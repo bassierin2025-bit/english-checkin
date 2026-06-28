@@ -365,7 +365,16 @@
   .hero .stat {
     background: var(--bg-soft); border-radius: var(--radius-sm); padding: 10px;
     text-align: center;
+    border-top: 3px solid transparent;
   }
+  .hero .stat:nth-child(1) { background: var(--green-bg); border-top-color: var(--green); }
+  .hero .stat:nth-child(2) { background: var(--blue-bg); border-top-color: var(--blue); }
+  .hero .stat:nth-child(3) { background: var(--tan-bg); border-top-color: var(--tan); }
+  .hero .stat:nth-child(4) { background: var(--red-bg); border-top-color: var(--red); }
+  .hero .stat:nth-child(1) .v { color: var(--green); }
+  .hero .stat:nth-child(2) .v { color: var(--blue); }
+  .hero .stat:nth-child(3) .v { color: var(--tan); }
+  .hero .stat:nth-child(4) .v { color: var(--red); }
   .hero .stat .v { font-size: 18px; font-weight: 700; font-family: var(--font-en); }
   .hero .stat .l { font-size: 11px; color: var(--ink-2); margin-top: 2px; }
   @media (max-width: 380px) {
@@ -397,14 +406,27 @@
   .task {
     background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
     margin-bottom: 10px; overflow: hidden;
-    border-left: 3px solid var(--gray);
+    border-left: 5px solid var(--gray);
+    position: relative;
   }
-  .task.cat-green { border-left-color: var(--green); }
-  .task.cat-blue  { border-left-color: var(--blue); }
-  .task.cat-tan   { border-left-color: var(--tan); }
-  .task.cat-red   { border-left-color: var(--red); }
-  .task.cat-gray  { border-left-color: var(--gray); }
-  .task.done { background: linear-gradient(180deg, #FBFBF9, #F4F2EC); }
+  .task::before {
+    content: ''; position: absolute; left: 0; top: 0; right: 0; height: 28px;
+    background: linear-gradient(180deg, currentColor 0%, transparent 100%);
+    opacity: .10; pointer-events: none;
+  }
+  .task.cat-green { border-left-color: var(--green); color: var(--green); }
+  .task.cat-blue  { border-left-color: var(--blue);  color: var(--blue); }
+  .task.cat-tan   { border-left-color: var(--tan);   color: var(--tan); }
+  .task.cat-red   { border-left-color: var(--red);   color: var(--red); }
+  .task.cat-gray  { border-left-color: var(--gray);  color: var(--gray); }
+  /* Restore default ink for inner text (so only the wash uses currentColor) */
+  .task .body, .task .body * { color: var(--ink); }
+  .task .body .desc { color: var(--ink-2); }
+  .task .body .meta, .task .body .meta * { color: var(--ink-3); }
+  .task .body .meta .action { color: var(--ink-2); }
+  .task .body .title-row .tag { color: inherit; }
+  .task.done { background: var(--bg-soft); }
+  .task.done::before { opacity: .05; }
 
   .task-head {
     display: flex; align-items: flex-start; gap: 10px;
@@ -3485,8 +3507,33 @@ setInterval(checkDateChange, 60 * 1000);
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').then(reg => {
-      // check for updates every 30 min
-      setInterval(() => reg.update().catch(() => {}), 30 * 60 * 1000);
+      setInterval(() => reg.update().catch(() => {}), 5 * 60 * 1000);
+      reg.addEventListener('updatefound', () => {
+        const nw = reg.installing; if (!nw) return;
+        nw.addEventListener('statechange', () => {
+          if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+            // new version ready — show a banner
+            const banner = document.createElement('div');
+            banner.style.cssText = `position:fixed;left:10px;right:10px;bottom:calc(86px + var(--safe-bottom));z-index:200;
+              background:var(--ink);color:var(--bg);padding:12px 14px;border-radius:14px;font-size:13px;line-height:1.5;
+              display:flex;gap:10px;align-items:center;box-shadow:0 8px 28px rgba(0,0,0,.25)`;
+            banner.innerHTML = `
+              <div style="flex:1">🆕 有新版本,刷新启用(数据不丢)</div>
+              <button id="reload-now" style="background:var(--bg);color:var(--ink);border:none;border-radius:8px;padding:7px 14px;font-size:12.5px;font-weight:600">刷新</button>
+            `;
+            document.body.appendChild(banner);
+            document.getElementById('reload-now').onclick = () => {
+              nw.postMessage('SKIP_WAITING');
+              setTimeout(() => location.reload(), 200);
+            };
+          }
+        });
+      });
+      // when a new SW activates and takes control, reload to use it
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return; refreshing = true; location.reload();
+      });
     }).catch(err => console.warn('SW registration failed:', err));
   });
 }
