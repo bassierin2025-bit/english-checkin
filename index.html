@@ -49,6 +49,112 @@
 
     --font-cn: -apple-system, "SF Pro SC", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
     --font-en: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    --topbar-bg: rgba(247,245,240,.86);
+    --tabbar-bg: rgba(255,255,255,.94);
+    --input-bg: #FCFBF8;
+  }
+
+  /* ===== Theme: Morandi (莫兰迪) ===== */
+  body[data-theme="morandi"] {
+    --bg: #ECEAE4;
+    --bg-soft: #DCD7CC;
+    --card: #F5F2EC;
+    --ink: #3D3B36;
+    --ink-2: #5F5A52;
+    --ink-3: #908A7E;
+    --line: #D2CBBE;
+    --line-2: #E2DDD2;
+    --green: #6F8C77;
+    --green-bg: #DDE6DF;
+    --blue: #6383A0;
+    --blue-bg: #DAE2EA;
+    --tan: #B08660;
+    --tan-bg: #ECDDC9;
+    --red: #AE695F;
+    --red-bg: #ECD6D1;
+    --gray: #807A6F;
+    --gray-bg: #DBD7CD;
+    --topbar-bg: rgba(236,234,228,.88);
+    --tabbar-bg: rgba(245,242,236,.95);
+    --input-bg: #F8F5EE;
+  }
+
+  /* ===== Theme: Ocean (海风) ===== */
+  body[data-theme="ocean"] {
+    --bg: #EBF1F6;
+    --bg-soft: #D6E2EE;
+    --card: #FFFFFF;
+    --ink: #0F2942;
+    --ink-2: #345A7E;
+    --ink-3: #7A91AB;
+    --line: #CCD9E5;
+    --line-2: #E3EAF2;
+    --green: #2E8C7A;
+    --green-bg: #D3EBE3;
+    --blue: #1B5F8A;
+    --blue-bg: #CFDEEF;
+    --tan: #C68A55;
+    --tan-bg: #F0DEC6;
+    --red: #C5544B;
+    --red-bg: #F5D8D4;
+    --gray: #6B7E92;
+    --gray-bg: #D8DFE8;
+    --topbar-bg: rgba(235,241,246,.88);
+    --tabbar-bg: rgba(255,255,255,.95);
+    --input-bg: #F7FAFC;
+  }
+
+  /* ===== Theme: Cherry (樱粉) ===== */
+  body[data-theme="cherry"] {
+    --bg: #FBF0F2;
+    --bg-soft: #F5DEE3;
+    --card: #FFFFFF;
+    --ink: #3D2832;
+    --ink-2: #6B4956;
+    --ink-3: #A38895;
+    --line: #EFD4DB;
+    --line-2: #F7E5EA;
+    --green: #6F8C75;
+    --green-bg: #DDE5DF;
+    --blue: #7C8DAE;
+    --blue-bg: #E0E6F0;
+    --tan: #B8855E;
+    --tan-bg: #EFDFCB;
+    --red: #C45770;
+    --red-bg: #F5D7DD;
+    --gray: #806775;
+    --gray-bg: #E5DCE0;
+    --topbar-bg: rgba(251,240,242,.88);
+    --tabbar-bg: rgba(255,255,255,.95);
+    --input-bg: #FDF6F8;
+  }
+
+  /* ===== Theme: Dark (暗夜) ===== */
+  body[data-theme="dark"] {
+    --bg: #161618;
+    --bg-soft: #25252A;
+    --card: #1F1F22;
+    --ink: #E8E6E0;
+    --ink-2: #B8B5AE;
+    --ink-3: #7A776F;
+    --line: #2F2F35;
+    --line-2: #26262B;
+    --green: #5BC494;
+    --green-bg: #1E3530;
+    --blue: #6FA8DE;
+    --blue-bg: #1B304A;
+    --tan: #E0B083;
+    --tan-bg: #3A2D1F;
+    --red: #F08A82;
+    --red-bg: #3A201E;
+    --gray: #9C9A95;
+    --gray-bg: #2A2A2F;
+    --shadow: 0 1px 3px rgba(0,0,0,.4), 0 4px 12px rgba(0,0,0,.3);
+    --shadow-lg: 0 8px 28px rgba(0,0,0,.5);
+    --topbar-bg: rgba(22,22,24,.88);
+    --tabbar-bg: rgba(31,31,34,.94);
+    --input-bg: #25252A;
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -77,7 +183,7 @@
     position: fixed; inset: 0 0 auto 0; z-index: 50;
     height: calc(56px + var(--safe-top));
     padding-top: var(--safe-top);
-    background: rgba(247,245,240,.86);
+    background: var(--topbar-bg);
     backdrop-filter: saturate(180%) blur(14px);
     -webkit-backdrop-filter: saturate(180%) blur(14px);
     border-bottom: 1px solid var(--line);
@@ -119,7 +225,7 @@
   /* ===== Bottom nav ===== */
   nav.tabbar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
-    background: rgba(255,255,255,.94);
+    background: var(--tabbar-bg);
     backdrop-filter: saturate(180%) blur(14px);
     -webkit-backdrop-filter: saturate(180%) blur(14px);
     border-top: 1px solid var(--line);
@@ -208,11 +314,11 @@
     border: 1.5px solid var(--line);
     display: grid; place-items: center; margin-top: 2px;
     transition: all .15s;
-    background: #fff;
+    background: var(--card);
   }
   .task .chk:hover { border-color: var(--ink-2); }
   .task.done .chk { background: var(--ink); border-color: var(--ink); }
-  .task.done .chk svg { stroke: #fff; opacity: 1; }
+  .task.done .chk svg { stroke: var(--bg); opacity: 1; }
   .task .chk svg { stroke: transparent; width: 14px; height: 14px; opacity: 0; transition: opacity .15s; }
   .task .body { flex: 1; min-width: 0; }
   .task .title-row {
@@ -273,7 +379,7 @@
     border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px;
     font-size: 12px; color: var(--ink-2);
   }
-  .timer-presets button.sel { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .timer-presets button.sel { background: var(--ink); color: var(--bg); border-color: var(--ink); }
   .timer-presets .custom { width: 64px; padding: 4px 6px; border-radius: 999px; text-align: center; }
   .timer-presets .mode {
     margin-left: auto;
@@ -284,7 +390,7 @@
   .timer-controls button {
     padding: 8px 16px; border-radius: 10px; font-weight: 600; font-size: 13px;
   }
-  .timer-controls .primary { background: var(--ink); color: #fff; min-width: 88px; }
+  .timer-controls .primary { background: var(--ink); color: var(--bg); min-width: 88px; }
   .timer-controls .primary:disabled { background: var(--ink-3); }
   .timer-controls .ghost { background: var(--bg-soft); color: var(--ink); }
 
@@ -302,9 +408,9 @@
   }
   .notes textarea {
     width: 100%; border: 1px solid var(--line); border-radius: 10px;
-    padding: 8px 10px; font-size: 13px; min-height: 70px; background: #FCFBF8;
+    padding: 8px 10px; font-size: 13px; min-height: 70px; background: var(--input-bg);
   }
-  .notes textarea:focus { outline: none; border-color: var(--ink-3); background: #fff; }
+  .notes textarea:focus { outline: none; border-color: var(--ink-3); background: var(--card); }
 
   /* ===== IELTS tracker ===== */
   .tracker {
@@ -352,18 +458,18 @@
   .err-form .req::after { content: " *"; color: var(--red); }
   .err-form input, .err-form select, .err-form textarea {
     width: 100%; border: 1px solid var(--line); border-radius: 8px;
-    padding: 7px 9px; background: #FCFBF8; font-size: 13px;
+    padding: 7px 9px; background: var(--input-bg); font-size: 13px;
   }
-  .err-form input:focus, .err-form select:focus, .err-form textarea:focus { outline: none; border-color: var(--ink-3); background: #fff; }
+  .err-form input:focus, .err-form select:focus, .err-form textarea:focus { outline: none; border-color: var(--ink-3); background: var(--card); }
   .err-form textarea { min-height: 60px; }
   .err-form .counter { font-size: 11px; color: var(--ink-3); text-align: right; margin-top: -4px; margin-bottom: 6px; font-family: var(--font-en); }
   .err-form .counter.ok { color: var(--green); }
   .err-form .tags { display: flex; flex-wrap: wrap; gap: 6px; }
   .err-form .tags button {
     font-size: 11.5px; padding: 3px 9px; border-radius: 999px;
-    border: 1px solid var(--line); color: var(--ink-2); background: #fff;
+    border: 1px solid var(--line); color: var(--ink-2); background: var(--card);
   }
-  .err-form .tags button.sel { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .err-form .tags button.sel { background: var(--ink); color: var(--bg); border-color: var(--ink); }
   .err-form .submit {
     margin-top: 10px; padding: 10px 16px; border-radius: 10px;
     background: var(--ink); color: #fff; font-weight: 600; width: 100%;
@@ -395,42 +501,70 @@
   .summary-stats .item { background: var(--bg-soft); border-radius: 10px; padding: 10px; }
   .summary-stats .item .v { font-size: 16px; font-weight: 700; font-family: var(--font-en); }
   .summary-stats .item .l { font-size: 11.5px; color: var(--ink-2); margin-top: 2px; }
-  .summary-textarea { width: 100%; min-height: 110px; border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: #FCFBF8; font-size: 14px; }
-  .summary-textarea:focus { outline: none; border-color: var(--ink-3); background: #fff; }
+  .summary-textarea { width: 100%; min-height: 110px; border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: var(--input-bg); font-size: 14px; }
+  .summary-textarea:focus { outline: none; border-color: var(--ink-3); background: var(--card); }
   .button-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
   .button-row button {
     flex: 1; min-width: 140px;
     padding: 9px 12px; border-radius: 10px; font-size: 13px; font-weight: 600;
   }
-  .btn-primary { background: var(--ink); color: #fff; }
+  .btn-primary { background: var(--ink); color: var(--bg); }
   .btn-secondary { background: var(--bg-soft); color: var(--ink); }
-  .btn-outline { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+  .btn-outline { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
 
   /* ===== Analytics ===== */
   .chart-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; margin-bottom: 12px; }
   .chart-card h3 { margin: 0 0 4px; font-size: 14px; }
   .chart-card .sub { color: var(--ink-3); font-size: 12px; margin-bottom: 10px; }
   .chart-card canvas { max-width: 100%; }
-  .heatmap { display: grid; grid-template-columns: 16px repeat(13, 1fr); gap: 3px; }
-  .heatmap .hm-row-lbl { font-size: 10px; color: var(--ink-3); display: flex; align-items: center; }
-  .heatmap .hm-cell {
-    aspect-ratio: 1 / 1; border-radius: 3px; background: var(--bg-soft);
-    position: relative;
+  .hm-cell {
+    aspect-ratio: 1 / 1; border-radius: 4px; background: var(--bg-soft);
   }
-  .heatmap .hm-cell[data-v="1"] { background: #DAE5DC; }
-  .heatmap .hm-cell[data-v="2"] { background: #A8C9B0; }
-  .heatmap .hm-cell[data-v="3"] { background: #6FA67E; }
-  .heatmap .hm-cell[data-v="4"] { background: #3D7D52; }
-  .heatmap .hm-cell[data-v="5"] { background: #1E5F38; }
-  .heatmap-legend { display: flex; align-items: center; gap: 6px; justify-content: flex-end; margin-top: 8px; font-size: 11px; color: var(--ink-3); font-family: var(--font-en); }
-  .heatmap-legend .hm-cell { width: 10px; height: 10px; aspect-ratio: auto; border-radius: 2px; }
+  .hm-cell[data-v="1"] { background: #DAE5DC; }
+  .hm-cell[data-v="2"] { background: #A8C9B0; }
+  .hm-cell[data-v="3"] { background: #6FA67E; }
+  .hm-cell[data-v="4"] { background: #3D7D52; }
+  .hm-cell[data-v="5"] { background: #1E5F38; }
+  .heatmap-legend { display: flex; align-items: center; gap: 6px; justify-content: flex-end; font-size: 11px; color: var(--ink-3); font-family: var(--font-en); }
+  .heatmap-legend .hm-cell { width: 12px; height: 12px; aspect-ratio: auto; border-radius: 3px; }
+
+  /* Calendar heatmap */
+  .cal-weekdays {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+    font-size: 10.5px; color: var(--ink-3); text-align: center;
+    margin: 4px 0 6px;
+  }
+  .cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+  }
+  .cal-day {
+    aspect-ratio: 1 / 1; border-radius: 6px;
+    display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;
+    padding: 4px 0 0 5px; font-size: 11px; color: var(--ink-3);
+    font-family: var(--font-en); font-weight: 500;
+    background: var(--bg-soft); position: relative; border: none;
+    cursor: pointer; transition: transform .08s;
+  }
+  .cal-day:active { transform: scale(.95); }
+  .cal-day.empty { background: transparent; pointer-events: none; }
+  .cal-day.future { opacity: .35; cursor: default; }
+  .cal-day.today { box-shadow: 0 0 0 2px var(--ink) inset; }
+  .cal-day[data-v="1"] { background: #DAE5DC; color: #1F2937; }
+  .cal-day[data-v="2"] { background: #A8C9B0; color: #1F2937; }
+  .cal-day[data-v="3"] { background: #6FA67E; color: #fff; }
+  .cal-day[data-v="4"] { background: #3D7D52; color: #fff; }
+  .cal-day[data-v="5"] { background: #1E5F38; color: #fff; }
+  .cal-day .cal-dot {
+    position: absolute; bottom: 4px; right: 5px;
+    font-size: 9px; opacity: .8; font-weight: 600;
+  }
 
   /* ===== Weekly review ===== */
   .week-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; margin-bottom: 12px; }
   .week-card .q { font-weight: 600; margin: 12px 0 4px; font-size: 14px; }
   .week-card .q:first-child { margin-top: 0; }
-  .week-card textarea { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 8px; background: #FCFBF8; font-size: 13.5px; min-height: 60px; }
-  .week-card textarea:focus { outline: none; border-color: var(--ink-3); background: #fff; }
+  .week-card textarea { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 8px; background: var(--input-bg); font-size: 13.5px; min-height: 60px; }
+  .week-card textarea:focus { outline: none; border-color: var(--ink-3); background: var(--card); }
   .week-card .meta { font-size: 12px; color: var(--ink-3); font-family: var(--font-en); margin-bottom: 10px; }
 
   /* ===== Settings ===== */
@@ -507,10 +641,12 @@
   .section-bar .actions { display: flex; gap: 6px; }
   .section-bar .actions button {
     font-size: 12px; color: var(--ink-2); padding: 4px 10px; border-radius: 999px;
-    border: 1px solid var(--line); background: #fff;
+    border: 1px solid var(--line); background: var(--card);
   }
+  .section-bar .actions button.sel { background: var(--ink); color: var(--bg); border-color: var(--ink); }
   .date-picker {
-    border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; background: #fff;
+    border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; background: var(--card);
+    color: var(--ink);
     font-size: 12.5px; font-family: var(--font-en);
   }
 </style>
@@ -725,10 +861,21 @@
   <!-- ============ ANALYTICS ============ -->
   <section class="view" id="view-analytics">
     <div class="chart-card">
-      <h3>打卡热力图</h3>
-      <div class="sub">过去 13 周,深色 = 当天完成项多</div>
-      <div class="heatmap" id="heatmap"></div>
-      <div class="heatmap-legend">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <h3 style="margin:0">打卡月历</h3>
+        <div style="display:flex;align-items:center;gap:6px">
+          <button id="cal-prev" type="button" style="width:28px;height:28px;border-radius:8px;background:var(--bg-soft);font-size:14px">‹</button>
+          <span id="cal-label" style="font-size:13px;font-weight:600;min-width:90px;text-align:center;font-family:var(--font-en)">--</span>
+          <button id="cal-next" type="button" style="width:28px;height:28px;border-radius:8px;background:var(--bg-soft);font-size:14px">›</button>
+          <button id="cal-today" type="button" style="margin-left:4px;padding:0 10px;height:28px;border-radius:8px;background:var(--bg-soft);font-size:12px">今天</button>
+        </div>
+      </div>
+      <div class="sub">深色 = 当天完成项多。点格子查看那天的打卡数。</div>
+      <div class="cal-weekdays">
+        <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <div class="heatmap-legend" style="margin-top:10px">
         少 <span class="hm-cell" data-v="0"></span><span class="hm-cell" data-v="1"></span><span class="hm-cell" data-v="2"></span><span class="hm-cell" data-v="3"></span><span class="hm-cell" data-v="4"></span><span class="hm-cell" data-v="5"></span> 多
       </div>
     </div>
@@ -759,9 +906,60 @@
   <!-- ============ WEEKLY ============ -->
   <section class="view" id="view-weekly">
     <div class="section-bar">
-      <h2>本周复盘 · 只看三件事</h2>
-      <input type="week" class="date-picker" id="week-picker" />
+      <h2>本周数据</h2>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button id="wk-prev" type="button" style="width:28px;height:28px;border-radius:8px;background:var(--bg-soft);font-size:14px">‹</button>
+        <span id="wk-label" style="font-size:13px;font-weight:600;min-width:140px;text-align:center;font-family:var(--font-en)">--</span>
+        <button id="wk-next" type="button" style="width:28px;height:28px;border-radius:8px;background:var(--bg-soft);font-size:14px">›</button>
+        <button id="wk-this" type="button" style="margin-left:4px;padding:0 10px;height:28px;border-radius:8px;background:var(--bg-soft);font-size:12px">本周</button>
+      </div>
     </div>
+
+    <!-- Top week stats -->
+    <div class="hero" style="margin-bottom:10px">
+      <div class="stats">
+        <div class="stat"><div class="v" id="wk-st-done">0</div><div class="l">完成项数</div></div>
+        <div class="stat"><div class="v" id="wk-st-time">0m</div><div class="l">总用时</div></div>
+        <div class="stat"><div class="v" id="wk-st-err">0</div><div class="l">新增错题</div></div>
+        <div class="stat"><div class="v" id="wk-st-active">0/7</div><div class="l">活跃天</div></div>
+      </div>
+    </div>
+
+    <!-- Per-day stacked bar -->
+    <div class="chart-card">
+      <h3>每日用时(按分类)</h3>
+      <div class="sub">周一到周日,堆叠柱状显示各类时间</div>
+      <canvas id="wk-chart-stack" height="200"></canvas>
+    </div>
+
+    <!-- Time distribution pie + completion -->
+    <div class="chart-card">
+      <h3>本周时间分配</h3>
+      <div class="sub">各类目用时占比</div>
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <canvas id="wk-pie" width="150" height="150" style="flex-shrink:0;width:150px;height:150px"></canvas>
+        <div id="wk-pie-legend" style="flex:1;min-width:160px;font-size:13px"></div>
+      </div>
+    </div>
+
+    <!-- Error tags this week -->
+    <div class="chart-card">
+      <h3>本周高频错因</h3>
+      <div class="sub">出现 ≥1 次的错题标签</div>
+      <canvas id="wk-tags" height="180"></canvas>
+    </div>
+
+    <!-- AI summary section -->
+    <div class="week-card" style="border-left:4px solid var(--green)">
+      <h3 style="margin:0 0 6px;font-size:14px">本周 AI 总结</h3>
+      <p style="font-size:12px;color:var(--ink-3);margin:0 0 10px">点下面按钮把本周数据整理成提示词,粘到 Claude/ChatGPT 让它给一份总结,贴回这里。</p>
+      <textarea id="wk-ai" style="width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:#FCFBF8;font-size:13.5px;min-height:120px" placeholder="把 AI 回复贴这里(可选)"></textarea>
+      <div class="button-row" style="margin-top:8px">
+        <button class="btn-secondary" id="btn-wk-prompt">复制本周 AI 提示词</button>
+      </div>
+    </div>
+
+    <!-- Three text questions kept at bottom -->
     <div class="week-card">
       <div class="meta" id="week-meta">--</div>
       <div class="q">本周最常错的逻辑类型</div>
@@ -781,6 +979,12 @@
 
   <!-- ============ SETTINGS ============ -->
   <section class="view" id="view-settings">
+    <div class="set-card">
+      <h3>配色主题</h3>
+      <p style="font-size:12.5px;color:var(--ink-2);margin:4px 0 10px">点一下切换,立刻生效。</p>
+      <div id="theme-picker" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px"></div>
+    </div>
+
     <div class="set-card">
       <h3>计时器</h3>
       <div class="set-row">
@@ -957,7 +1161,27 @@ const fmtDate = (d=new Date()) => {
   const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
   return `${y}-${m}-${day}`;
 };
-const TODAY = fmtDate();
+let TODAY = fmtDate();
+
+function checkDateChange() {
+  const now = fmtDate();
+  if (now === TODAY) return;
+  saveDay(dayState, TODAY);
+  persistTimerState();
+  const old = TODAY;
+  TODAY = now;
+  dayState = loadDay(TODAY);
+  if (typeof summaryDate !== 'undefined' && summaryDate === old) summaryDate = TODAY;
+  _lastStatsSig = '';
+  _lastDailyPieSig = '';
+  _cachedStreakDate = null;
+  if (dailyPieChart) { dailyPieChart.destroy(); dailyPieChart = null; }
+  renderTasks();
+  refreshTopStats();
+  if (typeof refreshSummary === 'function') refreshSummary();
+  if (typeof refreshAnalytics === 'function') refreshAnalytics();
+  toast(`日期切到 ${TODAY},今日数据已刷新`);
+}
 
 const settings = Object.assign({
   beep: true, vibrate: true, warn: true, srs: true, backupNag: true
@@ -2320,34 +2544,65 @@ function getRange(days) {
   return arr;
 }
 
+// Calendar month state
+let calYear = null, calMonth = null; // calMonth: 0-11
+
 function renderHeatmap() {
-  const wrap = $('#heatmap'); wrap.innerHTML = '';
-  // 13 weeks × 7 days
-  const totalDays = 13 * 7;
-  const days = getRange(totalDays);
-  // weekday labels (Mon, Wed, Fri)
-  const labels = ['', '一', '', '三', '', '五', ''];
-  // build week-by-week (columns = weeks)
-  // create rows label column on the left of each row
-  // Use grid: 7 rows of (1 lbl + 13 cells) but our HTML has 16px lbl col
-  for (let row = 0; row < 7; row++) {
-    const lbl = document.createElement('div');
-    lbl.className = 'hm-row-lbl';
-    lbl.textContent = labels[row];
-    wrap.appendChild(lbl);
-    for (let w = 0; w < 13; w++) {
-      const dateStr = days[w * 7 + row];
-      if (!dateStr) { wrap.appendChild(document.createElement('div')); continue; }
-      const data = LS.get(KEYS.day(dateStr));
-      const done = data ? Object.values(data.tasks || {}).filter(t => t.done).length : 0;
-      const v = done === 0 ? 0 : done <= 3 ? 1 : done <= 6 ? 2 : done <= 10 ? 3 : done <= 13 ? 4 : 5;
-      const c = document.createElement('div');
-      c.className = 'hm-cell';
-      c.dataset.v = v;
-      c.title = `${dateStr} · 完成 ${done} 项`;
-      wrap.appendChild(c);
-    }
+  const grid = $('#cal-grid'); if (!grid) return;
+  if (calYear == null) {
+    const t = new Date(TODAY);
+    calYear = t.getFullYear(); calMonth = t.getMonth();
   }
+  $('#cal-label').textContent = `${calYear} 年 ${String(calMonth+1).padStart(2,'0')} 月`;
+
+  grid.innerHTML = '';
+  const first = new Date(calYear, calMonth, 1);
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  // Monday-based offset: getDay() returns 0=Sun..6=Sat; we want Mon=0..Sun=6
+  const startOffset = (first.getDay() + 6) % 7;
+  const today = new Date(TODAY);
+
+  // leading empty cells
+  for (let i = 0; i < startOffset; i++) {
+    const e = document.createElement('div'); e.className = 'cal-day empty'; grid.appendChild(e);
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dt = new Date(calYear, calMonth, d);
+    const dateStr = fmtDate(dt);
+    const data = LS.get(KEYS.day(dateStr));
+    const done = data ? Object.values(data.tasks || {}).filter(t => t.done).length : 0;
+    const v = done === 0 ? 0 : done <= 3 ? 1 : done <= 6 ? 2 : done <= 10 ? 3 : done <= 13 ? 4 : 5;
+    const isFuture = dt > today;
+    const isToday = dateStr === TODAY;
+    const cell = document.createElement('button');
+    cell.type = 'button';
+    cell.className = 'cal-day' + (isFuture ? ' future' : '') + (isToday ? ' today' : '');
+    cell.dataset.v = v;
+    cell.dataset.date = dateStr;
+    cell.innerHTML = `${d}${done > 0 ? `<span class="cal-dot">${done}</span>` : ''}`;
+    cell.title = `${dateStr} · 完成 ${done} 项`;
+    if (!isFuture) {
+      cell.onclick = () => {
+        // jump to summary view of this date
+        summaryDate = dateStr;
+        document.querySelector('nav.tabbar button[data-view="summary"]').click();
+      };
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function calNav(deltaMonth) {
+  if (calYear == null) { const t = new Date(TODAY); calYear = t.getFullYear(); calMonth = t.getMonth(); }
+  calMonth += deltaMonth;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  // don't navigate past current month
+  const t = new Date(TODAY);
+  if (calYear > t.getFullYear() || (calYear === t.getFullYear() && calMonth > t.getMonth())) {
+    calYear = t.getFullYear(); calMonth = t.getMonth();
+  }
+  renderHeatmap();
 }
 
 function refreshAnalytics() {
@@ -2446,6 +2701,14 @@ function refreshAnalytics() {
 /* ============================================================
    WEEKLY
    ============================================================ */
+// Monday-based week functions
+function mondayOf(d) {
+  const dt = new Date(d.getTime());
+  dt.setHours(0,0,0,0);
+  // getDay: 0=Sun..6=Sat → offset to Monday: (day+6)%7
+  dt.setDate(dt.getDate() - ((dt.getDay() + 6) % 7));
+  return dt;
+}
 function isoWeek(d) {
   const dt = new Date(d.getTime());
   dt.setHours(0,0,0,0);
@@ -2456,15 +2719,149 @@ function isoWeek(d) {
 }
 function weekKey(d=new Date()) { const w = isoWeek(d); return `${w.year}-W${String(w.week).padStart(2,'0')}`; }
 
-let currentWeek = weekKey();
+// Anchor for the currently-viewed week (any date inside it)
+let currentWeekAnchor = mondayOf(new Date());
+
+let wkCharts = { stack: null, pie: null, tags: null };
+
+function getWeekDates(anchorDate) {
+  const mon = mondayOf(anchorDate);
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(mon); d.setDate(mon.getDate() + i);
+    return fmtDate(d);
+  });
+}
 
 function refreshWeek() {
-  const all = LS.get(KEYS.weeks, {});
-  const w = all[currentWeek] || { q1: '', q2: '', q3: '' };
-  $('#wk-1').value = w.q1; $('#wk-2').value = w.q2; $('#wk-3').value = w.q3;
-  $('#week-meta').textContent = currentWeek;
-  $('#week-picker').value = currentWeek;
+  const days = getWeekDates(currentWeekAnchor);
+  const wkKey = weekKey(currentWeekAnchor);
+  const mon = mondayOf(currentWeekAnchor), sun = new Date(mon); sun.setDate(sun.getDate() + 6);
+  const labelText = `${mon.getMonth()+1}/${mon.getDate()} – ${sun.getMonth()+1}/${sun.getDate()} · ${wkKey}`;
+  $('#wk-label').textContent = labelText;
+  $('#week-meta').textContent = wkKey;
 
+  // Load week-specific text inputs + AI
+  const all = LS.get(KEYS.weeks, {});
+  const w = all[wkKey] || { q1: '', q2: '', q3: '', ai: '' };
+  $('#wk-1').value = w.q1 || ''; $('#wk-2').value = w.q2 || ''; $('#wk-3').value = w.q3 || '';
+  $('#wk-ai').value = w.ai || '';
+
+  // Aggregate per-day data
+  const cats = ['green','blue','tan','red','gray'];
+  const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
+  const catColors = { green:'#2D6A4F', blue:'#1E5FAE', tan:'#B07A3C', red:'#B5322B', gray:'#6B7280' };
+
+  const perDay = days.map(d => {
+    const data = LS.get(KEYS.day(d), { tasks: {} });
+    const byCat = { green:0, blue:0, tan:0, red:0, gray:0 };
+    let doneCount = 0;
+    TASKS.forEach(t => {
+      const sec = data.tasks[t.id]?.elapsed || 0;
+      if (sec > 0) byCat[t.cat] += sec;
+      if (data.tasks[t.id]?.done) doneCount++;
+    });
+    const totalSec = Object.values(byCat).reduce((s,v) => s+v, 0);
+    return { date: d, byCat, totalSec, doneCount };
+  });
+
+  const totalDone = perDay.reduce((s, x) => s + x.doneCount, 0);
+  const totalSec = perDay.reduce((s, x) => s + x.totalSec, 0);
+  const activeDays = perDay.filter(x => x.doneCount > 0 || x.totalSec > 0).length;
+  const errs = loadErrors().filter(e => days.includes(e.date));
+
+  $('#wk-st-done').textContent = totalDone;
+  const totalMin = Math.round(totalSec / 60);
+  $('#wk-st-time').textContent = totalMin >= 60 ? `${(totalMin/60).toFixed(1)}h` : `${totalMin}m`;
+  $('#wk-st-err').textContent = errs.length;
+  $('#wk-st-active').textContent = `${activeDays}/7`;
+
+  if (window.Chart) {
+    // Stacked bar: per day per category (minutes)
+    const dayLabels = ['一','二','三','四','五','六','日'];
+    const stackData = cats.map(cat => ({
+      label: catLabels[cat],
+      data: perDay.map(p => Math.round(p.byCat[cat] / 60)),
+      backgroundColor: catColors[cat],
+      borderRadius: 3,
+      stack: 's'
+    }));
+    if (wkCharts.stack) wkCharts.stack.destroy();
+    wkCharts.stack = new Chart($('#wk-chart-stack'), {
+      type: 'bar',
+      data: { labels: dayLabels, datasets: stackData },
+      options: {
+        animation: { duration: 250 },
+        responsive: true,
+        scales: {
+          x: { stacked: true, grid: { display: false } },
+          y: { stacked: true, beginAtZero: true, ticks: { callback: v => v + 'm' } }
+        },
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } },
+          tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.parsed.y}min` } }
+        }
+      }
+    });
+
+    // Pie: total week time by category
+    const pieEntries = cats.map(c => [c, perDay.reduce((s,p) => s + p.byCat[c], 0)]).filter(([,v]) => v > 0).sort((a,b) => b[1]-a[1]);
+    const sumWeek = pieEntries.reduce((s,[,v]) => s+v, 0);
+    if (wkCharts.pie) wkCharts.pie.destroy();
+    if (pieEntries.length) {
+      wkCharts.pie = new Chart($('#wk-pie'), {
+        type: 'doughnut',
+        data: {
+          labels: pieEntries.map(([c]) => catLabels[c]),
+          datasets: [{
+            data: pieEntries.map(([,v]) => Math.round(v/60)),
+            backgroundColor: pieEntries.map(([c]) => catColors[c]),
+            borderColor: '#fff', borderWidth: 2
+          }]
+        },
+        options: {
+          animation: false, responsive: false,
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.label}: ${c.parsed}min` } } },
+          cutout: '62%'
+        }
+      });
+      $('#wk-pie-legend').innerHTML = pieEntries.map(([c, sec]) => {
+        const pct = Math.round(sec / sumWeek * 100);
+        return `<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line-2)">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${catColors[c]};display:inline-block"></span>${catLabels[c]}</span>
+          <span style="color:var(--ink-3);font-family:var(--font-en);font-size:11.5px">${Math.round(sec/60)}min · ${pct}%</span>
+        </div>`;
+      }).join('');
+    } else {
+      $('#wk-pie-legend').innerHTML = `<div class="empty" style="padding:10px;text-align:left">本周还没有用时数据</div>`;
+      const ctx = $('#wk-pie').getContext('2d');
+      ctx.clearRect(0,0,150,150);
+    }
+
+    // Top error tags
+    const tagFreq = {};
+    errs.forEach(e => (e.tags || []).forEach(t => tagFreq[t] = (tagFreq[t]||0)+1));
+    const tagList = Object.entries(tagFreq).sort((a,b) => b[1]-a[1]).slice(0,10);
+    if (wkCharts.tags) wkCharts.tags.destroy();
+    if (tagList.length) {
+      wkCharts.tags = new Chart($('#wk-tags'), {
+        type: 'bar',
+        data: {
+          labels: tagList.map(([k]) => k),
+          datasets: [{ data: tagList.map(([,v]) => v), backgroundColor: '#B5322B', borderRadius: 4 }]
+        },
+        options: {
+          indexAxis: 'y', animation: { duration: 250 },
+          plugins: { legend: { display: false } },
+          scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
+        }
+      });
+    } else {
+      const ctx = $('#wk-tags').getContext('2d');
+      ctx.clearRect(0,0,$('#wk-tags').width,$('#wk-tags').height);
+    }
+  }
+
+  // history list
   const hist = $('#week-history'); hist.innerHTML = '';
   const keys = Object.keys(all).sort().reverse();
   if (keys.length === 0) {
@@ -2484,23 +2881,129 @@ function refreshWeek() {
     });
   }
 }
+
+function navWeek(deltaWeeks) {
+  const d = new Date(currentWeekAnchor);
+  d.setDate(d.getDate() + deltaWeeks * 7);
+  // don't navigate to future weeks beyond this one
+  const thisMon = mondayOf(new Date());
+  if (d > thisMon) return;
+  currentWeekAnchor = mondayOf(d);
+  refreshWeek();
+}
+
 $('#btn-save-week').onclick = () => {
   const all = LS.get(KEYS.weeks, {});
-  all[currentWeek] = { q1: $('#wk-1').value, q2: $('#wk-2').value, q3: $('#wk-3').value };
+  const k = weekKey(currentWeekAnchor);
+  all[k] = {
+    q1: $('#wk-1').value, q2: $('#wk-2').value, q3: $('#wk-3').value,
+    ai: $('#wk-ai').value
+  };
   LS.set(KEYS.weeks, all);
   refreshWeek();
-  toast('已保存');
+  toast('已保存本周复盘');
 };
-$('#week-picker').addEventListener('change', e => { currentWeek = e.target.value || weekKey(); refreshWeek(); });
-['wk-1','wk-2','wk-3'].forEach(id => $('#' + id).addEventListener('input', () => {
+$('#wk-prev').addEventListener('click', () => navWeek(-1));
+$('#wk-next').addEventListener('click', () => navWeek(1));
+$('#wk-this').addEventListener('click', () => { currentWeekAnchor = mondayOf(new Date()); refreshWeek(); });
+
+['wk-1','wk-2','wk-3','wk-ai'].forEach(id => $('#' + id).addEventListener('input', () => {
   const all = LS.get(KEYS.weeks, {});
-  all[currentWeek] = { q1: $('#wk-1').value, q2: $('#wk-2').value, q3: $('#wk-3').value };
+  const k = weekKey(currentWeekAnchor);
+  all[k] = {
+    q1: $('#wk-1').value, q2: $('#wk-2').value, q3: $('#wk-3').value,
+    ai: $('#wk-ai').value
+  };
   LS.set(KEYS.weeks, all);
 }));
+
+$('#btn-wk-prompt').onclick = () => {
+  const days = getWeekDates(currentWeekAnchor);
+  const wkKey = weekKey(currentWeekAnchor);
+  const errs = loadErrors().filter(e => days.includes(e.date));
+  const cats = ['green','blue','tan','red','gray'];
+  const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
+  const dayNames = ['周一','周二','周三','周四','周五','周六','周日'];
+  const lines = [];
+  lines.push(`你是我的雅思英语训练教练。请基于这一周(${wkKey})的数据,给一份 ≤300 字的中文周报,要做到:`);
+  lines.push(`1) 用 1 句话指出本周最大的真正瓶颈;`);
+  lines.push(`2) 把本周错题按"判断机制"归并成 2-3 类,每类 1 行;`);
+  lines.push(`3) 给下周 3 条具体动作,每条必须是"看到 X 就做 Y";`);
+  lines.push(`4) 不要鼓励性套话。`);
+  lines.push('');
+  lines.push(`── 本周数据 ──`);
+  days.forEach((d, i) => {
+    const data = LS.get(KEYS.day(d), { tasks: {} });
+    const done = TASKS.filter(t => data.tasks[t.id]?.done);
+    const totalSec = TASKS.reduce((s, t) => s + (data.tasks[t.id]?.elapsed || 0), 0);
+    const byCat = { green:0, blue:0, tan:0, red:0, gray:0 };
+    TASKS.forEach(t => { const sec = data.tasks[t.id]?.elapsed || 0; if (sec > 0) byCat[t.cat] += sec; });
+    const catStr = cats.filter(c => byCat[c] > 0).map(c => `${catLabels[c]} ${Math.round(byCat[c]/60)}min`).join(' / ');
+    lines.push(`${dayNames[i]} (${d}): ${done.length}/16 · ${Math.round(totalSec/60)}min${catStr ? ' · ' + catStr : ''}${data.summary?.main ? ' · 总结:' + data.summary.main : ''}`);
+  });
+  lines.push('');
+  if (errs.length) {
+    lines.push(`错题 ${errs.length} 条:`);
+    errs.forEach((e, i) => {
+      lines.push(`${i+1}. [${e.date} 套${e.set} ${e.section}${e.qnum?' '+e.qnum:''}] ${e.tags?.join('/') || '无标签'}`);
+      lines.push(`   误导: ${e.trap}`);
+      lines.push(`   确认: ${e.anchor}`);
+    });
+  } else {
+    lines.push('本周无错题记录。');
+  }
+  showModal('本周 AI 提示词', lines.join('\n'));
+};
 
 /* ============================================================
    SETTINGS
    ============================================================ */
+
+// ===== Color themes =====
+const THEMES = [
+  { id: 'warm',    name: '暖米',   colors: ['#F7F5F0', '#2D6A4F', '#1E5FAE', '#B07A3C'] },
+  { id: 'morandi', name: '莫兰迪', colors: ['#ECEAE4', '#6F8C77', '#6383A0', '#B08660'] },
+  { id: 'ocean',   name: '海风',   colors: ['#EBF1F6', '#2E8C7A', '#1B5F8A', '#C68A55'] },
+  { id: 'cherry',  name: '樱粉',   colors: ['#FBF0F2', '#6F8C75', '#7C8DAE', '#B8855E'] },
+  { id: 'dark',    name: '暗夜',   colors: ['#161618', '#5BC494', '#6FA8DE', '#E0B083'] },
+];
+
+function applyTheme(id) {
+  if (id === 'warm' || !id) document.body.removeAttribute('data-theme');
+  else document.body.setAttribute('data-theme', id);
+  localStorage.setItem('theme', id || 'warm');
+  // refresh charts that use CSS-aware colors (currently they use hardcoded hex, so this is mostly visual)
+  if (typeof renderDailyPie === 'function') { _lastDailyPieSig = ''; renderDailyPie(); }
+}
+
+function renderThemePicker() {
+  const wrap = $('#theme-picker'); if (!wrap) return;
+  const current = localStorage.getItem('theme') || 'warm';
+  wrap.innerHTML = THEMES.map(t => {
+    const isSel = t.id === current;
+    return `<button type="button" data-theme-id="${t.id}" style="
+      padding:8px 4px;border-radius:10px;border:2px solid ${isSel ? 'var(--ink)' : 'var(--line)'};
+      background:var(--card);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;
+      transition:border-color .15s">
+      <div style="display:flex;gap:2px">
+        ${t.colors.map(c => `<span style="width:10px;height:18px;background:${c};border-radius:2px;border:1px solid rgba(0,0,0,.06)"></span>`).join('')}
+      </div>
+      <span style="font-size:11px;color:var(--ink);font-weight:${isSel ? '600' : '500'}">${t.name}</span>
+    </button>`;
+  }).join('');
+  wrap.querySelectorAll('button[data-theme-id]').forEach(b => {
+    b.onclick = () => {
+      applyTheme(b.dataset.themeId);
+      renderThemePicker();
+      toast('已切换到「' + THEMES.find(t => t.id === b.dataset.themeId).name + '」');
+    };
+  });
+}
+
+// Apply saved theme immediately on load
+applyTheme(localStorage.getItem('theme') || 'warm');
+renderThemePicker();
+
 ['beep', 'vibrate', 'warn', 'srs', 'backupNag'].forEach(k => {
   const sw = $('#sw-' + (k === 'backupNag' ? 'backup-nag' : k));
   if (!sw) return;
@@ -2777,6 +3280,15 @@ setErrFilterUI();
 refreshBackupHint();
 checkBackupNag();
 
+// Calendar nav
+$('#cal-prev')?.addEventListener('click', () => calNav(-1));
+$('#cal-next')?.addEventListener('click', () => calNav(1));
+$('#cal-today')?.addEventListener('click', () => {
+  const t = new Date(TODAY);
+  calYear = t.getFullYear(); calMonth = t.getMonth();
+  renderHeatmap();
+});
+
 // re-render after Chart.js loaded
 window.addEventListener('load', () => {
   refreshAnalytics();
@@ -2803,9 +3315,12 @@ function renderQR() {
 // keep timers ticking even before opening cards (for countdowns)
 setInterval(() => {
   // safety net: trigger globalTick if any countdown running
-  if ([...timers.values()].some(t => t.running && t.mode === 'down')) globalTick();
+  if (typeof timers !== 'undefined' && [...timers.values()].some(t => t.running && t.mode === 'down')) globalTick();
   refreshTopStats();
 }, 1000);
+
+// Check for date change every minute (cheaper than every second)
+setInterval(checkDateChange, 60 * 1000);
 
 // ============ PWA: register service worker for offline ============
 if ('serviceWorker' in navigator) {
@@ -2844,11 +3359,13 @@ if ('serviceWorker' in navigator) {
   }, 3000);
 })();
 
-// Save on tab visibility change (catch closes)
+// Save on tab visibility change (catch closes); when becoming visible, also check date
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     persistTimerState();
     saveDay(dayState);
+  } else {
+    checkDateChange();
   }
 });
 window.addEventListener('beforeunload', () => { persistTimerState(); saveDay(dayState); });
