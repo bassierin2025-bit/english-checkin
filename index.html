@@ -53,12 +53,31 @@
     --topbar-bg: rgba(247,245,240,.86);
     --tabbar-bg: rgba(255,255,255,.94);
     --input-bg: #FCFBF8;
+    /* Heatmap base color — themes can override to fit palette */
+    --heat-base: var(--green);
+    --task-tint: 8%;   /* % of category color mixed into task card bg */
   }
 
   /* ============================================================
      COLOR THEMES — 14 curated palettes
      Each fully overrides bg, neutrals, AND the 5 category colors
      ============================================================ */
+
+  /* Per-theme heat-base overrides (which accent color the calendar uses) */
+  body[data-theme="terra"]        { --heat-base: var(--tan); }
+  body[data-theme="olive"]        { --heat-base: var(--green); }
+  body[data-theme="morandi-ink"]  { --heat-base: var(--blue); }
+  body[data-theme="mono"]         { --heat-base: var(--ink); }
+  body[data-theme="britain"]      { --heat-base: var(--blue); }
+  body[data-theme="mist"]         { --heat-base: var(--blue); }
+  body[data-theme="silent-grey"]  { --heat-base: var(--green); }
+  body[data-theme="honey"]        { --heat-base: var(--tan); }
+  body[data-theme="soda"]         { --heat-base: var(--tan); }
+  body[data-theme="taro"]         { --heat-base: var(--blue); }
+  body[data-theme="persimmon"]    { --heat-base: var(--red); }
+  body[data-theme="wheat-coffee"] { --heat-base: var(--tan); }
+  body[data-theme="velvet"]       { --heat-base: var(--red); }
+  body[data-theme="bold-dark"]    { --heat-base: var(--green); }
 
   /* 陶土珊瑚 — terra & coral, warm but not sweet */
   body[data-theme="terra"] {
@@ -404,29 +423,21 @@
     font-family: var(--font-en);
   }
   .task {
-    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    border-radius: var(--radius); box-shadow: var(--shadow);
     margin-bottom: 10px; overflow: hidden;
     border-left: 5px solid var(--gray);
     position: relative;
   }
-  .task::before {
-    content: ''; position: absolute; left: 0; top: 0; right: 0; height: 28px;
-    background: linear-gradient(180deg, currentColor 0%, transparent 100%);
-    opacity: .10; pointer-events: none;
+  /* Each category gets its own soft tinted background derived from the theme color */
+  .task.cat-green { border-left-color: var(--green); background: color-mix(in oklab, var(--green) 12%, var(--card)); }
+  .task.cat-blue  { border-left-color: var(--blue);  background: color-mix(in oklab, var(--blue)  12%, var(--card)); }
+  .task.cat-tan   { border-left-color: var(--tan);   background: color-mix(in oklab, var(--tan)   12%, var(--card)); }
+  .task.cat-red   { border-left-color: var(--red);   background: color-mix(in oklab, var(--red)   12%, var(--card)); }
+  .task.cat-gray  { border-left-color: var(--gray);  background: color-mix(in oklab, var(--gray)  10%, var(--card)); }
+  .task.done { opacity: .65; }
+  .task.done::after {
+    content: ''; position: absolute; inset: 0; background: var(--bg-soft); opacity: .5; pointer-events: none;
   }
-  .task.cat-green { border-left-color: var(--green); color: var(--green); }
-  .task.cat-blue  { border-left-color: var(--blue);  color: var(--blue); }
-  .task.cat-tan   { border-left-color: var(--tan);   color: var(--tan); }
-  .task.cat-red   { border-left-color: var(--red);   color: var(--red); }
-  .task.cat-gray  { border-left-color: var(--gray);  color: var(--gray); }
-  /* Restore default ink for inner text (so only the wash uses currentColor) */
-  .task .body, .task .body * { color: var(--ink); }
-  .task .body .desc { color: var(--ink-2); }
-  .task .body .meta, .task .body .meta * { color: var(--ink-3); }
-  .task .body .meta .action { color: var(--ink-2); }
-  .task .body .title-row .tag { color: inherit; }
-  .task.done { background: var(--bg-soft); }
-  .task.done::before { opacity: .05; }
 
   .task-head {
     display: flex; align-items: flex-start; gap: 10px;
@@ -568,7 +579,7 @@
     display: grid; place-items: center;
   }
   .grid .cell.done { background: var(--ink); }
-  .grid .cell.done::after { content: ""; width: 8px; height: 5px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg); margin-top: -2px; }
+  .grid .cell.done::after { content: ""; width: 8px; height: 5px; border-left: 2px solid var(--bg); border-bottom: 2px solid var(--bg); transform: rotate(-45deg); margin-top: -2px; }
 
   /* ===== Errors ===== */
   .err-form {
@@ -621,7 +632,15 @@
   .summary-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; margin-bottom: 12px; }
   .summary-card h3 { margin: 0 0 10px; font-size: 15px; }
   .summary-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px; }
-  .summary-stats .item { background: var(--bg-soft); border-radius: 10px; padding: 10px; }
+  .summary-stats .item { background: var(--bg-soft); border-radius: 10px; padding: 10px; border-top: 3px solid transparent; }
+  .summary-stats .item:nth-child(1) { background: var(--green-bg); border-top-color: var(--green); }
+  .summary-stats .item:nth-child(2) { background: var(--blue-bg); border-top-color: var(--blue); }
+  .summary-stats .item:nth-child(3) { background: var(--red-bg); border-top-color: var(--red); }
+  .summary-stats .item:nth-child(4) { background: var(--tan-bg); border-top-color: var(--tan); }
+  .summary-stats .item:nth-child(1) .v { color: var(--green); }
+  .summary-stats .item:nth-child(2) .v { color: var(--blue); }
+  .summary-stats .item:nth-child(3) .v { color: var(--red); }
+  .summary-stats .item:nth-child(4) .v { color: var(--tan); }
   .summary-stats .item .v { font-size: 16px; font-weight: 700; font-family: var(--font-en); }
   .summary-stats .item .l { font-size: 11.5px; color: var(--ink-2); margin-top: 2px; }
   .summary-textarea { width: 100%; min-height: 110px; border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: var(--input-bg); font-size: 14px; }
@@ -643,11 +662,11 @@
   .hm-cell {
     aspect-ratio: 1 / 1; border-radius: 4px; background: var(--bg-soft);
   }
-  .hm-cell[data-v="1"] { background: #DAE5DC; }
-  .hm-cell[data-v="2"] { background: #A8C9B0; }
-  .hm-cell[data-v="3"] { background: #6FA67E; }
-  .hm-cell[data-v="4"] { background: #3D7D52; }
-  .hm-cell[data-v="5"] { background: #1E5F38; }
+  .hm-cell[data-v="1"] { background: color-mix(in oklab, var(--heat-base) 18%, var(--bg-soft)); }
+  .hm-cell[data-v="2"] { background: color-mix(in oklab, var(--heat-base) 38%, var(--bg-soft)); }
+  .hm-cell[data-v="3"] { background: color-mix(in oklab, var(--heat-base) 58%, var(--bg-soft)); }
+  .hm-cell[data-v="4"] { background: color-mix(in oklab, var(--heat-base) 78%, var(--bg-soft)); }
+  .hm-cell[data-v="5"] { background: var(--heat-base); }
   .heatmap-legend { display: flex; align-items: center; gap: 6px; justify-content: flex-end; font-size: 11px; color: var(--ink-3); font-family: var(--font-en); }
   .heatmap-legend .hm-cell { width: 12px; height: 12px; aspect-ratio: auto; border-radius: 3px; }
 
@@ -672,11 +691,11 @@
   .cal-day.empty { background: transparent; pointer-events: none; }
   .cal-day.future { opacity: .35; cursor: default; }
   .cal-day.today { box-shadow: 0 0 0 2px var(--ink) inset; }
-  .cal-day[data-v="1"] { background: #DAE5DC; color: #1F2937; }
-  .cal-day[data-v="2"] { background: #A8C9B0; color: #1F2937; }
-  .cal-day[data-v="3"] { background: #6FA67E; color: #fff; }
-  .cal-day[data-v="4"] { background: #3D7D52; color: #fff; }
-  .cal-day[data-v="5"] { background: #1E5F38; color: #fff; }
+  .cal-day[data-v="1"] { background: color-mix(in oklab, var(--heat-base) 18%, var(--bg-soft)); color: var(--ink); }
+  .cal-day[data-v="2"] { background: color-mix(in oklab, var(--heat-base) 38%, var(--bg-soft)); color: var(--ink); }
+  .cal-day[data-v="3"] { background: color-mix(in oklab, var(--heat-base) 58%, var(--bg-soft)); color: var(--bg); }
+  .cal-day[data-v="4"] { background: color-mix(in oklab, var(--heat-base) 78%, var(--bg-soft)); color: var(--bg); }
+  .cal-day[data-v="5"] { background: var(--heat-base); color: var(--bg); }
   .cal-day .cal-dot {
     position: absolute; bottom: 4px; right: 5px;
     font-size: 9px; opacity: .8; font-weight: 600;

@@ -1,5 +1,5 @@
 // Service Worker — cache-first offline support
-const VERSION = 'v6';
+const VERSION = 'v7';
 const CACHE = 'english-checkin-' + VERSION;
 
 const CORE = [
