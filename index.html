@@ -55,106 +55,207 @@
     --input-bg: #FCFBF8;
   }
 
-  /* ===== Theme: Morandi (莫兰迪) ===== */
-  body[data-theme="morandi"] {
-    --bg: #ECEAE4;
-    --bg-soft: #DCD7CC;
-    --card: #F5F2EC;
-    --ink: #3D3B36;
-    --ink-2: #5F5A52;
-    --ink-3: #908A7E;
-    --line: #D2CBBE;
-    --line-2: #E2DDD2;
-    --green: #6F8C77;
-    --green-bg: #DDE6DF;
-    --blue: #6383A0;
-    --blue-bg: #DAE2EA;
-    --tan: #B08660;
-    --tan-bg: #ECDDC9;
-    --red: #AE695F;
-    --red-bg: #ECD6D1;
-    --gray: #807A6F;
-    --gray-bg: #DBD7CD;
-    --topbar-bg: rgba(236,234,228,.88);
-    --tabbar-bg: rgba(245,242,236,.95);
-    --input-bg: #F8F5EE;
+  /* ============================================================
+     COLOR THEMES — 14 curated palettes
+     Each fully overrides bg, neutrals, AND the 5 category colors
+     ============================================================ */
+
+  /* 陶土珊瑚 — terra & coral, warm but not sweet */
+  body[data-theme="terra"] {
+    --bg: #F2E9DF; --bg-soft: #E3D5C4; --card: #FAF3E9;
+    --ink: #3A2718; --ink-2: #6B5240; --ink-3: #9C8770;
+    --line: #DBC9B5; --line-2: #ECDFCC;
+    --green: #8AA37A; --green-bg: #E0E8D7;
+    --blue: #5D7E96; --blue-bg: #D7E0E8;
+    --tan: #C97550; --tan-bg: #F0D9CC;
+    --red: #D26B5C; --red-bg: #F3D5CF;
+    --gray: #8D7A5C; --gray-bg: #E5DBCB;
+    --topbar-bg: rgba(242,233,223,.88); --tabbar-bg: rgba(250,243,233,.94);
+    --input-bg: #FBF5EC;
   }
 
-  /* ===== Theme: Ocean (海风) ===== */
-  body[data-theme="ocean"] {
-    --bg: #EBF1F6;
-    --bg-soft: #D6E2EE;
-    --card: #FFFFFF;
-    --ink: #0F2942;
-    --ink-2: #345A7E;
-    --ink-3: #7A91AB;
-    --line: #CCD9E5;
-    --line-2: #E3EAF2;
-    --green: #2E8C7A;
-    --green-bg: #D3EBE3;
-    --blue: #1B5F8A;
-    --blue-bg: #CFDEEF;
-    --tan: #C68A55;
-    --tan-bg: #F0DEC6;
-    --red: #C5544B;
-    --red-bg: #F5D8D4;
-    --gray: #6B7E92;
-    --gray-bg: #D8DFE8;
-    --topbar-bg: rgba(235,241,246,.88);
-    --tabbar-bg: rgba(255,255,255,.95);
-    --input-bg: #F7FAFC;
+  /* 青橄榄 — natural olive, calm-design */
+  body[data-theme="olive"] {
+    --bg: #F0EDE2; --bg-soft: #DDD8C7; --card: #F8F5E9;
+    --ink: #2A3320; --ink-2: #4F5A40; --ink-3: #87856B;
+    --line: #CFC9B6; --line-2: #E2DDC9;
+    --green: #5F7A3E; --green-bg: #E0E8D2;
+    --blue: #5E7383; --blue-bg: #D8DFE5;
+    --tan: #C49567; --tan-bg: #EEDEC9;
+    --red: #B25742; --red-bg: #ECD2C9;
+    --gray: #7A7560; --gray-bg: #E0DCCC;
+    --topbar-bg: rgba(240,237,226,.88); --tabbar-bg: rgba(248,245,233,.94);
+    --input-bg: #F8F5E9;
   }
 
-  /* ===== Theme: Cherry (樱粉) ===== */
-  body[data-theme="cherry"] {
-    --bg: #FBF0F2;
-    --bg-soft: #F5DEE3;
-    --card: #FFFFFF;
-    --ink: #3D2832;
-    --ink-2: #6B4956;
-    --ink-3: #A38895;
-    --line: #EFD4DB;
-    --line-2: #F7E5EA;
-    --green: #6F8C75;
-    --green-bg: #DDE5DF;
-    --blue: #7C8DAE;
-    --blue-bg: #E0E6F0;
-    --tan: #B8855E;
-    --tan-bg: #EFDFCB;
-    --red: #C45770;
-    --red-bg: #F5D7DD;
-    --gray: #806775;
-    --gray-bg: #E5DCE0;
-    --topbar-bg: rgba(251,240,242,.88);
-    --tabbar-bg: rgba(255,255,255,.95);
-    --input-bg: #FDF6F8;
+  /* 莫兰迪墨蓝 — cool professional */
+  body[data-theme="morandi-ink"] {
+    --bg: #E5EAEE; --bg-soft: #CFD7DE; --card: #EFF2F5;
+    --ink: #1F2C3A; --ink-2: #4E5C6E; --ink-3: #8090A0;
+    --line: #C9D1DB; --line-2: #DCE2E8;
+    --green: #6E8A85; --green-bg: #D8E2DF;
+    --blue: #3E5876; --blue-bg: #D2DAE3;
+    --tan: #A18570; --tan-bg: #E5DAD0;
+    --red: #A0625A; --red-bg: #E5D2CE;
+    --gray: #677483; --gray-bg: #D6DBE0;
+    --topbar-bg: rgba(229,234,238,.88); --tabbar-bg: rgba(239,242,245,.94);
+    --input-bg: #F2F5F8;
   }
 
-  /* ===== Theme: Dark (暗夜) ===== */
-  body[data-theme="dark"] {
-    --bg: #161618;
-    --bg-soft: #25252A;
-    --card: #1F1F22;
-    --ink: #E8E6E0;
-    --ink-2: #B8B5AE;
-    --ink-3: #7A776F;
-    --line: #2F2F35;
-    --line-2: #26262B;
-    --green: #5BC494;
-    --green-bg: #1E3530;
-    --blue: #6FA8DE;
-    --blue-bg: #1B304A;
-    --tan: #E0B083;
-    --tan-bg: #3A2D1F;
-    --red: #F08A82;
-    --red-bg: #3A201E;
-    --gray: #9C9A95;
-    --gray-bg: #2A2A2F;
+  /* 灰白黑 — minimal print-friendly */
+  body[data-theme="mono"] {
+    --bg: #F4F4F1; --bg-soft: #E0E0DC; --card: #FFFFFF;
+    --ink: #1A1A1A; --ink-2: #4A4A4A; --ink-3: #8A8A8A;
+    --line: #D8D8D4; --line-2: #ECECE8;
+    --green: #5A6B5A; --green-bg: #DEE3DE;
+    --blue: #4A5566; --blue-bg: #DBDFE5;
+    --tan: #8C7A60; --tan-bg: #E5DFD3;
+    --red: #8A3F36; --red-bg: #E5CFCC;
+    --gray: #5C5C5C; --gray-bg: #DCDCDC;
+    --topbar-bg: rgba(244,244,241,.88); --tabbar-bg: rgba(255,255,255,.94);
+    --input-bg: #FAFAF8;
+  }
+
+  /* 英伦蓝红 — academic, study-themed */
+  body[data-theme="britain"] {
+    --bg: #ECF0F5; --bg-soft: #D5DCE5; --card: #FFFFFF;
+    --ink: #14253D; --ink-2: #3A4D6C; --ink-3: #7F8FA8;
+    --line: #CCD5E0; --line-2: #E0E5ED;
+    --green: #2F5240; --green-bg: #D5DFD8;
+    --blue: #14366D; --blue-bg: #CFD8E6;
+    --tan: #B07A3C; --tan-bg: #EEDFC9;
+    --red: #B5322B; --red-bg: #ECD0CC;
+    --gray: #4A5970; --gray-bg: #D6DAE2;
+    --topbar-bg: rgba(236,240,245,.88); --tabbar-bg: rgba(255,255,255,.94);
+    --input-bg: #F7F9FC;
+  }
+
+  /* 雾蓝奶油 — light morning */
+  body[data-theme="mist"] {
+    --bg: #ECF1F5; --bg-soft: #D2DCE5; --card: #FFFCF5;
+    --ink: #1A2942; --ink-2: #455C7C; --ink-3: #8898AE;
+    --line: #CDD7E0; --line-2: #E2E8ED;
+    --green: #8AAA90; --green-bg: #DFE9E2;
+    --blue: #5683A8; --blue-bg: #D5DFE9;
+    --tan: #D9A582; --tan-bg: #F0DECF;
+    --red: #C75A4F; --red-bg: #EED4CF;
+    --gray: #6E8095; --gray-bg: #D8DFE5;
+    --topbar-bg: rgba(236,241,245,.88); --tabbar-bg: rgba(255,252,245,.94);
+    --input-bg: #FAFCFE;
+  }
+
+  /* 月白静灰 — long-screen friendly */
+  body[data-theme="silent-grey"] {
+    --bg: #EDECE5; --bg-soft: #D8D7CD; --card: #F7F5EE;
+    --ink: #2A2D26; --ink-2: #525547; --ink-3: #8C8E80;
+    --line: #CFCEC0; --line-2: #E2E0D3;
+    --green: #6F7A5E; --green-bg: #DCE0D2;
+    --blue: #5C7B89; --blue-bg: #D5DFE3;
+    --tan: #B59778; --tan-bg: #E8DDD0;
+    --red: #A35648; --red-bg: #E5CFC8;
+    --gray: #74756B; --gray-bg: #DAD9CF;
+    --topbar-bg: rgba(237,236,229,.88); --tabbar-bg: rgba(247,245,238,.94);
+    --input-bg: #F7F5EE;
+  }
+
+  /* 蜂蜜柚子 — warm honey */
+  body[data-theme="honey"] {
+    --bg: #FAF2DC; --bg-soft: #F1E3BE; --card: #FEF8E6;
+    --ink: #3D2A12; --ink-2: #6E552A; --ink-3: #A38B5E;
+    --line: #E8D6B0; --line-2: #F2E7CB;
+    --green: #76864A; --green-bg: #E2E5C9;
+    --blue: #2D4A6B; --blue-bg: #CFD7E0;
+    --tan: #D08F2C; --tan-bg: #F2DEB8;
+    --red: #C75D2F; --red-bg: #F0D2C0;
+    --gray: #80654A; --gray-bg: #E2D6C3;
+    --topbar-bg: rgba(250,242,220,.88); --tabbar-bg: rgba(254,248,230,.94);
+    --input-bg: #FBF5DE;
+  }
+
+  /* 橘子汽水 — vibrant fresh */
+  body[data-theme="soda"] {
+    --bg: #EEF3F8; --bg-soft: #D7E1EC; --card: #FFFFFF;
+    --ink: #1F2F45; --ink-2: #4A5C75; --ink-3: #8694A8;
+    --line: #CDD8E3; --line-2: #E2E9F0;
+    --green: #4FA791; --green-bg: #D8EBE5;
+    --blue: #2371C5; --blue-bg: #CDDDF0;
+    --tan: #E07835; --tan-bg: #F5D8C0;
+    --red: #D94535; --red-bg: #F5D0CB;
+    --gray: #6B7A8C; --gray-bg: #D8DEE5;
+    --topbar-bg: rgba(238,243,248,.88); --tabbar-bg: rgba(255,255,255,.94);
+    --input-bg: #F8FAFC;
+  }
+
+  /* 芋泥雾蓝 — soft pastel memorable */
+  body[data-theme="taro"] {
+    --bg: #ECEAF2; --bg-soft: #D8D4E2; --card: #F7F5FB;
+    --ink: #2F2840; --ink-2: #574E73; --ink-3: #918CA8;
+    --line: #D3CEDE; --line-2: #E5E1EB;
+    --green: #7E8475; --green-bg: #DCDED5;
+    --blue: #4F5F8C; --blue-bg: #D2D7E2;
+    --tan: #C5A77E; --tan-bg: #EBDFCB;
+    --red: #B85565; --red-bg: #ECD0D5;
+    --gray: #756B8C; --gray-bg: #DCD7E2;
+    --topbar-bg: rgba(236,234,242,.88); --tabbar-bg: rgba(247,245,251,.94);
+    --input-bg: #F9F7FC;
+  }
+
+  /* 柿红云霜 — high contrast bold */
+  body[data-theme="persimmon"] {
+    --bg: #F3EEE2; --bg-soft: #E5DCC8; --card: #FFFCF5;
+    --ink: #2F1815; --ink-2: #5C3530; --ink-3: #9C7D78;
+    --line: #DDCFB8; --line-2: #ECE0CC;
+    --green: #355E3B; --green-bg: #D6E0D5;
+    --blue: #1B2E4C; --blue-bg: #CCD2DD;
+    --tan: #C4612F; --tan-bg: #EFD5C3;
+    --red: #B0322A; --red-bg: #ECCFCB;
+    --gray: #4A4844; --gray-bg: #D8D6CF;
+    --topbar-bg: rgba(243,238,226,.88); --tabbar-bg: rgba(255,252,245,.94);
+    --input-bg: #FBF6E8;
+  }
+
+  /* 浅麦咖啡 — warm coffee */
+  body[data-theme="wheat-coffee"] {
+    --bg: #F2EAD7; --bg-soft: #E0D3B5; --card: #FAF3DF;
+    --ink: #3A2614; --ink-2: #6B4D2A; --ink-3: #9F8662;
+    --line: #DBC8A8; --line-2: #ECDFC4;
+    --green: #5B6B3D; --green-bg: #DDE2C9;
+    --blue: #6A7A85; --blue-bg: #D8DCE2;
+    --tan: #8B5A2B; --tan-bg: #E8D5BC;
+    --red: #A04534; --red-bg: #ECCFC4;
+    --gray: #6F5A45; --gray-bg: #E0D6C3;
+    --topbar-bg: rgba(242,234,215,.88); --tabbar-bg: rgba(250,243,223,.94);
+    --input-bg: #FBF4DE;
+  }
+
+  /* 红丝绒 — deep velvet bold */
+  body[data-theme="velvet"] {
+    --bg: #EFE8DC; --bg-soft: #DCD0BC; --card: #FAF3E5;
+    --ink: #2A1815; --ink-2: #5A3735; --ink-3: #9C7D77;
+    --line: #D8C7B0; --line-2: #ECDFCB;
+    --green: #2D5740; --green-bg: #D2E0D5;
+    --blue: #2F3A5C; --blue-bg: #CFD2DE;
+    --tan: #8E5A2F; --tan-bg: #E8D5BC;
+    --red: #8B2D2D; --red-bg: #ECCDCD;
+    --gray: #5A4848; --gray-bg: #DBD3D0;
+    --topbar-bg: rgba(239,232,220,.88); --tabbar-bg: rgba(250,243,229,.94);
+    --input-bg: #FBF5E5;
+  }
+
+  /* 黑底撞色 — dark accent bold */
+  body[data-theme="bold-dark"] {
+    --bg: #0F0F12; --bg-soft: #1E1E24; --card: #1A1A1F;
+    --ink: #F0EFE8; --ink-2: #BFBDB3; --ink-3: #7D7B73;
+    --line: #2A2A30; --line-2: #232328;
+    --green: #5DE6B0; --green-bg: #173028;
+    --blue: #5DAFFF; --blue-bg: #15293F;
+    --tan: #FFAA50; --tan-bg: #3A2818;
+    --red: #FF7373; --red-bg: #381F1F;
+    --gray: #A8A8B0; --gray-bg: #25252A;
     --shadow: 0 1px 3px rgba(0,0,0,.4), 0 4px 12px rgba(0,0,0,.3);
     --shadow-lg: 0 8px 28px rgba(0,0,0,.5);
-    --topbar-bg: rgba(22,22,24,.88);
-    --tabbar-bg: rgba(31,31,34,.94);
-    --input-bg: #25252A;
+    --topbar-bg: rgba(15,15,18,.88); --tabbar-bg: rgba(26,26,31,.94);
+    --input-bg: #1E1E24;
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -981,8 +1082,13 @@
   <section class="view" id="view-settings">
     <div class="set-card">
       <h3>配色主题</h3>
-      <p style="font-size:12.5px;color:var(--ink-2);margin:4px 0 10px">点一下切换,立刻生效。</p>
-      <div id="theme-picker" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px"></div>
+      <div class="set-row" style="border-top:none;padding-top:4px">
+        <div>
+          <div class="label" id="current-theme-name">--</div>
+          <div class="hint">点右边可换。只切换视觉,数据不受影响。</div>
+        </div>
+        <button type="button" id="open-theme-picker" class="action" style="padding:6px 14px;border-radius:8px;border:1px solid var(--line);background:var(--card);font-size:13px;font-weight:600">选择配色</button>
+      </div>
     </div>
 
     <div class="set-card">
@@ -1128,6 +1234,19 @@
       <button class="btn-primary" id="modal-copy">复制</button>
       <button class="btn-outline" id="modal-close">关闭</button>
     </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="theme-modal-bg">
+  <div class="modal" style="max-width:680px;max-height:88vh">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+      <div>
+        <h3 style="margin:0">选择配色</h3>
+        <p style="font-size:12px;color:var(--ink-3);margin:4px 0 0">只切换视觉主题,已有训练数据不会变化。</p>
+      </div>
+      <button type="button" id="theme-modal-close" style="width:30px;height:30px;border-radius:50%;background:var(--bg-soft);color:var(--ink-2);font-size:16px;flex-shrink:0">×</button>
+    </div>
+    <div id="theme-picker-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px"></div>
   </div>
 </div>
 
@@ -1310,6 +1429,13 @@ function elapsedOf(t) {
   return (t.accumulated || 0) + (t.running ? (Date.now() - t.startedAt) / 1000 : 0);
 }
 function remainingOf(t) { return Math.max(0, t.target - elapsedOf(t)); }
+
+// Read live category colors from CSS variables so charts follow the theme
+function themeCatColors() {
+  const cs = getComputedStyle(document.documentElement);
+  const pick = name => cs.getPropertyValue('--' + name).trim() || '#888';
+  return { green: pick('green'), blue: pick('blue'), tan: pick('tan'), red: pick('red'), gray: pick('gray') };
+}
 
 // Combined elapsed: max of recorded (dayState) and live timer
 function effectiveElapsed(taskId) {
@@ -1662,7 +1788,7 @@ function renderSummaryPie(data) {
   const canvas = $('#sum-pie'); if (!canvas) return;
 
   const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
-  const catColors = { green:'#2D6A4F', blue:'#1E5FAE', tan:'#B07A3C', red:'#B5322B', gray:'#6B7280' };
+  const catColors = themeCatColors();
   const catTime = { green:0, blue:0, tan:0, red:0, gray:0 };
   TASKS.forEach(t => {
     const sec = data.tasks[t.id]?.elapsed || 0;
@@ -1724,7 +1850,7 @@ function renderDailyPie() {
   const canvas = $('#daily-pie'); if (!canvas) return;
 
   const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
-  const catColors = { green:'#2D6A4F', blue:'#1E5FAE', tan:'#B07A3C', red:'#B5322B', gray:'#6B7280' };
+  const catColors = themeCatColors();
   const catTime = { green:0, blue:0, tan:0, red:0, gray:0 };
   TASKS.forEach(t => {
     const sec = effectiveElapsed(t.id);
@@ -2206,7 +2332,7 @@ function buildReportHTML(forDate) {
 
   // category time aggregation
   const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
-  const catColors = { green:'#2D6A4F', blue:'#1E5FAE', tan:'#B07A3C', red:'#B5322B', gray:'#6B7280' };
+  const catColors = themeCatColors();
   const catTime = { green:0, blue:0, tan:0, red:0, gray:0 };
   const catDone = { green:0, blue:0, tan:0, red:0, gray:0 };
   const catTotal = { green:0, blue:0, tan:0, red:0, gray:0 };
@@ -2615,7 +2741,8 @@ function refreshAnalytics() {
   // category completion
   const cats = ['green', 'blue', 'tan', 'red'];
   const catNames = ['夏洛克', '雅思', '输出', '短视频'];
-  const catColors = ['#2D6A4F', '#1E5FAE', '#B07A3C', '#B5322B'];
+  const themeCols = themeCatColors();
+  const catColors = [themeCols.green, themeCols.blue, themeCols.tan, themeCols.red];
   const catData = cats.map(cat => {
     const tasksInCat = TASKS.filter(t => t.cat === cat);
     let totalSlots = tasksInCat.length * days.length, doneSlots = 0;
@@ -2645,8 +2772,8 @@ function refreshAnalytics() {
     data: {
       labels: days.map(d => d.slice(5)),
       datasets: [
-        { type: 'bar', label: '用时 (分钟)', data: timeMin, backgroundColor: 'rgba(30,95,174,.7)', borderRadius: 4, yAxisID: 'y' },
-        { type: 'line', label: '错题数', data: errCnt, borderColor: '#B5322B', backgroundColor: '#B5322B', tension: .3, yAxisID: 'y1', pointRadius: 3 }
+        { type: 'bar', label: '用时 (分钟)', data: timeMin, backgroundColor: themeCols.blue, borderRadius: 4, yAxisID: 'y' },
+        { type: 'line', label: '错题数', data: errCnt, borderColor: themeCols.red, backgroundColor: themeCols.red, tension: .3, yAxisID: 'y1', pointRadius: 3 }
       ]
     },
     options: {
@@ -2669,7 +2796,7 @@ function refreshAnalytics() {
       type: 'bar',
       data: {
         labels: sorted.map(([k]) => k),
-        datasets: [{ data: sorted.map(([,v]) => v), backgroundColor: '#B5322B', borderRadius: 4 }]
+        datasets: [{ data: sorted.map(([,v]) => v), backgroundColor: themeCols.red, borderRadius: 4 }]
       },
       options: {
         indexAxis: 'y',
@@ -2683,13 +2810,14 @@ function refreshAnalytics() {
   }
 
   // IELTS completion
+  const lineColor = getComputedStyle(document.documentElement).getPropertyValue('--line').trim() || '#E5E7EB';
   const setComp = ielts.map(row => row.filter(Boolean).length);
   if (charts.ielts) charts.ielts.destroy();
   charts.ielts = new Chart($('#chart-ielts'), {
     type: 'bar',
     data: {
       labels: setComp.map((_, i) => 'S' + (i+1)),
-      datasets: [{ data: setComp, backgroundColor: setComp.map(v => v === 9 ? '#2D6A4F' : v >= 5 ? '#1E5FAE' : v > 0 ? '#B07A3C' : '#E5E7EB'), borderRadius: 4 }]
+      datasets: [{ data: setComp, backgroundColor: setComp.map(v => v === 9 ? themeCols.green : v >= 5 ? themeCols.blue : v > 0 ? themeCols.tan : lineColor), borderRadius: 4 }]
     },
     options: {
       plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.parsed.y}/9 步` } } },
@@ -2749,7 +2877,7 @@ function refreshWeek() {
   // Aggregate per-day data
   const cats = ['green','blue','tan','red','gray'];
   const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
-  const catColors = { green:'#2D6A4F', blue:'#1E5FAE', tan:'#B07A3C', red:'#B5322B', gray:'#6B7280' };
+  const catColors = themeCatColors();
 
   const perDay = days.map(d => {
     const data = LS.get(KEYS.day(d), { tasks: {} });
@@ -2847,7 +2975,7 @@ function refreshWeek() {
         type: 'bar',
         data: {
           labels: tagList.map(([k]) => k),
-          datasets: [{ data: tagList.map(([,v]) => v), backgroundColor: '#B5322B', borderRadius: 4 }]
+          datasets: [{ data: tagList.map(([,v]) => v), backgroundColor: catColors.red, borderRadius: 4 }]
         },
         options: {
           indexAxis: 'y', animation: { duration: 250 },
@@ -2960,49 +3088,80 @@ $('#btn-wk-prompt').onclick = () => {
    ============================================================ */
 
 // ===== Color themes =====
+// Each entry: id (matches CSS body[data-theme="id"]), name, desc, 5 swatch colors (bg/green/blue/tan/red)
 const THEMES = [
-  { id: 'warm',    name: '暖米',   colors: ['#F7F5F0', '#2D6A4F', '#1E5FAE', '#B07A3C'] },
-  { id: 'morandi', name: '莫兰迪', colors: ['#ECEAE4', '#6F8C77', '#6383A0', '#B08660'] },
-  { id: 'ocean',   name: '海风',   colors: ['#EBF1F6', '#2E8C7A', '#1B5F8A', '#C68A55'] },
-  { id: 'cherry',  name: '樱粉',   colors: ['#FBF0F2', '#6F8C75', '#7C8DAE', '#B8855E'] },
-  { id: 'dark',    name: '暗夜',   colors: ['#161618', '#5BC494', '#6FA8DE', '#E0B083'] },
+  { id: 'warm',         name: '暖米',       desc: '默认温润感,适合日常长时间用',         colors: ['#F7F5F0','#2D6A4F','#1E5FAE','#B07A3C','#B5322B'] },
+  { id: 'terra',        name: '陶土珊瑚',   desc: '暖色但不甜腻,适合输出复盘',           colors: ['#F2E9DF','#8AA37A','#5D7E96','#C97550','#D26B5C'] },
+  { id: 'olive',        name: '青橄榄',     desc: '自然、稳、带一点设计感',               colors: ['#F0EDE2','#5F7A3E','#5E7383','#C49567','#B25742'] },
+  { id: 'morandi-ink',  name: '莫兰迪墨蓝', desc: '冷静、专业,减少视觉疲劳',             colors: ['#E5EAEE','#6E8A85','#3E5876','#A18570','#A0625A'] },
+  { id: 'mono',         name: '灰白黑',     desc: '极简、清醒,适合打印和长文',           colors: ['#F4F4F1','#5A6B5A','#4A5566','#8C7A60','#8A3F36'] },
+  { id: 'britain',      name: '英伦蓝红',   desc: '更有学习主题感,适合雅思',             colors: ['#ECF0F5','#2F5240','#14366D','#B07A3C','#B5322B'] },
+  { id: 'mist',         name: '雾蓝奶油',   desc: '轻、干净,带一点早晨感',               colors: ['#ECF1F5','#8AAA90','#5683A8','#D9A582','#C75A4F'] },
+  { id: 'silent-grey',  name: '月白静灰',   desc: '月白底、灰绿影,适合长时间盯屏',       colors: ['#EDECE5','#6F7A5E','#5C7B89','#B59778','#A35648'] },
+  { id: 'honey',        name: '蜂蜜柚子',   desc: '奶黄底配橙柚,明亮但不刺眼',           colors: ['#FAF2DC','#76864A','#2D4A6B','#D08F2C','#C75D2F'] },
+  { id: 'soda',         name: '橘子汽水',   desc: '橙蓝撞色,清爽一点的活力感',           colors: ['#EEF3F8','#4FA791','#2371C5','#E07835','#D94535'] },
+  { id: 'taro',         name: '芋泥雾蓝',   desc: '紫蓝和奶黄,柔和但有记忆点',           colors: ['#ECEAF2','#7E8475','#4F5F8C','#C5A77E','#B85565'] },
+  { id: 'persimmon',    name: '柿红云霜',   desc: '红白米色,高对比但留白多',             colors: ['#F3EEE2','#355E3B','#1B2E4C','#C4612F','#B0322A'] },
+  { id: 'wheat-coffee', name: '浅麦咖啡',   desc: '麦黄、奶杏、深咖,温暖但更沉稳',       colors: ['#F2EAD7','#5B6B3D','#6A7A85','#8B5A2B','#A04534'] },
+  { id: 'velvet',       name: '红丝绒',     desc: '深红、云米霜、炭巧棕,更大胆一点',     colors: ['#EFE8DC','#2D5740','#2F3A5C','#8E5A2F','#8B2D2D'] },
+  { id: 'bold-dark',    name: '黑底撞色',   desc: '黑底、青绿、奶油和淡紫,适合夜间',     colors: ['#0F0F12','#5DE6B0','#5DAFFF','#FFAA50','#FF7373'] },
 ];
 
 function applyTheme(id) {
   if (id === 'warm' || !id) document.body.removeAttribute('data-theme');
   else document.body.setAttribute('data-theme', id);
   localStorage.setItem('theme', id || 'warm');
-  // refresh charts that use CSS-aware colors (currently they use hardcoded hex, so this is mostly visual)
-  if (typeof renderDailyPie === 'function') { _lastDailyPieSig = ''; renderDailyPie(); }
+  const t = THEMES.find(x => x.id === (id || 'warm'));
+  const lbl = $('#current-theme-name');
+  if (lbl && t) lbl.textContent = t.name;
+  // re-render all charts with the new theme colors (charts read CSS vars)
+  setTimeout(() => {
+    _lastDailyPieSig = '';
+    if (typeof renderDailyPie === 'function') renderDailyPie();
+    if (typeof refreshSummary === 'function' && document.querySelector('#view-summary.active')) refreshSummary();
+    if (typeof refreshWeek === 'function' && document.querySelector('#view-weekly.active')) refreshWeek();
+    if (typeof refreshAnalytics === 'function' && document.querySelector('#view-analytics.active')) refreshAnalytics();
+  }, 50);
 }
 
 function renderThemePicker() {
-  const wrap = $('#theme-picker'); if (!wrap) return;
+  const grid = $('#theme-picker-grid'); if (!grid) return;
   const current = localStorage.getItem('theme') || 'warm';
-  wrap.innerHTML = THEMES.map(t => {
+  grid.innerHTML = THEMES.map(t => {
     const isSel = t.id === current;
     return `<button type="button" data-theme-id="${t.id}" style="
-      padding:8px 4px;border-radius:10px;border:2px solid ${isSel ? 'var(--ink)' : 'var(--line)'};
-      background:var(--card);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;
-      transition:border-color .15s">
-      <div style="display:flex;gap:2px">
-        ${t.colors.map(c => `<span style="width:10px;height:18px;background:${c};border-radius:2px;border:1px solid rgba(0,0,0,.06)"></span>`).join('')}
+      padding:14px 14px 12px;border-radius:14px;border:2px solid ${isSel ? 'var(--ink)' : 'var(--line)'};
+      background:var(--card);cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:8px;
+      transition:border-color .15s;font-family:inherit;color:inherit">
+      <div style="display:flex;gap:5px">
+        ${t.colors.map(c => `<span style="width:18px;height:18px;background:${c};border-radius:50%;border:1px solid rgba(0,0,0,.08);box-shadow:0 1px 2px rgba(0,0,0,.04)"></span>`).join('')}
       </div>
-      <span style="font-size:11px;color:var(--ink);font-weight:${isSel ? '600' : '500'}">${t.name}</span>
+      <div style="font-weight:700;font-size:14px;color:var(--ink);margin-top:2px">${t.name}</div>
+      <div style="font-size:11.5px;color:var(--ink-3);line-height:1.4">${t.desc}</div>
     </button>`;
   }).join('');
-  wrap.querySelectorAll('button[data-theme-id]').forEach(b => {
+  grid.querySelectorAll('button[data-theme-id]').forEach(b => {
     b.onclick = () => {
-      applyTheme(b.dataset.themeId);
+      const id = b.dataset.themeId;
+      applyTheme(id);
       renderThemePicker();
-      toast('已切换到「' + THEMES.find(t => t.id === b.dataset.themeId).name + '」');
+      toast('已切换到「' + THEMES.find(t => t.id === id).name + '」');
     };
   });
 }
 
 // Apply saved theme immediately on load
 applyTheme(localStorage.getItem('theme') || 'warm');
-renderThemePicker();
+
+// Open / close theme modal
+$('#open-theme-picker')?.addEventListener('click', () => {
+  renderThemePicker();
+  $('#theme-modal-bg').classList.add('show');
+});
+$('#theme-modal-close')?.addEventListener('click', () => $('#theme-modal-bg').classList.remove('show'));
+$('#theme-modal-bg')?.addEventListener('click', e => {
+  if (e.target.id === 'theme-modal-bg') $('#theme-modal-bg').classList.remove('show');
+});
 
 ['beep', 'vibrate', 'warn', 'srs', 'backupNag'].forEach(k => {
   const sw = $('#sw-' + (k === 'backupNag' ? 'backup-nag' : k));
