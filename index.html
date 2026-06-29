@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1" />
-<meta name="theme-color" content="#1F2937" />
+<meta name="theme-color" content="#2F7D6B" />
 <title>英语训练每日打卡</title>
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="icon" type="image/svg+xml" href="icon.svg" />
@@ -19,25 +19,25 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js" defer></script>
 <style>
   :root {
-    --bg: #F7F5F0;
-    --bg-soft: #EFEBE3;
-    --card: #FFFFFF;
-    --ink: #1F2937;
-    --ink-2: #4B5563;
-    --ink-3: #9CA3AF;
-    --line: #E5E7EB;
-    --line-2: #F1EFEA;
+    --bg: #EEF4F2;
+    --bg-soft: #DCE9E5;
+    --card: #FFFCF7;
+    --ink: #24312F;
+    --ink-2: #52615E;
+    --ink-3: #8B9995;
+    --line: #CAD8D4;
+    --line-2: #E3ECE9;
 
-    --green: #2D6A4F;   /* 夏洛克 */
-    --green-bg: #E8F1EC;
-    --blue: #1E5FAE;    /* 雅思 */
-    --blue-bg: #E6EEF8;
-    --tan: #B07A3C;     /* 输出 */
-    --tan-bg: #F5EBDC;
-    --red: #B5322B;     /* 短视频 */
-    --red-bg: #F8E6E4;
-    --gray: #6B7280;    /* 总结 */
-    --gray-bg: #ECECEA;
+    --green: #2F7D6B;   /* 夏洛克 */
+    --green-bg: #DCEEE8;
+    --blue: #3B6EA8;    /* 雅思 */
+    --blue-bg: #DDE8F4;
+    --tan: #D48A3A;     /* 输出 */
+    --tan-bg: #F4E2C8;
+    --red: #C64F5A;     /* 短视频 */
+    --red-bg: #F3D8DB;
+    --gray: #75808A;    /* 总结 */
+    --gray-bg: #E2E7E7;
 
     --shadow: 0 1px 2px rgba(15,23,42,.04), 0 4px 12px rgba(15,23,42,.04);
     --shadow-lg: 0 8px 28px rgba(15,23,42,.10);
@@ -50,9 +50,9 @@
     --font-cn: -apple-system, "SF Pro SC", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
     --font-en: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-    --topbar-bg: rgba(247,245,240,.86);
-    --tabbar-bg: rgba(255,255,255,.94);
-    --input-bg: #FCFBF8;
+    --topbar-bg: rgba(238,244,242,.88);
+    --tabbar-bg: rgba(255,252,247,.95);
+    --input-bg: #F7FBF9;
     /* Heatmap base color — themes can override to fit palette */
     --heat-base: var(--green);
     --task-tint: 8%;   /* % of category color mixed into task card bg */
@@ -1471,11 +1471,24 @@ function elapsedOf(t) {
 }
 function remainingOf(t) { return Math.max(0, t.target - elapsedOf(t)); }
 
-// Read live category colors from CSS variables so charts follow the theme
-function themeCatColors() {
+// Read live colors from CSS variables so charts and report output follow the theme
+function themeVars() {
   const cs = getComputedStyle(document.documentElement);
   const pick = name => cs.getPropertyValue('--' + name).trim() || '#888';
-  return { green: pick('green'), blue: pick('blue'), tan: pick('tan'), red: pick('red'), gray: pick('gray') };
+  return {
+    bg: pick('bg'), bgSoft: pick('bg-soft'), card: pick('card'),
+    ink: pick('ink'), ink2: pick('ink-2'), ink3: pick('ink-3'),
+    line: pick('line'), line2: pick('line-2'),
+    green: pick('green'), greenBg: pick('green-bg'),
+    blue: pick('blue'), blueBg: pick('blue-bg'),
+    tan: pick('tan'), tanBg: pick('tan-bg'),
+    red: pick('red'), redBg: pick('red-bg'),
+    gray: pick('gray'), grayBg: pick('gray-bg')
+  };
+}
+function themeCatColors() {
+  const t = themeVars();
+  return { green: t.green, blue: t.blue, tan: t.tan, red: t.red, gray: t.gray };
 }
 
 // Combined elapsed: max of recorded (dayState) and live timer
@@ -1829,6 +1842,7 @@ function renderSummaryPie(data) {
   const canvas = $('#sum-pie'); if (!canvas) return;
 
   const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
+  const theme = themeVars();
   const catColors = themeCatColors();
   const catTime = { green:0, blue:0, tan:0, red:0, gray:0 };
   TASKS.forEach(t => {
@@ -1867,7 +1881,7 @@ function renderSummaryPie(data) {
       datasets: [{
         data: entries.map(([,v]) => Math.round(v / 60)),
         backgroundColor: entries.map(([c]) => catColors[c]),
-        borderColor: '#fff',
+        borderColor: theme.card,
         borderWidth: 2
       }]
     },
@@ -1891,6 +1905,7 @@ function renderDailyPie() {
   const canvas = $('#daily-pie'); if (!canvas) return;
 
   const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
+  const theme = themeVars();
   const catColors = themeCatColors();
   const catTime = { green:0, blue:0, tan:0, red:0, gray:0 };
   TASKS.forEach(t => {
@@ -1938,11 +1953,12 @@ function renderDailyPie() {
     dailyPieChart.data.labels = labels;
     dailyPieChart.data.datasets[0].data = dataArr;
     dailyPieChart.data.datasets[0].backgroundColor = colors;
+    dailyPieChart.data.datasets[0].borderColor = theme.card;
     dailyPieChart.update('none');
   } else {
     dailyPieChart = new Chart(canvas, {
       type: 'doughnut',
-      data: { labels, datasets: [{ data: dataArr, backgroundColor: colors, borderColor: '#fff', borderWidth: 2 }] },
+      data: { labels, datasets: [{ data: dataArr, backgroundColor: colors, borderColor: theme.card, borderWidth: 2 }] },
       options: {
         animation: false,
         responsive: false,
@@ -2373,6 +2389,7 @@ function buildReportHTML(forDate) {
 
   // category time aggregation
   const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
+  const theme = themeVars();
   const catColors = themeCatColors();
   const catTime = { green:0, blue:0, tan:0, red:0, gray:0 };
   const catDone = { green:0, blue:0, tan:0, red:0, gray:0 };
@@ -2396,7 +2413,7 @@ function buildReportHTML(forDate) {
   // Build inline SVG donut (no Chart.js needed in print view → always renders)
   function svgDonut(entries, size = 180) {
     const total = entries.reduce((s, [,v]) => s + v, 0);
-    if (total === 0) return `<div style="height:${size}px;display:flex;align-items:center;justify-content:center;color:#9CA3AF;font-size:12px">暂无用时数据</div>`;
+    if (total === 0) return `<div style="height:${size}px;display:flex;align-items:center;justify-content:center;color:${theme.ink3};font-size:12px">暂无用时数据</div>`;
     const cx = size/2, cy = size/2, r = size*0.42, ir = size*0.27;
     let startAngle = -Math.PI / 2;
     const paths = entries.map(([color, value]) => {
@@ -2409,38 +2426,38 @@ function buildReportHTML(forDate) {
       const ix2 = cx + ir * Math.cos(endAngle),   iy2 = cy + ir * Math.sin(endAngle);
       const path = `M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 ${largeArc} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} L ${ix2.toFixed(2)} ${iy2.toFixed(2)} A ${ir} ${ir} 0 ${largeArc} 0 ${ix1.toFixed(2)} ${iy1.toFixed(2)} Z`;
       startAngle = endAngle;
-      return `<path d="${path}" fill="${color}" stroke="#fff" stroke-width="1.5"/>`;
+      return `<path d="${path}" fill="${color}" stroke="${theme.card}" stroke-width="1.5"/>`;
     }).join('');
     return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto">
       ${paths}
-      <text x="${cx}" y="${cy - 2}" text-anchor="middle" font-size="20" font-weight="700" fill="#1F2937" font-family="ui-monospace,monospace">${total}</text>
-      <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="9" fill="#9CA3AF" letter-spacing="1">MIN</text>
+      <text x="${cx}" y="${cy - 2}" text-anchor="middle" font-size="20" font-weight="700" fill="${theme.ink}" font-family="ui-monospace,monospace">${total}</text>
+      <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="9" fill="${theme.ink3}" letter-spacing="1">MIN</text>
     </svg>`;
   }
   const pieEntries = Object.entries(catTime).filter(([,v]) => v > 0).map(([c, v]) => [catColors[c], v]);
   const pieLegend = Object.entries(catTime).filter(([,v]) => v > 0).sort((a,b) => b[1]-a[1]).map(([c, v]) => {
     const pct = Math.round(v / Object.values(catTime).reduce((s,x)=>s+x,0) * 100);
-    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid #F1EFEA;font-size:11.5px">
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid ${theme.line2};font-size:11.5px">
       <span><span style="display:inline-block;width:8px;height:8px;background:${catColors[c]};border-radius:50%;margin-right:6px;vertical-align:1px"></span>${catLabels[c]}</span>
-      <span style="color:#6B7280;font-family:ui-monospace,monospace">${v}min · ${pct}%</span>
+      <span style="color:${theme.ink2};font-family:ui-monospace,monospace">${v}min · ${pct}%</span>
     </div>`;
   }).join('');
 
   // build done tasks 2-col grid
   const doneCards = done.map(t => `
-    <div style="background:#fff;border:1px solid #E5E7EB;border-left:4px solid ${catColors[t.cat]};
+    <div style="background:${theme.card};border:1px solid ${theme.line};border-left:4px solid ${catColors[t.cat]};
                 border-radius:8px;padding:10px 12px;break-inside:avoid;page-break-inside:avoid">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px">
         <div style="font-weight:600;font-size:13px">
-          <span style="color:#9CA3AF;font-family:ui-monospace,monospace;margin-right:6px">${String(t.id).padStart(2,'0')}</span>${t.title}
+          <span style="color:${theme.ink3};font-family:ui-monospace,monospace;margin-right:6px">${String(t.id).padStart(2,'0')}</span>${t.title}
         </div>
         <span style="font-size:10px;font-family:ui-monospace,monospace;background:${catColors[t.cat]}20;color:${catColors[t.cat]};padding:1px 6px;border-radius:8px">${t.tag}</span>
       </div>
-      <div style="font-size:11px;color:#6B7280;font-family:ui-monospace,monospace">
+      <div style="font-size:11px;color:${theme.ink2};font-family:ui-monospace,monospace">
         ${Math.round((data.tasks[t.id]?.elapsed || 0)/60) || 0} min
       </div>
       ${data.tasks[t.id]?.notes ? `
-        <div style="font-size:11.5px;color:#4B5563;margin-top:4px;padding-top:4px;border-top:1px dashed #E5E7EB;white-space:pre-wrap;line-height:1.5">
+        <div style="font-size:11.5px;color:${theme.ink2};margin-top:4px;padding-top:4px;border-top:1px dashed ${theme.line};white-space:pre-wrap;line-height:1.5">
           ${safeText(data.tasks[t.id].notes)}
         </div>` : ''}
     </div>
@@ -2449,39 +2466,39 @@ function buildReportHTML(forDate) {
   // build undone tasks (compact list)
   const undone = TASKS.filter(t => !data.tasks[t.id]?.done);
   const undoneList = undone.length ? `
-    <div style="margin-top:10px;font-size:11.5px;color:#9CA3AF;background:#FAFAFA;border-radius:6px;padding:8px 10px">
-      <b style="color:#6B7280">今日未完成 (${undone.length}):</b>
+    <div style="margin-top:10px;font-size:11.5px;color:${theme.ink3};background:${theme.bgSoft};border-radius:6px;padding:8px 10px">
+      <b style="color:${theme.ink2}">今日未完成 (${undone.length}):</b>
       ${undone.map(t => `${t.id}. ${t.title}`).join('  ·  ')}
     </div>` : '';
 
   // error cards
   const errCards = errs.map((e, i) => `
-    <div style="background:#fff;border:1px solid #E5E7EB;border-left:4px solid #B5322B;
+    <div style="background:${theme.card};border:1px solid ${theme.line};border-left:4px solid ${theme.red};
                 border-radius:8px;padding:11px 13px;margin-bottom:8px;break-inside:avoid;page-break-inside:avoid">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px">
-        <div style="font-size:11.5px;color:#6B7280;font-family:ui-monospace,monospace">
+        <div style="font-size:11.5px;color:${theme.ink2};font-family:ui-monospace,monospace">
           #${String(i+1).padStart(2,'0')} · 套${e.set} · ${e.section}${e.qnum?' · '+e.qnum:''} · ${confName(e.confidence)}
         </div>
         ${e.tags?.length ? `<div style="display:flex;gap:4px;flex-wrap:wrap">
-          ${e.tags.map(t => `<span style="font-size:10px;background:#F8E6E4;color:#B5322B;padding:1px 6px;border-radius:8px">${safeText(t)}</span>`).join('')}
+          ${e.tags.map(t => `<span style="font-size:10px;background:${theme.redBg};color:${theme.red};padding:1px 6px;border-radius:8px">${safeText(t)}</span>`).join('')}
         </div>` : ''}
       </div>
       ${e.right || e.mine ? `
-        <div style="display:flex;gap:14px;font-size:11.5px;margin-bottom:6px;padding:4px 8px;background:#F9FAFB;border-radius:4px">
-          <span><span style="color:#9CA3AF;margin-right:4px">正解</span>${safeText(e.right || '-')}</span>
-          <span><span style="color:#9CA3AF;margin-right:4px">我答</span>${safeText(e.mine || '-')}</span>
+        <div style="display:flex;gap:14px;font-size:11.5px;margin-bottom:6px;padding:4px 8px;background:${theme.bgSoft};border-radius:4px">
+          <span><span style="color:${theme.ink3};margin-right:4px">正解</span>${safeText(e.right || '-')}</span>
+          <span><span style="color:${theme.ink3};margin-right:4px">我答</span>${safeText(e.mine || '-')}</span>
         </div>` : ''}
       <div style="font-size:12.5px;line-height:1.55;margin-bottom:4px">
-        <span style="display:inline-block;width:36px;color:#9CA3AF;font-size:11px;vertical-align:top">误导</span>${safeText(e.trap)}
+        <span style="display:inline-block;width:36px;color:${theme.ink3};font-size:11px;vertical-align:top">误导</span>${safeText(e.trap)}
       </div>
       <div style="font-size:12.5px;line-height:1.55;margin-bottom:${e.mechanism||e.logic?'4px':'0'}">
-        <span style="display:inline-block;width:36px;color:#9CA3AF;font-size:11px;vertical-align:top">确认</span>${safeText(e.anchor)}
+        <span style="display:inline-block;width:36px;color:${theme.ink3};font-size:11px;vertical-align:top">确认</span>${safeText(e.anchor)}
       </div>
       ${e.mechanism ? `<div style="font-size:12.5px;line-height:1.55;margin-bottom:${e.logic?'4px':'0'}">
-        <span style="display:inline-block;width:36px;color:#9CA3AF;font-size:11px;vertical-align:top">机制</span>${safeText(e.mechanism)}
+        <span style="display:inline-block;width:36px;color:${theme.ink3};font-size:11px;vertical-align:top">机制</span>${safeText(e.mechanism)}
       </div>` : ''}
       ${e.logic ? `<div style="font-size:12.5px;line-height:1.55">
-        <span style="display:inline-block;width:36px;color:#9CA3AF;font-size:11px;vertical-align:top">逻辑词</span>${safeText(e.logic)}
+        <span style="display:inline-block;width:36px;color:${theme.ink3};font-size:11px;vertical-align:top">逻辑词</span>${safeText(e.logic)}
       </div>` : ''}
     </div>
   `).join('');
@@ -2493,9 +2510,9 @@ function buildReportHTML(forDate) {
       <div style="margin-bottom:8px">
         <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:3px">
           <span><span style="display:inline-block;width:6px;height:6px;background:${catColors[c]};border-radius:50%;margin-right:5px;vertical-align:1px"></span>${catLabels[c]}</span>
-          <span style="color:#6B7280;font-family:ui-monospace,monospace">${catDone[c]}/${catTotal[c]} · ${catTime[c]}min</span>
+          <span style="color:${theme.ink2};font-family:ui-monospace,monospace">${catDone[c]}/${catTotal[c]} · ${catTime[c]}min</span>
         </div>
-        <div style="height:6px;background:#F3F4F6;border-radius:3px;overflow:hidden">
+        <div style="height:6px;background:${theme.line2};border-radius:3px;overflow:hidden">
           <div style="height:100%;width:${pct}%;background:${catColors[c]};border-radius:3px"></div>
         </div>
       </div>
@@ -2506,85 +2523,85 @@ function buildReportHTML(forDate) {
     <div class="report" style="padding:24px 30px 30px">
 
       <!-- Header -->
-      <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2.5px solid #1F2937;padding-bottom:10px;margin-bottom:18px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2.5px solid ${theme.ink};padding-bottom:10px;margin-bottom:18px">
         <div>
           <div style="font-size:24px;font-weight:700;letter-spacing:.01em">英语训练日报</div>
-          <div style="font-size:11px;color:#9CA3AF;letter-spacing:.15em;font-family:ui-monospace,monospace;margin-top:4px">
+          <div style="font-size:11px;color:${theme.ink3};letter-spacing:.15em;font-family:ui-monospace,monospace;margin-top:4px">
             ${forDate} · LISTEN → JUDGE → CALIBRATE → REWRITE → SPEAK
           </div>
         </div>
         <div style="text-align:right">
-          <div style="font-size:32px;font-weight:700;font-family:ui-monospace,monospace;line-height:1">${done.length}<span style="color:#9CA3AF;font-size:18px">/16</span></div>
-          <div style="font-size:10px;color:#9CA3AF;letter-spacing:.1em;margin-top:2px">DAILY COMPLETION</div>
+          <div style="font-size:32px;font-weight:700;font-family:ui-monospace,monospace;line-height:1">${done.length}<span style="color:${theme.ink3};font-size:18px">/16</span></div>
+          <div style="font-size:10px;color:${theme.ink3};letter-spacing:.1em;margin-top:2px">DAILY COMPLETION</div>
         </div>
       </div>
 
       <!-- Top stats -->
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
-        <div style="background:#F7F5F0;padding:12px;border-radius:10px;text-align:center">
-          <div style="font-size:20px;font-weight:700;font-family:ui-monospace,monospace">${totalMin}<span style="font-size:12px;color:#9CA3AF">min</span></div>
-          <div style="font-size:10.5px;color:#6B7280;margin-top:3px">学习时长</div>
+        <div style="background:${theme.bgSoft};padding:12px;border-radius:10px;text-align:center">
+          <div style="font-size:20px;font-weight:700;font-family:ui-monospace,monospace">${totalMin}<span style="font-size:12px;color:${theme.ink3}">min</span></div>
+          <div style="font-size:10.5px;color:${theme.ink2};margin-top:3px">学习时长</div>
         </div>
-        <div style="background:#F7F5F0;padding:12px;border-radius:10px;text-align:center">
+        <div style="background:${theme.bgSoft};padding:12px;border-radius:10px;text-align:center">
           <div style="font-size:20px;font-weight:700;font-family:ui-monospace,monospace">${errs.length}</div>
-          <div style="font-size:10.5px;color:#6B7280;margin-top:3px">今日错题</div>
+          <div style="font-size:10.5px;color:${theme.ink2};margin-top:3px">今日错题</div>
         </div>
-        <div style="background:#F7F5F0;padding:12px;border-radius:10px;text-align:center">
+        <div style="background:${theme.bgSoft};padding:12px;border-radius:10px;text-align:center">
           <div style="font-size:20px;font-weight:700;font-family:ui-monospace,monospace">${computeStreak()}</div>
-          <div style="font-size:10.5px;color:#6B7280;margin-top:3px">连续天数</div>
+          <div style="font-size:10.5px;color:${theme.ink2};margin-top:3px">连续天数</div>
         </div>
-        <div style="background:#F7F5F0;padding:12px;border-radius:10px;text-align:center">
-          <div style="font-size:20px;font-weight:700;font-family:ui-monospace,monospace">${Math.round(done.length/16*100)}<span style="font-size:12px;color:#9CA3AF">%</span></div>
-          <div style="font-size:10.5px;color:#6B7280;margin-top:3px">完成度</div>
+        <div style="background:${theme.bgSoft};padding:12px;border-radius:10px;text-align:center">
+          <div style="font-size:20px;font-weight:700;font-family:ui-monospace,monospace">${Math.round(done.length/16*100)}<span style="font-size:12px;color:${theme.ink3}">%</span></div>
+          <div style="font-size:10.5px;color:${theme.ink2};margin-top:3px">完成度</div>
         </div>
       </div>
 
       <!-- Charts row: pie + completion bars -->
       <div style="display:grid;grid-template-columns:240px 1fr;gap:14px;margin-bottom:18px;break-inside:avoid;page-break-inside:avoid">
-        <div style="background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:12px">
+        <div style="background:${theme.card};border:1px solid ${theme.line};border-radius:10px;padding:12px">
           <div style="font-size:12px;font-weight:600;margin-bottom:6px">时间分配</div>
           ${svgDonut(pieEntries, 160)}
           ${pieLegend ? `<div style="margin-top:8px">${pieLegend}</div>` : ''}
         </div>
-        <div style="background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:12px 14px">
+        <div style="background:${theme.card};border:1px solid ${theme.line};border-radius:10px;padding:12px 14px">
           <div style="font-size:12px;font-weight:600;margin-bottom:10px">分类完成率 & 用时</div>
-          ${catBars || '<div style="color:#9CA3AF;font-size:12px;padding:20px 0;text-align:center">今天还没勾选任何任务</div>'}
+          ${catBars || `<div style="color:${theme.ink3};font-size:12px;padding:20px 0;text-align:center">今天还没勾选任何任务</div>`}
         </div>
       </div>
 
       <!-- Summary cards -->
       <div style="margin-bottom:18px">
-        <div style="font-size:13px;font-weight:600;color:#4B5563;margin-bottom:8px;display:flex;align-items:center;gap:8px">
-          <span style="width:3px;height:14px;background:#1F2937;border-radius:2px"></span>今日总结
+        <div style="font-size:13px;font-weight:600;color:${theme.ink2};margin-bottom:8px;display:flex;align-items:center;gap:8px">
+          <span style="width:3px;height:14px;background:${theme.ink};border-radius:2px"></span>今日总结
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div style="background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:12px;break-inside:avoid;page-break-inside:avoid">
-            <div style="font-size:10.5px;color:#9CA3AF;letter-spacing:.08em;margin-bottom:5px">MAIN ISSUE</div>
-            <div style="font-size:13px;line-height:1.65;white-space:pre-wrap;color:#1F2937;min-height:40px">
+          <div style="background:${theme.card};border:1px solid ${theme.line};border-radius:10px;padding:12px;break-inside:avoid;page-break-inside:avoid">
+            <div style="font-size:10.5px;color:${theme.ink3};letter-spacing:.08em;margin-bottom:5px">MAIN ISSUE</div>
+            <div style="font-size:13px;line-height:1.65;white-space:pre-wrap;color:${theme.ink};min-height:40px">
               ${safeText(data.summary?.main || '（未填写）')}
             </div>
           </div>
-          <div style="background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:12px;break-inside:avoid;page-break-inside:avoid">
-            <div style="font-size:10.5px;color:#9CA3AF;letter-spacing:.08em;margin-bottom:5px">TOMORROW ACTION</div>
-            <div style="font-size:13px;line-height:1.65;white-space:pre-wrap;color:#1F2937;min-height:40px">
+          <div style="background:${theme.card};border:1px solid ${theme.line};border-radius:10px;padding:12px;break-inside:avoid;page-break-inside:avoid">
+            <div style="font-size:10.5px;color:${theme.ink3};letter-spacing:.08em;margin-bottom:5px">TOMORROW ACTION</div>
+            <div style="font-size:13px;line-height:1.65;white-space:pre-wrap;color:${theme.ink};min-height:40px">
               ${safeText(data.summary?.next || '（未填写）')}
             </div>
           </div>
         </div>
         ${data.summary?.ai ? `
-          <div style="background:#FAFAF8;border:1px solid #E5E7EB;border-left:4px solid #2D6A4F;border-radius:10px;padding:12px;margin-top:10px;break-inside:avoid;page-break-inside:avoid">
-            <div style="font-size:10.5px;color:#2D6A4F;letter-spacing:.08em;margin-bottom:5px;font-weight:600">AI COACH</div>
+          <div style="background:${theme.bgSoft};border:1px solid ${theme.line};border-left:4px solid ${theme.green};border-radius:10px;padding:12px;margin-top:10px;break-inside:avoid;page-break-inside:avoid">
+            <div style="font-size:10.5px;color:${theme.green};letter-spacing:.08em;margin-bottom:5px;font-weight:600">AI COACH</div>
             <div style="font-size:12.5px;line-height:1.65;white-space:pre-wrap">${safeText(data.summary.ai)}</div>
           </div>` : ''}
       </div>
 
       <!-- Top error tags -->
       ${topTags.length ? `
-        <div style="margin-bottom:18px;background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:12px 14px;break-inside:avoid;page-break-inside:avoid">
+        <div style="margin-bottom:18px;background:${theme.card};border:1px solid ${theme.line};border-radius:10px;padding:12px 14px;break-inside:avoid;page-break-inside:avoid">
           <div style="font-size:12px;font-weight:600;margin-bottom:8px">高频错因(今日)</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             ${topTags.map(([t, n]) => `
-              <span style="background:#F8E6E4;color:#B5322B;font-size:11.5px;padding:3px 9px;border-radius:12px">
+              <span style="background:${theme.redBg};color:${theme.red};font-size:11.5px;padding:3px 9px;border-radius:12px">
                 ${safeText(t)} <b style="margin-left:4px">×${n}</b>
               </span>`).join('')}
           </div>
@@ -2592,31 +2609,31 @@ function buildReportHTML(forDate) {
 
       <!-- Completed tasks 2-column -->
       <div style="margin-bottom:18px">
-        <div style="font-size:13px;font-weight:600;color:#4B5563;margin-bottom:8px;display:flex;align-items:center;gap:8px">
-          <span style="width:3px;height:14px;background:#2D6A4F;border-radius:2px"></span>今日完成的 ${done.length} 项任务
+        <div style="font-size:13px;font-weight:600;color:${theme.ink2};margin-bottom:8px;display:flex;align-items:center;gap:8px">
+          <span style="width:3px;height:14px;background:${theme.green};border-radius:2px"></span>今日完成的 ${done.length} 项任务
         </div>
         ${done.length ? `
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${doneCards}</div>
           ${undoneList}
-        ` : `<div style="color:#9CA3AF;font-size:12px;padding:20px;text-align:center;background:#FAFAFA;border-radius:8px">今日尚未勾选任何任务</div>`}
+        ` : `<div style="color:${theme.ink3};font-size:12px;padding:20px;text-align:center;background:${theme.bgSoft};border-radius:8px">今日尚未勾选任何任务</div>`}
       </div>
 
       <!-- Errors -->
       ${errs.length ? `
         <div style="margin-bottom:8px">
-          <div style="font-size:13px;font-weight:600;color:#4B5563;margin-bottom:8px;display:flex;align-items:center;gap:8px">
-            <span style="width:3px;height:14px;background:#B5322B;border-radius:2px"></span>今日错题 (${errs.length})
+          <div style="font-size:13px;font-weight:600;color:${theme.ink2};margin-bottom:8px;display:flex;align-items:center;gap:8px">
+            <span style="width:3px;height:14px;background:${theme.red};border-radius:2px"></span>今日错题 (${errs.length})
           </div>
           ${errCards}
         </div>
       ` : `
-        <div style="background:#E8F1EC;border:1px solid #A8C9B0;border-radius:10px;padding:14px;text-align:center;color:#2D6A4F;font-size:12.5px">
+        <div style="background:${theme.greenBg};border:1px solid ${theme.green};border-radius:10px;padding:14px;text-align:center;color:${theme.green};font-size:12.5px">
           ✓ 今日 0 错题 · 状态稳
         </div>
       `}
 
       <!-- Footer -->
-      <div style="margin-top:24px;padding-top:10px;border-top:1px solid #E5E7EB;font-size:10px;color:#9CA3AF;font-family:ui-monospace,monospace;text-align:center;letter-spacing:.1em">
+      <div style="margin-top:24px;padding-top:10px;border-top:1px solid ${theme.line};font-size:10px;color:${theme.ink3};font-family:ui-monospace,monospace;text-align:center;letter-spacing:.1em">
         ENGLISH TRAINING DAILY · ${forDate} · Generated ${new Date().toLocaleString('zh-CN')}
       </div>
     </div>
@@ -2631,27 +2648,27 @@ function buildReportHTML(forDate) {
   <style>
     @page { margin: 8mm; size: A4; }
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; background: #F0EEE8; }
+    html, body { margin: 0; padding: 0; background: ${theme.bg}; }
     body {
       font-family: -apple-system, "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
-      color: #1F2937;
+      color: ${theme.ink};
       -webkit-font-smoothing: antialiased;
     }
     .toolbar {
       position: sticky; top: 0; z-index: 10;
-      background: rgba(31,41,55,.96);
-      color: #fff; padding: 10px 16px;
+      background: ${theme.ink};
+      color: ${theme.bg}; padding: 10px 16px;
       display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
       backdrop-filter: blur(10px);
     }
     .toolbar button {
-      background: #fff; color: #1F2937; border: none; border-radius: 6px;
+      background: ${theme.bg}; color: ${theme.ink}; border: none; border-radius: 6px;
       padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
       font-family: inherit;
     }
-    .toolbar .hint { font-size: 12px; color: #D1D5DB; line-height: 1.5; flex: 1; min-width: 200px; }
+    .toolbar .hint { font-size: 12px; color: ${theme.line2}; line-height: 1.5; flex: 1; min-width: 200px; }
     .page {
-      max-width: 794px; margin: 14px auto; background: #fff;
+      max-width: 794px; margin: 14px auto; background: ${theme.card};
       box-shadow: 0 4px 20px rgba(0,0,0,.08);
     }
     @media print {
@@ -2782,6 +2799,7 @@ function refreshAnalytics() {
   // category completion
   const cats = ['green', 'blue', 'tan', 'red'];
   const catNames = ['夏洛克', '雅思', '输出', '短视频'];
+  const theme = themeVars();
   const themeCols = themeCatColors();
   const catColors = [themeCols.green, themeCols.blue, themeCols.tan, themeCols.red];
   const catData = cats.map(cat => {
@@ -2799,7 +2817,10 @@ function refreshAnalytics() {
     data: { labels: catNames, datasets: [{ data: catData, backgroundColor: catColors, borderRadius: 6 }] },
     options: {
       plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.parsed.y}% 完成率` } } },
-      scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } }
+      scales: {
+        x: { grid: { display: false }, ticks: { color: theme.ink3 } },
+        y: { beginAtZero: true, max: 100, grid: { color: theme.line2 }, ticks: { color: theme.ink3, callback: v => v + '%' } }
+      }
     }
   });
 
@@ -2820,10 +2841,11 @@ function refreshAnalytics() {
     options: {
       responsive: true,
       scales: {
-        y: { beginAtZero: true, position: 'left', title: { display: true, text: '分钟', color: '#6B7280' } },
-        y1: { beginAtZero: true, position: 'right', grid: { display: false }, title: { display: true, text: '错题', color: '#6B7280' } }
+        x: { grid: { display: false }, ticks: { color: theme.ink3 } },
+        y: { beginAtZero: true, position: 'left', grid: { color: theme.line2 }, ticks: { color: theme.ink3 }, title: { display: true, text: '分钟', color: theme.ink2 } },
+        y1: { beginAtZero: true, position: 'right', grid: { display: false }, ticks: { color: theme.ink3 }, title: { display: true, text: '错题', color: theme.ink2 } }
       },
-      plugins: { legend: { labels: { boxWidth: 12 } } }
+      plugins: { legend: { labels: { boxWidth: 12, color: theme.ink2 } } }
     }
   });
 
@@ -2842,7 +2864,10 @@ function refreshAnalytics() {
       options: {
         indexAxis: 'y',
         plugins: { legend: { display: false } },
-        scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
+        scales: {
+          x: { beginAtZero: true, grid: { color: theme.line2 }, ticks: { color: theme.ink3, precision: 0 } },
+          y: { grid: { display: false }, ticks: { color: theme.ink3 } }
+        }
       }
     });
   } else {
@@ -2851,7 +2876,7 @@ function refreshAnalytics() {
   }
 
   // IELTS completion
-  const lineColor = getComputedStyle(document.documentElement).getPropertyValue('--line').trim() || '#E5E7EB';
+  const lineColor = getComputedStyle(document.documentElement).getPropertyValue('--line').trim() || '#CAD8D4';
   const setComp = ielts.map(row => row.filter(Boolean).length);
   if (charts.ielts) charts.ielts.destroy();
   charts.ielts = new Chart($('#chart-ielts'), {
@@ -2862,7 +2887,10 @@ function refreshAnalytics() {
     },
     options: {
       plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.parsed.y}/9 步` } } },
-      scales: { y: { beginAtZero: true, max: 9, ticks: { stepSize: 1 } } }
+      scales: {
+        x: { grid: { display: false }, ticks: { color: theme.ink3 } },
+        y: { beginAtZero: true, max: 9, grid: { color: theme.line2 }, ticks: { color: theme.ink3, stepSize: 1 } }
+      }
     }
   });
 }
@@ -2918,6 +2946,7 @@ function refreshWeek() {
   // Aggregate per-day data
   const cats = ['green','blue','tan','red','gray'];
   const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
+  const theme = themeVars();
   const catColors = themeCatColors();
 
   const perDay = days.map(d => {
@@ -2962,11 +2991,11 @@ function refreshWeek() {
         animation: { duration: 250 },
         responsive: true,
         scales: {
-          x: { stacked: true, grid: { display: false } },
-          y: { stacked: true, beginAtZero: true, ticks: { callback: v => v + 'm' } }
+          x: { stacked: true, grid: { display: false }, ticks: { color: theme.ink3 } },
+          y: { stacked: true, beginAtZero: true, grid: { color: theme.line2 }, ticks: { color: theme.ink3, callback: v => v + 'm' } }
         },
         plugins: {
-          legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } },
+          legend: { position: 'bottom', labels: { boxWidth: 10, color: theme.ink2, font: { size: 11 } } },
           tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.parsed.y}min` } }
         }
       }
@@ -2984,7 +3013,7 @@ function refreshWeek() {
           datasets: [{
             data: pieEntries.map(([,v]) => Math.round(v/60)),
             backgroundColor: pieEntries.map(([c]) => catColors[c]),
-            borderColor: '#fff', borderWidth: 2
+            borderColor: theme.card, borderWidth: 2
           }]
         },
         options: {
@@ -3021,7 +3050,10 @@ function refreshWeek() {
         options: {
           indexAxis: 'y', animation: { duration: 250 },
           plugins: { legend: { display: false } },
-          scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
+          scales: {
+            x: { beginAtZero: true, grid: { color: theme.line2 }, ticks: { color: theme.ink3, precision: 0 } },
+            y: { grid: { display: false }, ticks: { color: theme.ink3 } }
+          }
         }
       });
     } else {
@@ -3131,7 +3163,7 @@ $('#btn-wk-prompt').onclick = () => {
 // ===== Color themes =====
 // Each entry: id (matches CSS body[data-theme="id"]), name, desc, 5 swatch colors (bg/green/blue/tan/red)
 const THEMES = [
-  { id: 'warm',         name: '暖米',       desc: '默认温润感,适合日常长时间用',         colors: ['#F7F5F0','#2D6A4F','#1E5FAE','#B07A3C','#B5322B'] },
+  { id: 'warm',         name: '青瓷晨雾',   desc: '清爽、柔和,适合手机长时间打卡',       colors: ['#EEF4F2','#2F7D6B','#3B6EA8','#D48A3A','#C64F5A'] },
   { id: 'terra',        name: '陶土珊瑚',   desc: '暖色但不甜腻,适合输出复盘',           colors: ['#F2E9DF','#8AA37A','#5D7E96','#C97550','#D26B5C'] },
   { id: 'olive',        name: '青橄榄',     desc: '自然、稳、带一点设计感',               colors: ['#F0EDE2','#5F7A3E','#5E7383','#C49567','#B25742'] },
   { id: 'morandi-ink',  name: '莫兰迪墨蓝', desc: '冷静、专业,减少视觉疲劳',             colors: ['#E5EAEE','#6E8A85','#3E5876','#A18570','#A0625A'] },
@@ -3503,7 +3535,8 @@ function renderQR() {
   const url = location.origin + location.pathname;
   urlEl.textContent = url;
   if (window.QRCode) {
-    QRCode.toCanvas(url, { width: 180, margin: 1, color: { dark: '#1F2937', light: '#FFFFFF' } }, (err, canvas) => {
+    const theme = themeVars();
+    QRCode.toCanvas(url, { width: 180, margin: 1, color: { dark: theme.ink, light: theme.card } }, (err, canvas) => {
       if (err) { box.textContent = '二维码生成失败'; return; }
       box.innerHTML = ''; box.appendChild(canvas);
     });
@@ -3566,14 +3599,14 @@ if ('serviceWorker' in navigator) {
   setTimeout(() => {
     const banner = document.createElement('div');
     banner.style.cssText = `position:fixed;left:10px;right:10px;bottom:calc(86px + var(--safe-bottom));z-index:200;
-      background:#1F2937;color:#fff;padding:14px 16px;border-radius:14px;font-size:13px;line-height:1.55;
+      background:var(--ink);color:var(--bg);padding:14px 16px;border-radius:14px;font-size:13px;line-height:1.55;
       box-shadow:0 8px 28px rgba(0,0,0,.25)`;
     banner.innerHTML = `
       <div style="font-weight:600;margin-bottom:6px">📲 装到主屏幕,出门也能用</div>
-      <div style="color:#D1D5DB;font-size:12.5px">点 Safari 底部 <b style="color:#fff">分享</b> → <b style="color:#fff">添加到主屏幕</b>。
+      <div style="color:var(--line-2);font-size:12.5px">点 Safari 底部 <b style="color:var(--bg)">分享</b> → <b style="color:var(--bg)">添加到主屏幕</b>。
       装一次以后离线、出门都能开,数据存在手机里永不丢。</div>
       <div style="margin-top:10px;text-align:right">
-        <button id="dismiss-install" style="background:#fff;color:#1F2937;border:none;border-radius:8px;padding:6px 14px;font-size:12.5px;font-weight:600">知道了</button>
+        <button id="dismiss-install" style="background:var(--bg);color:var(--ink);border:none;border-radius:8px;padding:6px 14px;font-size:12.5px;font-weight:600">知道了</button>
       </div>
     `;
     document.body.appendChild(banner);
