@@ -425,15 +425,10 @@
   .task {
     border-radius: var(--radius); box-shadow: var(--shadow);
     margin-bottom: 10px; overflow: hidden;
-    border-left: 5px solid var(--gray);
+    border-left: 5px solid var(--task-color, var(--gray));
+    background: var(--task-bg, var(--card));
     position: relative;
   }
-  /* Each category gets its own soft tinted background derived from the theme color */
-  .task.cat-green { border-left-color: var(--green); background: color-mix(in oklab, var(--green) 12%, var(--card)); }
-  .task.cat-blue  { border-left-color: var(--blue);  background: color-mix(in oklab, var(--blue)  12%, var(--card)); }
-  .task.cat-tan   { border-left-color: var(--tan);   background: color-mix(in oklab, var(--tan)   12%, var(--card)); }
-  .task.cat-red   { border-left-color: var(--red);   background: color-mix(in oklab, var(--red)   12%, var(--card)); }
-  .task.cat-gray  { border-left-color: var(--gray);  background: color-mix(in oklab, var(--gray)  10%, var(--card)); }
   .task.done { opacity: .65; }
   .task.done::after {
     content: ''; position: absolute; inset: 0; background: var(--bg-soft); opacity: .5; pointer-events: none;
@@ -463,6 +458,8 @@
   .task .tag {
     font-size: 10.5px; padding: 1px 7px; border-radius: 10px; letter-spacing: .04em;
     font-weight: 500;
+    background: color-mix(in oklab, var(--task-color, var(--gray)) 18%, var(--card));
+    color: var(--task-color, var(--gray));
   }
   .tag.green { background: var(--green-bg); color: var(--green); }
   .tag.blue  { background: var(--blue-bg);  color: var(--blue); }
@@ -484,6 +481,11 @@
     transition: background .15s, border-color .15s;
   }
   .task .action:hover { background: var(--bg-soft); border-color: var(--ink-3); }
+  .task .edit-actions { display:flex; gap:6px; margin-left:auto; flex-wrap:nowrap; }
+  .task .edit-actions .action { font-size:11.5px; padding:3px 7px; }
+  @media (max-width: 420px) {
+    .task .edit-actions { width:100%; justify-content:flex-end; margin-left:0; }
+  }
 
   /* ===== Timer panel ===== */
   .timer {
@@ -813,20 +815,14 @@
       <h1>今日打卡</h1>
       <div class="flow">LISTEN → JUDGE → CALIBRATE → REWRITE → SPEAK</div>
       <div class="stats">
-        <div class="stat"><div class="v" id="st-done">0/16</div><div class="l">已完成</div></div>
+        <div class="stat"><div class="v" id="st-done">0/0</div><div class="l">已完成</div></div>
         <div class="stat"><div class="v" id="st-time">0m</div><div class="l">今日用时</div></div>
         <div class="stat"><div class="v" id="st-streak">0</div><div class="l">连续天数</div></div>
         <div class="stat"><div class="v" id="st-errors">0</div><div class="l">今日错题</div></div>
       </div>
     </div>
 
-    <div class="legend">
-      <span><i class="dot green"></i>夏洛克</span>
-      <span><i class="dot blue"></i>雅思</span>
-      <span><i class="dot tan"></i>输出转化</span>
-      <span><i class="dot red"></i>短视频</span>
-      <span><i class="dot gray"></i>总结</span>
-    </div>
+    <div class="legend" id="task-legend"></div>
 
     <div class="hero" id="time-card" style="display:none">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
@@ -840,11 +836,13 @@
     </div>
 
     <div class="section-bar">
-      <h2>每日 16 项</h2>
+      <h2 id="daily-task-title">每日任务</h2>
       <div class="actions">
         <button id="btn-min-only">仅看最低完成版</button>
+        <button id="btn-add-task">添加任务</button>
       </div>
     </div>
+    <div id="day-plan-note" class="empty" style="display:none;margin-bottom:10px;text-align:left;padding:10px 12px"></div>
     <div id="task-list"></div>
 
     <div class="section-bar">
@@ -1312,7 +1310,8 @@ const KEYS = {
   errors: 'error_log',
   settings: 'settings',
   ielts: 'ielts_tracker',
-  timers: 'timers_state'
+  timers: 'timers_state',
+  taskPlan: 'task_plan_v2'
 };
 
 const escapeHTML = (s) => String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1371,7 +1370,7 @@ $('#modal-close').onclick = () => $('#modal-bg').classList.remove('show');
 $('#modal-bg').addEventListener('click', e => { if (e.target.id === 'modal-bg') $('#modal-bg').classList.remove('show'); });
 
 /* ===== Tasks from SOP ===== */
-const TASKS = [
+const DEFAULT_TASKS = [
   { id: 1,  cat: 'green', tag:'夏洛克',  title: '英式声音开机',  desc: '选一段夏洛克或喜欢的英式片段,先听声音和语流,不查词不分析剧情。', timer: 5,  mode: 'down' },
   { id: 2,  cat: 'blue',  tag:'雅思',    title: '圈逻辑词',      desc: '圈出 but / actually / after / before / until / so that / which means 等。', timer: 5, mode: 'down' },
   { id: 3,  cat: 'green', tag:'夏洛克',  title: '英式声音校准',  desc: '第二遍开英文字幕,标出一句好听的,重点听重音、停顿、弱读。', timer: 10, mode: 'down' },
@@ -1389,6 +1388,156 @@ const TASKS = [
   { id: 15, cat: 'blue',  tag:'雅思',    title: '标误导和确认点',desc: '格式:误导点是……  确认点是……', timer: 10, mode: 'down' },
   { id: 16, cat: 'gray',  tag:'总结',    title: '今日总结',      desc: '写一句今天最主要的问题,例:今天容易把前置动作当最终答案。', timer: 5, mode: 'down' },
 ];
+
+function normalizeTask(task, fallbackId) {
+  const id = Number(task.id ?? fallbackId);
+  const timer = Math.max(0, Number(task.timer || 0));
+  return {
+    id,
+    cat: task.cat || 'gray',
+    tag: String(task.tag || '自定义').trim() || '自定义',
+    title: String(task.title || '未命名任务').trim() || '未命名任务',
+    desc: String(task.desc || '').trim(),
+    timer,
+    mode: task.mode === 'up' || timer === 0 ? 'up' : 'down',
+    custom: !!task.custom
+  };
+}
+
+function normalizeTasks(tasks) {
+  return (Array.isArray(tasks) ? tasks : DEFAULT_TASKS).map((t, i) => normalizeTask(t, i + 1));
+}
+
+function loadGlobalTasks() {
+  return normalizeTasks(LS.get(KEYS.taskPlan, DEFAULT_TASKS));
+}
+
+function saveGlobalTasks(tasks) {
+  LS.set(KEYS.taskPlan, normalizeTasks(tasks));
+}
+
+function tasksForDate(date=TODAY, state=null) {
+  const data = state || (date === TODAY ? dayState : loadDay(date));
+  return normalizeTasks(data.dayTasks || loadGlobalTasks());
+}
+
+function ensureDayTaskPlan() {
+  if (!dayState.dayTasks) {
+    dayState.dayTasks = tasksForDate(TODAY).map(t => ({ ...t }));
+    saveDay(dayState);
+  }
+  return dayState.dayTasks;
+}
+
+function nextTaskId(tasks) {
+  return Math.max(0, ...tasks.map(t => Number(t.id) || 0)) + 1;
+}
+
+function taskPaletteColor(task, tasks) {
+  const colors = themeCatColors();
+  const palette = [colors.green, colors.blue, colors.tan, colors.red, colors.gray];
+  const tags = [...new Set(tasks.map(t => t.tag || t.cat || '自定义'))];
+  const idx = Math.max(0, tags.indexOf(task.tag || task.cat || '自定义'));
+  return palette[idx % palette.length];
+}
+
+function colorForText(text) {
+  const colors = themeCatColors();
+  const palette = [colors.green, colors.blue, colors.tan, colors.red, colors.gray];
+  let hash = 0;
+  String(text || '').split('').forEach(ch => { hash = (hash * 31 + ch.charCodeAt(0)) >>> 0; });
+  return palette[hash % palette.length];
+}
+
+function looseTagHTML(text) {
+  const color = colorForText(text);
+  return `<span class="tag" style="background:color-mix(in oklab, ${color} 18%, var(--card));color:${color}">${escapeHTML(text)}</span>`;
+}
+
+function taskStyle(task, tasks, strength=12) {
+  const color = taskPaletteColor(task, tasks);
+  return `--task-color:${color};--task-bg:color-mix(in oklab, ${color} ${strength}%, var(--card))`;
+}
+
+function taskTagHTML(task, tasks, label=null) {
+  return `<span class="tag" style="${taskStyle(task, tasks, 10)}">${escapeHTML(label || task.tag)}</span>`;
+}
+
+function chooseTaskScope(action) {
+  return confirm(`${action}\n\n确定 = 以后每天都这样\n取消 = 只改今天`) ? 'global' : 'today';
+}
+
+function editTaskPlan(scope, mutator) {
+  if (scope === 'global') {
+    const tasks = loadGlobalTasks();
+    mutator(tasks);
+    saveGlobalTasks(tasks);
+    if (dayState.dayTasks) mutator(dayState.dayTasks);
+  } else {
+    const tasks = ensureDayTaskPlan();
+    mutator(tasks);
+  }
+  saveDay(dayState);
+  _lastStatsSig = '';
+  _lastDailyPieSig = '';
+  renderTasks();
+  refreshTopStats();
+  renderDailyPie();
+}
+
+function promptTaskFields(base={}) {
+  const title = prompt('任务名称', base.title || '');
+  if (title == null || !title.trim()) return null;
+  const tag = prompt('标签/分类名', base.tag || '自定义');
+  if (tag == null) return null;
+  const desc = prompt('任务说明（可留空）', base.desc || '');
+  if (desc == null) return null;
+  const timerRaw = prompt('建议分钟数（0 表示正计时）', String(base.timer ?? 5));
+  if (timerRaw == null) return null;
+  const timer = Math.max(0, Number(timerRaw) || 0);
+  return normalizeTask({
+    ...base,
+    title,
+    tag,
+    desc,
+    timer,
+    mode: timer === 0 ? 'up' : 'down',
+    custom: true
+  }, base.id);
+}
+
+function addTaskFlow() {
+  const scope = chooseTaskScope('添加任务');
+  const baseTasks = scope === 'global' ? loadGlobalTasks() : tasksForDate(TODAY);
+  const task = promptTaskFields({ id: nextTaskId(baseTasks), tag: '自定义', timer: 5, mode: 'down', custom: true });
+  if (!task) return;
+  editTaskPlan(scope, tasks => tasks.push(task));
+  toast(scope === 'global' ? '已加入以后每天的循环任务' : '已加入今天');
+}
+
+function editTaskFlow(taskId) {
+  const current = tasksForDate(TODAY).find(t => t.id === taskId);
+  if (!current) return;
+  const updated = promptTaskFields(current);
+  if (!updated) return;
+  const scope = chooseTaskScope(`修改「${current.title}」`);
+  editTaskPlan(scope, tasks => {
+    const idx = tasks.findIndex(t => t.id === taskId);
+    if (idx >= 0) tasks[idx] = updated;
+  });
+  toast(scope === 'global' ? '已修改以后每天的任务' : '已只修改今天');
+}
+
+function deleteTaskFlow(taskId) {
+  const current = tasksForDate(TODAY).find(t => t.id === taskId);
+  if (!current) return;
+  const scope = chooseTaskScope(`删除「${current.title}」`);
+  editTaskPlan(scope, tasks => {
+    const idx = tasks.findIndex(t => t.id === taskId);
+    if (idx >= 0) tasks.splice(idx, 1);
+  });
+  toast(scope === 'global' ? '以后每天已删除这项' : '今天已删除这项');
+}
 
 const MIN_VERSION = [
   { text: '夏洛克听一小段 + 跟读一句' },
@@ -1421,6 +1570,7 @@ const TAG_PRESETS = [
 function loadDay(d=TODAY) {
   return LS.get(KEYS.day(d), {
     tasks: {},      // {1: {done, elapsed, notes}, ...}
+    dayTasks: null, // optional full task list only for this date
     minDone: {},    // {0: true, ...}
     summary: { main: '', next: '', ai: '' },
   });
@@ -1462,6 +1612,14 @@ function ensureTimer(taskId, task) {
       running: false,
       presetSel: task.timer
     });
+  } else {
+    const t = timers.get(taskId);
+    const target = task.timer * 60;
+    if (!t.running && (t.accumulated || 0) === 0 && (t.target !== target || t.mode !== task.mode)) {
+      t.mode = task.mode;
+      t.target = target;
+      t.presetSel = task.timer;
+    }
   }
   return timers.get(taskId);
 }
@@ -1610,7 +1768,7 @@ function globalTick() {
 
 function onTimerFinish(id) {
   chordDone();
-  const task = TASKS.find(t => t.id === id);
+  const task = tasksForDate(TODAY).find(t => t.id === id);
   toast(`「${task.title}」时间到`);
   // record elapsed into dayState; do not auto-complete (user may want to extend)
   const t = timers.get(id);
@@ -1646,13 +1804,30 @@ function updateTimerDisplay(taskEl, id) {
    ============================================================ */
 function renderTasks() {
   const list = $('#task-list'); list.innerHTML = '';
-  TASKS.forEach(task => {
+  const tasks = tasksForDate(TODAY);
+  const title = $('#daily-task-title');
+  if (title) title.textContent = `每日 ${tasks.length} 项`;
+  const legend = $('#task-legend');
+  if (legend) {
+    const tags = [...new Set(tasks.map(t => t.tag))];
+    legend.innerHTML = tags.map(tag => {
+      const sample = tasks.find(t => t.tag === tag);
+      return `<span><i class="dot" style="background:${taskPaletteColor(sample, tasks)}"></i>${escapeHTML(tag)}</span>`;
+    }).join('');
+  }
+  const note = $('#day-plan-note');
+  if (note) {
+    note.style.display = dayState.dayTasks ? '' : 'none';
+    note.textContent = dayState.dayTasks ? '今天使用单独任务表。明天会回到循环任务，除非你选择“以后每天都这样”。' : '';
+  }
+  tasks.forEach(task => {
     const state = dayState.tasks[task.id] || { done: false, elapsed: 0, notes: '' };
     ensureTimer(task.id, task);
     const t = timers.get(task.id);
 
     const el = document.createElement('div');
-    el.className = `task cat-${task.cat}${state.done ? ' done' : ''}`;
+    el.className = `task${state.done ? ' done' : ''}`;
+    el.style.cssText = taskStyle(task, tasks);
     el.dataset.id = task.id;
     el.innerHTML = `
       <div class="task-head">
@@ -1661,10 +1836,14 @@ function renderTasks() {
         </button>
         <div class="body">
           <div class="title-row">
-            <span class="title">${task.id}. ${task.title}</span>
-            <span class="tag ${task.cat}">${task.tag}</span>
+            <span class="title">${task.id}. ${escapeHTML(task.title)}</span>
+            ${taskTagHTML(task, tasks)}
+            <span class="edit-actions">
+              <button class="action btn-edit-task" type="button">编辑</button>
+              <button class="action btn-del-task" type="button">删除</button>
+            </span>
           </div>
-          <div class="desc">${task.desc}</div>
+          <div class="desc">${escapeHTML(task.desc)}</div>
           <div class="meta">
             <span class="pill timer-meta">已计 ${fmtMS(state.elapsed || 0)}</span>
             <span class="pill">${task.timer ? task.timer + 'min 建议' : '正计时'}</span>
@@ -1694,12 +1873,14 @@ function renderTasks() {
         </div>
       </div>
       <div class="notes">
-        <textarea placeholder="今天这一项的笔记 / 录音文件名 / 摘到的句子...">${state.notes || ''}</textarea>
+        <textarea placeholder="今天这一项的笔记 / 录音文件名 / 摘到的句子...">${escapeHTML(state.notes || '')}</textarea>
       </div>
     `;
 
     // events
     el.querySelector('.chk').onclick = () => toggleTaskDone(task.id);
+    el.querySelector('.btn-edit-task').onclick = () => editTaskFlow(task.id);
+    el.querySelector('.btn-del-task').onclick = () => deleteTaskFlow(task.id);
     el.querySelector('.btn-toggle-timer').onclick = () => {
       el.classList.toggle('timer-open');
       el.classList.remove('notes-open');
@@ -1783,7 +1964,8 @@ function renderTasks() {
   MIN_VERSION.forEach((m, i) => {
     const done = !!dayState.minDone[i];
     const el = document.createElement('div');
-    el.className = `task cat-gray${done ? ' done' : ''}`;
+    el.className = `task${done ? ' done' : ''}`;
+    el.style.cssText = `--task-color:var(--gray);--task-bg:var(--gray-bg)`;
     el.innerHTML = `
       <div class="task-head">
         <button class="chk"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 10 17 19 7"/></svg></button>
@@ -1796,6 +1978,7 @@ function renderTasks() {
     min.appendChild(el);
   });
 
+  applyMinOnlyFilter();
   refreshTopStats();
 }
 
@@ -1813,10 +1996,11 @@ let _lastStatsSig = '';
 let _cachedStreak = null, _cachedStreakDate = null;
 
 function refreshTopStats() {
-  const total = TASKS.length;
-  const done = TASKS.filter(t => dayState.tasks[t.id]?.done).length;
+  const tasks = tasksForDate(TODAY);
+  const total = tasks.length;
+  const done = tasks.filter(t => dayState.tasks[t.id]?.done).length;
   // total seconds including live-running timers, rounded to 10s for signature stability
-  const totalSec = TASKS.reduce((s, t) => s + effectiveElapsed(t.id), 0);
+  const totalSec = tasks.reduce((s, t) => s + effectiveElapsed(t.id), 0);
   const errCount = LS.get(KEYS.errors, []).filter(e => e.date === TODAY).length;
   // signature — skip whole UI update if nothing observable changed
   const sig = `${done}|${Math.floor(totalSec/10)}|${errCount}`;
@@ -1841,15 +2025,18 @@ function renderSummaryPie(data) {
   if (!window.Chart) { setTimeout(() => renderSummaryPie(data), 200); return; }
   const canvas = $('#sum-pie'); if (!canvas) return;
 
-  const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
   const theme = themeVars();
-  const catColors = themeCatColors();
-  const catTime = { green:0, blue:0, tan:0, red:0, gray:0 };
-  TASKS.forEach(t => {
+  const tasks = tasksForDate(summaryDate, data);
+  const tagTime = {};
+  const tagTask = {};
+  tasks.forEach(t => {
     const sec = data.tasks[t.id]?.elapsed || 0;
-    if (sec > 0) catTime[t.cat] += sec;
+    if (sec > 0) {
+      tagTime[t.tag] = (tagTime[t.tag] || 0) + sec;
+      tagTask[t.tag] = tagTask[t.tag] || t;
+    }
   });
-  const entries = Object.entries(catTime).filter(([,v]) => v > 0);
+  const entries = Object.entries(tagTime).filter(([,v]) => v > 0);
   const totalSec = entries.reduce((s, [,v]) => s + v, 0);
 
   const wrap = $('#sum-pie-wrap');
@@ -1865,8 +2052,8 @@ function renderSummaryPie(data) {
     return `
       <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--line-2)">
         <span style="display:flex;align-items:center;gap:6px">
-          <span style="width:9px;height:9px;border-radius:50%;background:${catColors[c]};display:inline-block"></span>
-          <span>${catLabels[c]}</span>
+          <span style="width:9px;height:9px;border-radius:50%;background:${taskPaletteColor(tagTask[c], tasks)};display:inline-block"></span>
+          <span>${escapeHTML(c)}</span>
         </span>
         <span style="color:var(--ink-3);font-family:var(--font-en);font-size:12px">${min}min · ${pct}%</span>
       </div>
@@ -1877,10 +2064,10 @@ function renderSummaryPie(data) {
   summaryPieChart = new Chart(canvas, {
     type: 'doughnut',
     data: {
-      labels: entries.map(([c]) => catLabels[c]),
+      labels: entries.map(([c]) => c),
       datasets: [{
         data: entries.map(([,v]) => Math.round(v / 60)),
-        backgroundColor: entries.map(([c]) => catColors[c]),
+        backgroundColor: entries.map(([c]) => taskPaletteColor(tagTask[c], tasks)),
         borderColor: theme.card,
         borderWidth: 2
       }]
@@ -1904,15 +2091,18 @@ function renderDailyPie() {
   if (!window.Chart) return;
   const canvas = $('#daily-pie'); if (!canvas) return;
 
-  const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
   const theme = themeVars();
-  const catColors = themeCatColors();
-  const catTime = { green:0, blue:0, tan:0, red:0, gray:0 };
-  TASKS.forEach(t => {
+  const tasks = tasksForDate(TODAY);
+  const tagTime = {};
+  const tagTask = {};
+  tasks.forEach(t => {
     const sec = effectiveElapsed(t.id);
-    if (sec > 0) catTime[t.cat] += sec;
+    if (sec > 0) {
+      tagTime[t.tag] = (tagTime[t.tag] || 0) + sec;
+      tagTask[t.tag] = tagTask[t.tag] || t;
+    }
   });
-  const entries = Object.entries(catTime).filter(([,v]) => v > 0).sort((a,b) => b[1] - a[1]);
+  const entries = Object.entries(tagTime).filter(([,v]) => v > 0).sort((a,b) => b[1] - a[1]);
   const totalSec = entries.reduce((s, [,v]) => s + v, 0);
 
   // quantize to 30s buckets for signature stability so we don't repaint every second
@@ -1937,17 +2127,17 @@ function renderDailyPie() {
     return `
       <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line-2)">
         <span style="display:flex;align-items:center;gap:6px">
-          <span style="width:8px;height:8px;border-radius:50%;background:${catColors[c]};display:inline-block"></span>
-          <span>${catLabels[c]}</span>
+          <span style="width:8px;height:8px;border-radius:50%;background:${taskPaletteColor(tagTask[c], tasks)};display:inline-block"></span>
+          <span>${escapeHTML(c)}</span>
         </span>
         <span style="color:var(--ink-3);font-family:var(--font-en);font-size:11.5px">${min}min · ${pct}%</span>
       </div>
     `;
   }).join('');
 
-  const labels = entries.map(([c]) => catLabels[c]);
+  const labels = entries.map(([c]) => c);
   const dataArr = entries.map(([,v]) => Math.round(v / 60));
-  const colors = entries.map(([c]) => catColors[c]);
+  const colors = entries.map(([c]) => taskPaletteColor(tagTask[c], tasks));
 
   if (dailyPieChart) {
     dailyPieChart.data.labels = labels;
@@ -2139,7 +2329,7 @@ function renderErrors() {
         <span>${err.date} · ${err.section}${err.qnum ? ' · ' + err.qnum : ''} · 套题 ${err.set}</span>
         <span>${err.confidence === 'sure' ? '确定' : err.confidence === 'half' ? '半确定' : '乱猜'}${due != null ? ` · D+${due} 复习日` : ''}</span>
       </div>
-      ${err.tags?.length ? `<div class="err-tags">${err.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
+      ${err.tags?.length ? `<div class="err-tags">${err.tags.map(t => looseTagHTML(t)).join('')}</div>` : ''}
       ${err.right || err.mine ? `<p><span class="lbl">正解</span>${err.right || '-'}　<span class="lbl">我答</span>${err.mine || '-'}</p>` : ''}
       <p><span class="lbl">误导点</span>${err.trap}</p>
       <p><span class="lbl">确认点</span>${err.anchor}</p>
@@ -2258,15 +2448,16 @@ let summaryDate = TODAY;
 
 function refreshSummary() {
   const data = loadDay(summaryDate);
-  const done = TASKS.filter(t => data.tasks[t.id]?.done);
-  const totalSec = TASKS.reduce((s, t) => s + (data.tasks[t.id]?.elapsed || 0), 0);
+  const tasks = tasksForDate(summaryDate, data);
+  const done = tasks.filter(t => data.tasks[t.id]?.done);
+  const totalSec = tasks.reduce((s, t) => s + (data.tasks[t.id]?.elapsed || 0), 0);
   const errors = loadErrors().filter(e => e.date === summaryDate);
   const tagFreq = {};
   errors.forEach(e => e.tags.forEach(t => tagFreq[t] = (tagFreq[t] || 0) + 1));
   const topTag = Object.entries(tagFreq).sort((a,b) => b[1]-a[1])[0];
 
   $('#sum-stats').innerHTML = `
-    <div class="item"><div class="v">${done.length}/16</div><div class="l">打卡完成</div></div>
+    <div class="item"><div class="v">${done.length}/${tasks.length}</div><div class="l">打卡完成</div></div>
     <div class="item"><div class="v">${Math.round(totalSec/60)} 分钟</div><div class="l">实际学习时长</div></div>
     <div class="item"><div class="v">${errors.length}</div><div class="l">今日新增错题</div></div>
     <div class="item"><div class="v">${topTag ? topTag[0] : '—'}</div><div class="l">最高频错因</div></div>
@@ -2287,8 +2478,8 @@ function refreshSummary() {
         <div style="padding:7px 0;border-bottom:1px solid var(--line-2);display:flex;gap:8px;align-items:flex-start">
           <span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span>
           <div style="flex:1;min-width:0">
-            <div><span style="color:var(--ink-3);font-family:var(--font-en);margin-right:6px">${String(t.id).padStart(2,'0')}</span>${t.title}
-              <span class="tag ${t.cat}" style="margin-left:6px">${t.tag}</span>
+            <div><span style="color:var(--ink-3);font-family:var(--font-en);margin-right:6px">${String(t.id).padStart(2,'0')}</span>${escapeHTML(t.title)}
+              <span style="margin-left:6px">${taskTagHTML(t, tasks)}</span>
               ${mins ? `<span style="float:right;color:var(--ink-3);font-family:var(--font-en);font-size:12px">${mins}min</span>` : ''}
             </div>
             ${notes ? `<div style="color:var(--ink-2);font-size:12.5px;margin-top:2px;white-space:pre-wrap">${escapeHTML(notes)}</div>` : ''}
@@ -2339,8 +2530,9 @@ $('#btn-save-summary').onclick = () => { toast('已自动保存'); };
 $('#btn-copy-prompt').onclick = () => {
   const data = loadDay(summaryDate);
   const errs = loadErrors().filter(e => e.date === summaryDate);
-  const done = TASKS.filter(t => data.tasks[t.id]?.done);
-  const totalSec = TASKS.reduce((s, t) => s + (data.tasks[t.id]?.elapsed || 0), 0);
+  const tasks = tasksForDate(summaryDate, data);
+  const done = tasks.filter(t => data.tasks[t.id]?.done);
+  const totalSec = tasks.reduce((s, t) => s + (data.tasks[t.id]?.elapsed || 0), 0);
   const lines = [];
   lines.push(`你是我的雅思英语训练教练。请基于下面这一天的数据,给我一份 300 字以内的中文总结,要做到:`);
   lines.push(`1) 用 1 句话指出今天最大的真正瓶颈(不是表面错题数);`);
@@ -2349,7 +2541,7 @@ $('#btn-copy-prompt').onclick = () => {
   lines.push(`4) 不要鼓励性套话。`);
   lines.push('');
   lines.push(`── 数据(${summaryDate})──`);
-  lines.push(`打卡完成: ${done.length}/16`);
+  lines.push(`打卡完成: ${done.length}/${tasks.length}`);
   lines.push(`总用时: ${Math.round(totalSec/60)} 分钟`);
   lines.push(`完成项 (${done.length} 项):`);
   if (done.length) {
@@ -2383,22 +2575,23 @@ $('#btn-copy-prompt').onclick = () => {
 function buildReportHTML(forDate) {
   const data = loadDay(forDate);
   const errs = loadErrors().filter(e => e.date === forDate);
-  const done = TASKS.filter(t => data.tasks[t.id]?.done);
-  const totalSec = TASKS.reduce((s, t) => s + (data.tasks[t.id]?.elapsed || 0), 0);
+  const tasks = tasksForDate(forDate, data);
+  const done = tasks.filter(t => data.tasks[t.id]?.done);
+  const totalSec = tasks.reduce((s, t) => s + (data.tasks[t.id]?.elapsed || 0), 0);
   const totalMin = Math.round(totalSec / 60);
 
-  // category time aggregation
-  const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
+  // tag time aggregation
   const theme = themeVars();
-  const catColors = themeCatColors();
-  const catTime = { green:0, blue:0, tan:0, red:0, gray:0 };
-  const catDone = { green:0, blue:0, tan:0, red:0, gray:0 };
-  const catTotal = { green:0, blue:0, tan:0, red:0, gray:0 };
-  TASKS.forEach(t => {
-    catTotal[t.cat]++;
+  const tagTime = {};
+  const tagDone = {};
+  const tagTotal = {};
+  const tagTask = {};
+  tasks.forEach(t => {
+    tagTotal[t.tag] = (tagTotal[t.tag] || 0) + 1;
+    tagTask[t.tag] = tagTask[t.tag] || t;
     if (data.tasks[t.id]?.done) {
-      catDone[t.cat]++;
-      catTime[t.cat] += Math.round((data.tasks[t.id]?.elapsed || 0) / 60);
+      tagDone[t.tag] = (tagDone[t.tag] || 0) + 1;
+      tagTime[t.tag] = (tagTime[t.tag] || 0) + Math.round((data.tasks[t.id]?.elapsed || 0) / 60);
     }
   });
 
@@ -2434,24 +2627,25 @@ function buildReportHTML(forDate) {
       <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="9" fill="${theme.ink3}" letter-spacing="1">MIN</text>
     </svg>`;
   }
-  const pieEntries = Object.entries(catTime).filter(([,v]) => v > 0).map(([c, v]) => [catColors[c], v]);
-  const pieLegend = Object.entries(catTime).filter(([,v]) => v > 0).sort((a,b) => b[1]-a[1]).map(([c, v]) => {
-    const pct = Math.round(v / Object.values(catTime).reduce((s,x)=>s+x,0) * 100);
+  const pieEntries = Object.entries(tagTime).filter(([,v]) => v > 0).map(([tag, v]) => [taskPaletteColor(tagTask[tag], tasks), v]);
+  const pieLegend = Object.entries(tagTime).filter(([,v]) => v > 0).sort((a,b) => b[1]-a[1]).map(([tag, v]) => {
+    const pct = Math.round(v / Object.values(tagTime).reduce((s,x)=>s+x,0) * 100);
+    const color = taskPaletteColor(tagTask[tag], tasks);
     return `<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid ${theme.line2};font-size:11.5px">
-      <span><span style="display:inline-block;width:8px;height:8px;background:${catColors[c]};border-radius:50%;margin-right:6px;vertical-align:1px"></span>${catLabels[c]}</span>
+      <span><span style="display:inline-block;width:8px;height:8px;background:${color};border-radius:50%;margin-right:6px;vertical-align:1px"></span>${safeText(tag)}</span>
       <span style="color:${theme.ink2};font-family:ui-monospace,monospace">${v}min · ${pct}%</span>
     </div>`;
   }).join('');
 
   // build done tasks 2-col grid
   const doneCards = done.map(t => `
-    <div style="background:${theme.card};border:1px solid ${theme.line};border-left:4px solid ${catColors[t.cat]};
+    <div style="background:${theme.card};border:1px solid ${theme.line};border-left:4px solid ${taskPaletteColor(t, tasks)};
                 border-radius:8px;padding:10px 12px;break-inside:avoid;page-break-inside:avoid">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px">
         <div style="font-weight:600;font-size:13px">
-          <span style="color:${theme.ink3};font-family:ui-monospace,monospace;margin-right:6px">${String(t.id).padStart(2,'0')}</span>${t.title}
+          <span style="color:${theme.ink3};font-family:ui-monospace,monospace;margin-right:6px">${String(t.id).padStart(2,'0')}</span>${safeText(t.title)}
         </div>
-        <span style="font-size:10px;font-family:ui-monospace,monospace;background:${catColors[t.cat]}20;color:${catColors[t.cat]};padding:1px 6px;border-radius:8px">${t.tag}</span>
+        <span style="font-size:10px;font-family:ui-monospace,monospace;background:color-mix(in oklab, ${taskPaletteColor(t, tasks)} 18%, ${theme.card});color:${taskPaletteColor(t, tasks)};padding:1px 6px;border-radius:8px">${safeText(t.tag)}</span>
       </div>
       <div style="font-size:11px;color:${theme.ink2};font-family:ui-monospace,monospace">
         ${Math.round((data.tasks[t.id]?.elapsed || 0)/60) || 0} min
@@ -2464,7 +2658,7 @@ function buildReportHTML(forDate) {
   `).join('');
 
   // build undone tasks (compact list)
-  const undone = TASKS.filter(t => !data.tasks[t.id]?.done);
+  const undone = tasks.filter(t => !data.tasks[t.id]?.done);
   const undoneList = undone.length ? `
     <div style="margin-top:10px;font-size:11.5px;color:${theme.ink3};background:${theme.bgSoft};border-radius:6px;padding:8px 10px">
       <b style="color:${theme.ink2}">今日未完成 (${undone.length}):</b>
@@ -2480,7 +2674,10 @@ function buildReportHTML(forDate) {
           #${String(i+1).padStart(2,'0')} · 套${e.set} · ${e.section}${e.qnum?' · '+e.qnum:''} · ${confName(e.confidence)}
         </div>
         ${e.tags?.length ? `<div style="display:flex;gap:4px;flex-wrap:wrap">
-          ${e.tags.map(t => `<span style="font-size:10px;background:${theme.redBg};color:${theme.red};padding:1px 6px;border-radius:8px">${safeText(t)}</span>`).join('')}
+          ${e.tags.map(t => {
+            const color = colorForText(t);
+            return `<span style="font-size:10px;background:color-mix(in oklab, ${color} 18%, ${theme.card});color:${color};padding:1px 6px;border-radius:8px">${safeText(t)}</span>`;
+          }).join('')}
         </div>` : ''}
       </div>
       ${e.right || e.mine ? `
@@ -2503,17 +2700,18 @@ function buildReportHTML(forDate) {
     </div>
   `).join('');
 
-  // category breakdown bars (in print, instead of bar chart canvas)
-  const catBars = ['green','blue','tan','red','gray'].filter(c => catTotal[c] > 0).map(c => {
-    const pct = catTotal[c] ? Math.round(catDone[c] / catTotal[c] * 100) : 0;
+  // task tag breakdown bars (in print, instead of bar chart canvas)
+  const catBars = Object.keys(tagTotal).map(tag => {
+    const pct = tagTotal[tag] ? Math.round((tagDone[tag] || 0) / tagTotal[tag] * 100) : 0;
+    const color = taskPaletteColor(tagTask[tag], tasks);
     return `
       <div style="margin-bottom:8px">
         <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:3px">
-          <span><span style="display:inline-block;width:6px;height:6px;background:${catColors[c]};border-radius:50%;margin-right:5px;vertical-align:1px"></span>${catLabels[c]}</span>
-          <span style="color:${theme.ink2};font-family:ui-monospace,monospace">${catDone[c]}/${catTotal[c]} · ${catTime[c]}min</span>
+          <span><span style="display:inline-block;width:6px;height:6px;background:${color};border-radius:50%;margin-right:5px;vertical-align:1px"></span>${safeText(tag)}</span>
+          <span style="color:${theme.ink2};font-family:ui-monospace,monospace">${tagDone[tag] || 0}/${tagTotal[tag]} · ${tagTime[tag] || 0}min</span>
         </div>
         <div style="height:6px;background:${theme.line2};border-radius:3px;overflow:hidden">
-          <div style="height:100%;width:${pct}%;background:${catColors[c]};border-radius:3px"></div>
+          <div style="height:100%;width:${pct}%;background:${color};border-radius:3px"></div>
         </div>
       </div>
     `;
@@ -2531,7 +2729,7 @@ function buildReportHTML(forDate) {
           </div>
         </div>
         <div style="text-align:right">
-          <div style="font-size:32px;font-weight:700;font-family:ui-monospace,monospace;line-height:1">${done.length}<span style="color:${theme.ink3};font-size:18px">/16</span></div>
+          <div style="font-size:32px;font-weight:700;font-family:ui-monospace,monospace;line-height:1">${done.length}<span style="color:${theme.ink3};font-size:18px">/${tasks.length}</span></div>
           <div style="font-size:10px;color:${theme.ink3};letter-spacing:.1em;margin-top:2px">DAILY COMPLETION</div>
         </div>
       </div>
@@ -2551,7 +2749,7 @@ function buildReportHTML(forDate) {
           <div style="font-size:10.5px;color:${theme.ink2};margin-top:3px">连续天数</div>
         </div>
         <div style="background:${theme.bgSoft};padding:12px;border-radius:10px;text-align:center">
-          <div style="font-size:20px;font-weight:700;font-family:ui-monospace,monospace">${Math.round(done.length/16*100)}<span style="font-size:12px;color:${theme.ink3}">%</span></div>
+          <div style="font-size:20px;font-weight:700;font-family:ui-monospace,monospace">${tasks.length ? Math.round(done.length/tasks.length*100) : 0}<span style="font-size:12px;color:${theme.ink3}">%</span></div>
           <div style="font-size:10.5px;color:${theme.ink2};margin-top:3px">完成度</div>
         </div>
       </div>
@@ -2601,7 +2799,7 @@ function buildReportHTML(forDate) {
           <div style="font-size:12px;font-weight:600;margin-bottom:8px">高频错因(今日)</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             ${topTags.map(([t, n]) => `
-              <span style="background:${theme.redBg};color:${theme.red};font-size:11.5px;padding:3px 9px;border-radius:12px">
+              <span style="background:color-mix(in oklab, ${colorForText(t)} 18%, ${theme.card});color:${colorForText(t)};font-size:11.5px;padding:3px 9px;border-radius:12px">
                 ${safeText(t)} <b style="margin-left:4px">×${n}</b>
               </span>`).join('')}
           </div>
@@ -2796,25 +2994,31 @@ function refreshAnalytics() {
   const days = getRange(14);
   const dayData = days.map(d => LS.get(KEYS.day(d), { tasks: {} }));
 
-  // category completion
-  const cats = ['green', 'blue', 'tan', 'red'];
-  const catNames = ['夏洛克', '雅思', '输出', '短视频'];
+  // tag completion
   const theme = themeVars();
   const themeCols = themeCatColors();
-  const catColors = [themeCols.green, themeCols.blue, themeCols.tan, themeCols.red];
-  const catData = cats.map(cat => {
-    const tasksInCat = TASKS.filter(t => t.cat === cat);
-    let totalSlots = tasksInCat.length * days.length, doneSlots = 0;
-    dayData.forEach(d => {
-      tasksInCat.forEach(t => { if (d.tasks[t.id]?.done) doneSlots++; });
+  const tasksByDay = days.map((d, i) => tasksForDate(d, dayData[i]));
+  const tagNames = [...new Set(tasksByDay.flatMap(tasks => tasks.map(t => t.tag)))];
+  const tagData = tagNames.map(tag => {
+    let totalSlots = 0, doneSlots = 0;
+    dayData.forEach((d, i) => {
+      tasksByDay[i].filter(t => t.tag === tag).forEach(t => {
+        totalSlots++;
+        if (d.tasks[t.id]?.done) doneSlots++;
+      });
     });
-    return Math.round(doneSlots / totalSlots * 100);
+    return totalSlots ? Math.round(doneSlots / totalSlots * 100) : 0;
+  });
+  const tagColors = tagNames.map(tag => {
+    const sampleTasks = tasksByDay.find(list => list.some(t => t.tag === tag)) || tasksByDay[0] || [];
+    const sample = sampleTasks.find(t => t.tag === tag) || { tag };
+    return taskPaletteColor(sample, sampleTasks);
   });
 
   if (charts.cat) charts.cat.destroy();
   charts.cat = new Chart($('#chart-cat'), {
     type: 'bar',
-    data: { labels: catNames, datasets: [{ data: catData, backgroundColor: catColors, borderRadius: 6 }] },
+    data: { labels: tagNames, datasets: [{ data: tagData, backgroundColor: tagColors, borderRadius: 6 }] },
     options: {
       plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.parsed.y}% 完成率` } } },
       scales: {
@@ -2826,7 +3030,7 @@ function refreshAnalytics() {
 
   // time + errors line/bar
   const errArr = loadErrors();
-  const timeMin = days.map((d, i) => Math.round(TASKS.reduce((s, t) => s + (dayData[i].tasks[t.id]?.elapsed || 0), 0) / 60));
+  const timeMin = days.map((d, i) => Math.round(tasksByDay[i].reduce((s, t) => s + (dayData[i].tasks[t.id]?.elapsed || 0), 0) / 60));
   const errCnt = days.map(d => errArr.filter(e => e.date === d).length);
 
   if (charts.time) charts.time.destroy();
@@ -2944,18 +3148,22 @@ function refreshWeek() {
   $('#wk-ai').value = w.ai || '';
 
   // Aggregate per-day data
-  const cats = ['green','blue','tan','red','gray'];
-  const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
   const theme = themeVars();
-  const catColors = themeCatColors();
-
-  const perDay = days.map(d => {
+  const dayTaskLists = days.map(d => {
     const data = LS.get(KEYS.day(d), { tasks: {} });
-    const byCat = { green:0, blue:0, tan:0, red:0, gray:0 };
+    return tasksForDate(d, data);
+  });
+  const cats = [...new Set(dayTaskLists.flatMap(tasks => tasks.map(t => t.tag)))];
+  const tagSamples = {};
+  dayTaskLists.forEach(tasks => tasks.forEach(t => { tagSamples[t.tag] = tagSamples[t.tag] || { task: t, tasks }; }));
+
+  const perDay = days.map((d, i) => {
+    const data = LS.get(KEYS.day(d), { tasks: {} });
+    const byCat = Object.fromEntries(cats.map(tag => [tag, 0]));
     let doneCount = 0;
-    TASKS.forEach(t => {
+    dayTaskLists[i].forEach(t => {
       const sec = data.tasks[t.id]?.elapsed || 0;
-      if (sec > 0) byCat[t.cat] += sec;
+      if (sec > 0) byCat[t.tag] += sec;
       if (data.tasks[t.id]?.done) doneCount++;
     });
     const totalSec = Object.values(byCat).reduce((s,v) => s+v, 0);
@@ -2974,12 +3182,12 @@ function refreshWeek() {
   $('#wk-st-active').textContent = `${activeDays}/7`;
 
   if (window.Chart) {
-    // Stacked bar: per day per category (minutes)
+    // Stacked bar: per day per tag (minutes)
     const dayLabels = ['一','二','三','四','五','六','日'];
     const stackData = cats.map(cat => ({
-      label: catLabels[cat],
+      label: cat,
       data: perDay.map(p => Math.round(p.byCat[cat] / 60)),
-      backgroundColor: catColors[cat],
+      backgroundColor: taskPaletteColor(tagSamples[cat]?.task || { tag: cat }, tagSamples[cat]?.tasks || dayTaskLists[0] || []),
       borderRadius: 3,
       stack: 's'
     }));
@@ -3001,7 +3209,7 @@ function refreshWeek() {
       }
     });
 
-    // Pie: total week time by category
+    // Pie: total week time by tag
     const pieEntries = cats.map(c => [c, perDay.reduce((s,p) => s + p.byCat[c], 0)]).filter(([,v]) => v > 0).sort((a,b) => b[1]-a[1]);
     const sumWeek = pieEntries.reduce((s,[,v]) => s+v, 0);
     if (wkCharts.pie) wkCharts.pie.destroy();
@@ -3009,10 +3217,10 @@ function refreshWeek() {
       wkCharts.pie = new Chart($('#wk-pie'), {
         type: 'doughnut',
         data: {
-          labels: pieEntries.map(([c]) => catLabels[c]),
+          labels: pieEntries.map(([c]) => c),
           datasets: [{
             data: pieEntries.map(([,v]) => Math.round(v/60)),
-            backgroundColor: pieEntries.map(([c]) => catColors[c]),
+            backgroundColor: pieEntries.map(([c]) => taskPaletteColor(tagSamples[c]?.task || { tag: c }, tagSamples[c]?.tasks || dayTaskLists[0] || [])),
             borderColor: theme.card, borderWidth: 2
           }]
         },
@@ -3025,7 +3233,7 @@ function refreshWeek() {
       $('#wk-pie-legend').innerHTML = pieEntries.map(([c, sec]) => {
         const pct = Math.round(sec / sumWeek * 100);
         return `<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line-2)">
-          <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${catColors[c]};display:inline-block"></span>${catLabels[c]}</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${taskPaletteColor(tagSamples[c]?.task || { tag: c }, tagSamples[c]?.tasks || dayTaskLists[0] || [])};display:inline-block"></span>${escapeHTML(c)}</span>
           <span style="color:var(--ink-3);font-family:var(--font-en);font-size:11.5px">${Math.round(sec/60)}min · ${pct}%</span>
         </div>`;
       }).join('');
@@ -3045,7 +3253,7 @@ function refreshWeek() {
         type: 'bar',
         data: {
           labels: tagList.map(([k]) => k),
-          datasets: [{ data: tagList.map(([,v]) => v), backgroundColor: catColors.red, borderRadius: 4 }]
+          datasets: [{ data: tagList.map(([,v]) => v), backgroundColor: theme.red, borderRadius: 4 }]
         },
         options: {
           indexAxis: 'y', animation: { duration: 250 },
@@ -3122,8 +3330,6 @@ $('#btn-wk-prompt').onclick = () => {
   const days = getWeekDates(currentWeekAnchor);
   const wkKey = weekKey(currentWeekAnchor);
   const errs = loadErrors().filter(e => days.includes(e.date));
-  const cats = ['green','blue','tan','red','gray'];
-  const catLabels = { green:'夏洛克', blue:'雅思', tan:'输出', red:'短视频', gray:'总结' };
   const dayNames = ['周一','周二','周三','周四','周五','周六','周日'];
   const lines = [];
   lines.push(`你是我的雅思英语训练教练。请基于这一周(${wkKey})的数据,给一份 ≤300 字的中文周报,要做到:`);
@@ -3135,12 +3341,13 @@ $('#btn-wk-prompt').onclick = () => {
   lines.push(`── 本周数据 ──`);
   days.forEach((d, i) => {
     const data = LS.get(KEYS.day(d), { tasks: {} });
-    const done = TASKS.filter(t => data.tasks[t.id]?.done);
-    const totalSec = TASKS.reduce((s, t) => s + (data.tasks[t.id]?.elapsed || 0), 0);
-    const byCat = { green:0, blue:0, tan:0, red:0, gray:0 };
-    TASKS.forEach(t => { const sec = data.tasks[t.id]?.elapsed || 0; if (sec > 0) byCat[t.cat] += sec; });
-    const catStr = cats.filter(c => byCat[c] > 0).map(c => `${catLabels[c]} ${Math.round(byCat[c]/60)}min`).join(' / ');
-    lines.push(`${dayNames[i]} (${d}): ${done.length}/16 · ${Math.round(totalSec/60)}min${catStr ? ' · ' + catStr : ''}${data.summary?.main ? ' · 总结:' + data.summary.main : ''}`);
+    const tasks = tasksForDate(d, data);
+    const done = tasks.filter(t => data.tasks[t.id]?.done);
+    const totalSec = tasks.reduce((s, t) => s + (data.tasks[t.id]?.elapsed || 0), 0);
+    const byTag = {};
+    tasks.forEach(t => { const sec = data.tasks[t.id]?.elapsed || 0; if (sec > 0) byTag[t.tag] = (byTag[t.tag] || 0) + sec; });
+    const tagStr = Object.entries(byTag).map(([tag, sec]) => `${tag} ${Math.round(sec/60)}min`).join(' / ');
+    lines.push(`${dayNames[i]} (${d}): ${done.length}/${tasks.length} · ${Math.round(totalSec/60)}min${tagStr ? ' · ' + tagStr : ''}${data.summary?.main ? ' · 总结:' + data.summary.main : ''}`);
   });
   lines.push('');
   if (errs.length) {
@@ -3190,6 +3397,8 @@ function applyTheme(id) {
   // re-render all charts with the new theme colors (charts read CSS vars)
   setTimeout(() => {
     _lastDailyPieSig = '';
+    if (typeof renderTasks === 'function') renderTasks();
+    if (typeof renderErrors === 'function') renderErrors();
     if (typeof renderDailyPie === 'function') renderDailyPie();
     if (typeof refreshSummary === 'function' && document.querySelector('#view-summary.active')) refreshSummary();
     if (typeof refreshWeek === 'function' && document.querySelector('#view-weekly.active')) refreshWeek();
@@ -3352,13 +3561,14 @@ function downloadICS(text, filename) {
 // 今日打卡 → 一条日历事件
 $('#btn-export-ics-today').onclick = () => {
   const data = loadDay(summaryDate);
-  const done = TASKS.filter(t => data.tasks[t.id]?.done);
-  const totalSec = TASKS.reduce((s, t) => s + (data.tasks[t.id]?.elapsed || 0), 0);
+  const tasks = tasksForDate(summaryDate, data);
+  const done = tasks.filter(t => data.tasks[t.id]?.done);
+  const totalSec = tasks.reduce((s, t) => s + (data.tasks[t.id]?.elapsed || 0), 0);
   const errs = loadErrors().filter(e => e.date === summaryDate);
   const ymd = summaryDate.replace(/-/g, '');
   const nextDay = new Date(summaryDate); nextDay.setDate(nextDay.getDate() + 1);
   const desc = [
-    `完成 ${done.length}/16  ·  用时 ${Math.round(totalSec/60)} 分钟  ·  错题 ${errs.length} 条`,
+    `完成 ${done.length}/${tasks.length}  ·  用时 ${Math.round(totalSec/60)} 分钟  ·  错题 ${errs.length} 条`,
     '',
     '完成项:',
     ...done.map(t => `· ${t.title}`),
@@ -3371,7 +3581,7 @@ $('#btn-export-ics-today').onclick = () => {
     allDay: true,
     start: ymd,
     end: icsDate(nextDay, true),
-    summary: `📚 英语打卡 ${done.length}/16 · ${Math.round(totalSec/60)}min`,
+    summary: `📚 英语打卡 ${done.length}/${tasks.length} · ${Math.round(totalSec/60)}min`,
     description: desc
   }]);
   downloadICS(ics, `打卡_${summaryDate}.ics`);
@@ -3428,9 +3638,10 @@ $('#btn-export-ics-history').onclick = () => {
     const key = fmtDate(d);
     const data = LS.get(KEYS.day(key));
     if (!data) continue;
-    const done = TASKS.filter(t => data.tasks[t.id]?.done);
+    const tasks = tasksForDate(key, data);
+    const done = tasks.filter(t => data.tasks[t.id]?.done);
     if (done.length === 0 && !data.summary?.main) continue;
-    const totalSec = TASKS.reduce((s, t) => s + (data.tasks[t.id]?.elapsed || 0), 0);
+    const totalSec = tasks.reduce((s, t) => s + (data.tasks[t.id]?.elapsed || 0), 0);
     const errs = loadErrors().filter(e => e.date === key);
     const nextDay = new Date(d); nextDay.setDate(nextDay.getDate() + 1);
     events.push({
@@ -3438,7 +3649,7 @@ $('#btn-export-ics-history').onclick = () => {
       allDay: true,
       start: key.replace(/-/g, ''),
       end: icsDate(nextDay, true),
-      summary: `📚 ${done.length}/16 · ${Math.round(totalSec/60)}min${errs.length?' · '+errs.length+'错':''}`,
+      summary: `📚 ${done.length}/${tasks.length} · ${Math.round(totalSec/60)}min${errs.length?' · '+errs.length+'错':''}`,
       description: (data.summary?.main || '') + (done.length ? '\n完成:' + done.map(t => t.title).join('、') : '')
     });
   }
@@ -3484,17 +3695,24 @@ $$('nav.tabbar button').forEach(b => {
   };
 });
 
-$('#btn-min-only').onclick = () => {
-  document.body.classList.toggle('min-only');
+function applyMinOnlyFilter() {
   const isOn = document.body.classList.contains('min-only');
-  $('#btn-min-only').textContent = isOn ? '显示全部 16 项' : '仅看最低完成版';
+  const btn = $('#btn-min-only');
+  if (btn) btn.textContent = isOn ? '显示全部任务' : '仅看最低完成版';
   // simple filter: hide non-essential tasks (1,5,7,9,11,12,15 ≈ closest to min version)
   const essentialIds = [1, 5, 7, 9, 11, 12, 15];
   $$('#task-list .task').forEach(el => {
     const id = Number(el.dataset.id);
     el.style.display = (isOn && !essentialIds.includes(id)) ? 'none' : '';
   });
+}
+
+$('#btn-min-only').onclick = () => {
+  document.body.classList.toggle('min-only');
+  applyMinOnlyFilter();
 };
+
+$('#btn-add-task').onclick = addTaskFlow;
 
 /* ============================================================
    INIT
