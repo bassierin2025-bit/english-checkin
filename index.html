@@ -403,8 +403,8 @@
 
   /* ===== Legend ===== */
   .legend {
-    display: flex; flex-wrap: wrap; gap: 6px 12px; padding: 0 4px; margin-bottom: 10px;
-    font-size: 12px; color: var(--ink-2);
+    display: flex; flex-wrap: wrap; gap: 5px 10px; padding: 0 4px; margin-bottom: 8px;
+    font-size: 11.5px; color: var(--ink-2);
   }
   .legend .dot {
     display: inline-block; width: 8px; height: 8px; border-radius: 50%;
@@ -424,8 +424,8 @@
   }
   .task {
     border-radius: var(--radius); box-shadow: var(--shadow);
-    margin-bottom: 10px; overflow: hidden;
-    border-left: 5px solid var(--task-color, var(--gray));
+    margin-bottom: 8px; overflow: hidden;
+    border-left: 4px solid var(--task-color, var(--gray));
     background: var(--task-bg, var(--card));
     position: relative;
   }
@@ -435,11 +435,11 @@
   }
 
   .task-head {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 12px 14px;
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 9px 12px;
   }
   .task .chk {
-    flex-shrink: 0; width: 24px; height: 24px; border-radius: 7px;
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 7px;
     border: 1.5px solid var(--line);
     display: grid; place-items: center; margin-top: 2px;
     transition: all .15s;
@@ -451,12 +451,12 @@
   .task .chk svg { stroke: transparent; width: 14px; height: 14px; opacity: 0; transition: opacity .15s; }
   .task .body { flex: 1; min-width: 0; }
   .task .title-row {
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
-  .task .title { font-weight: 600; font-size: 15px; }
+  .task .title { font-weight: 600; font-size: 14.5px; }
   .task.done .title { color: var(--ink-2); text-decoration: line-through; text-decoration-color: var(--ink-3); text-decoration-thickness: 1px; }
   .task .tag {
-    font-size: 10.5px; padding: 1px 7px; border-radius: 10px; letter-spacing: .04em;
+    font-size: 10px; padding: 1px 6px; border-radius: 9px; letter-spacing: .04em;
     font-weight: 500;
     background: color-mix(in oklab, var(--task-color, var(--gray)) 18%, var(--card));
     color: var(--task-color, var(--gray));
@@ -466,54 +466,54 @@
   .tag.tan   { background: var(--tan-bg);   color: var(--tan); }
   .tag.red   { background: var(--red-bg);   color: var(--red); }
   .tag.gray  { background: var(--gray-bg);  color: var(--gray); }
-  .task .desc { color: var(--ink-2); font-size: 13px; margin-top: 4px; }
+  .task .desc { color: var(--ink-2); font-size: 12.5px; margin-top: 2px; line-height: 1.45; }
   .task .meta {
-    display: flex; align-items: center; gap: 8px; margin-top: 6px;
+    display: flex; align-items: center; gap: 6px; margin-top: 5px;
     font-size: 11.5px; color: var(--ink-3); font-family: var(--font-en);
   }
   .task .meta .pill {
     background: var(--bg-soft); padding: 1px 6px; border-radius: 6px;
   }
   .task .action {
-    background: none; padding: 4px 8px; border-radius: 8px;
-    font-size: 12px; color: var(--ink-2);
+    background: none; padding: 3px 7px; border-radius: 7px;
+    font-size: 11.5px; color: var(--ink-2);
     border: 1px solid var(--line);
     transition: background .15s, border-color .15s;
   }
   .task .action:hover { background: var(--bg-soft); border-color: var(--ink-3); }
   .task .edit-actions { display:flex; gap:6px; margin-left:auto; flex-wrap:nowrap; }
-  .task .edit-actions .action { font-size:11.5px; padding:3px 7px; }
+  .task .edit-actions .action { font-size:11px; padding:2px 7px; }
   @media (max-width: 420px) {
     .task .edit-actions { width:100%; justify-content:flex-end; margin-left:0; }
   }
 
   /* ===== Timer panel ===== */
   .timer {
-    padding: 0 14px;
+    padding: 0 12px;
     max-height: 0; overflow: hidden;
     transition: max-height .25s ease, padding .25s ease;
     border-top: 1px solid transparent;
   }
   .task.timer-open .timer {
     max-height: 320px;
-    padding: 12px 14px 14px;
+    padding: 9px 12px 11px;
     border-top-color: var(--line-2);
   }
   .timer-display {
     font-family: var(--font-en);
     font-variant-numeric: tabular-nums;
-    font-size: 38px; font-weight: 600; letter-spacing: .02em;
-    text-align: center; padding: 4px 0 10px;
+    font-size: 32px; font-weight: 600; letter-spacing: .02em;
+    text-align: center; padding: 2px 0 8px;
     color: var(--ink);
   }
   .timer.over .timer-display { color: var(--red); }
   .timer.warn .timer-display { color: var(--tan); }
   .timer-presets {
-    display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px;
+    display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; margin-bottom: 7px;
   }
   .timer-presets button {
-    border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px;
-    font-size: 12px; color: var(--ink-2);
+    border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px;
+    font-size: 11.5px; color: var(--ink-2);
   }
   .timer-presets button.sel { background: var(--ink); color: var(--bg); border-color: var(--ink); }
   .timer-presets .custom { width: 64px; padding: 4px 6px; border-radius: 999px; text-align: center; }
@@ -521,10 +521,10 @@
     margin-left: auto;
   }
   .timer-controls {
-    display: flex; gap: 8px; justify-content: center;
+    display: flex; gap: 6px; justify-content: center;
   }
   .timer-controls button {
-    padding: 8px 16px; border-radius: 10px; font-weight: 600; font-size: 13px;
+    padding: 7px 13px; border-radius: 9px; font-weight: 600; font-size: 12.5px;
   }
   .timer-controls .primary { background: var(--ink); color: var(--bg); min-width: 88px; }
   .timer-controls .primary:disabled { background: var(--ink-3); }
@@ -532,19 +532,19 @@
 
   /* ===== Notes ===== */
   .notes {
-    padding: 0 14px;
+    padding: 0 12px;
     max-height: 0; overflow: hidden;
     transition: max-height .25s ease, padding .25s ease;
     border-top: 1px solid transparent;
   }
   .task.notes-open .notes {
     max-height: 240px;
-    padding: 10px 14px 12px;
+    padding: 8px 12px 10px;
     border-top-color: var(--line-2);
   }
   .notes textarea {
     width: 100%; border: 1px solid var(--line); border-radius: 10px;
-    padding: 8px 10px; font-size: 13px; min-height: 70px; background: var(--input-bg);
+    padding: 7px 9px; font-size: 12.5px; min-height: 62px; background: var(--input-bg);
   }
   .notes textarea:focus { outline: none; border-color: var(--ink-3); background: var(--card); }
 
@@ -1433,17 +1433,50 @@ function nextTaskId(tasks) {
   return Math.max(0, ...tasks.map(t => Number(t.id) || 0)) + 1;
 }
 
+function hexToRgb(hex) {
+  const clean = String(hex || '').trim().replace('#', '');
+  const full = clean.length === 3 ? clean.split('').map(x => x + x).join('') : clean;
+  const n = Number.parseInt(full, 16);
+  if (!Number.isFinite(n)) return null;
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+
+function rgbToHex({ r, g, b }) {
+  const toHex = v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function mixHex(a, b, amount=.5) {
+  const ca = hexToRgb(a), cb = hexToRgb(b);
+  if (!ca || !cb) return a || b || '#888888';
+  return rgbToHex({
+    r: ca.r * (1 - amount) + cb.r * amount,
+    g: ca.g * (1 - amount) + cb.g * amount,
+    b: ca.b * (1 - amount) + cb.b * amount
+  });
+}
+
+function themeTaskPalette() {
+  const t = themeVars();
+  // Muted colors derived from the active theme neutrals, not direct category red/green/blue.
+  return [
+    mixHex(t.ink, t.gray, .18),
+    mixHex(t.ink2, t.gray, .24),
+    mixHex(t.gray, t.tan, .24),
+    mixHex(t.ink, t.tan, .16),
+    mixHex(t.ink2, t.tan, .18)
+  ];
+}
+
 function taskPaletteColor(task, tasks) {
-  const colors = themeCatColors();
-  const palette = [colors.green, colors.blue, colors.tan, colors.red, colors.gray];
+  const palette = themeTaskPalette();
   const tags = [...new Set(tasks.map(t => t.tag || t.cat || '自定义'))];
   const idx = Math.max(0, tags.indexOf(task.tag || task.cat || '自定义'));
   return palette[idx % palette.length];
 }
 
 function colorForText(text) {
-  const colors = themeCatColors();
-  const palette = [colors.green, colors.blue, colors.tan, colors.red, colors.gray];
+  const palette = themeTaskPalette();
   let hash = 0;
   String(text || '').split('').forEach(ch => { hash = (hash * 31 + ch.charCodeAt(0)) >>> 0; });
   return palette[hash % palette.length];
@@ -1451,16 +1484,16 @@ function colorForText(text) {
 
 function looseTagHTML(text) {
   const color = colorForText(text);
-  return `<span class="tag" style="background:color-mix(in oklab, ${color} 18%, var(--card));color:${color}">${escapeHTML(text)}</span>`;
+  return `<span class="tag" style="background:color-mix(in oklab, ${color} 14%, var(--card));color:${color}">${escapeHTML(text)}</span>`;
 }
 
-function taskStyle(task, tasks, strength=12) {
+function taskStyle(task, tasks, strength=8) {
   const color = taskPaletteColor(task, tasks);
   return `--task-color:${color};--task-bg:color-mix(in oklab, ${color} ${strength}%, var(--card))`;
 }
 
 function taskTagHTML(task, tasks, label=null) {
-  return `<span class="tag" style="${taskStyle(task, tasks, 10)}">${escapeHTML(label || task.tag)}</span>`;
+  return `<span class="tag" style="${taskStyle(task, tasks, 7)}">${escapeHTML(label || task.tag)}</span>`;
 }
 
 function chooseTaskScope(action) {
@@ -1865,11 +1898,11 @@ function renderTasks() {
           <button class="ghost btn-reset">重置</button>
           <button class="ghost btn-add-min">+1 分钟</button>
         </div>
-        <div class="timer-manual" style="margin-top:8px;display:flex;align-items:center;gap:6px;justify-content:center;font-size:12px;color:var(--ink-2)">
+        <div class="timer-manual" style="margin-top:6px;display:flex;align-items:center;gap:5px;justify-content:center;font-size:11.5px;color:var(--ink-2)">
           <span style="color:var(--ink-3)">手动记录:</span>
-          <input class="manual-min" type="number" min="0" max="999" inputmode="numeric" placeholder="分钟" style="width:62px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;font-family:var(--font-en);text-align:center;font-size:13px;background:#fff" />
-          <button type="button" class="btn-time-set" style="padding:5px 10px;border-radius:8px;background:var(--bg-soft);font-size:12px;font-weight:600">= 设为</button>
-          <button type="button" class="btn-time-add" style="padding:5px 10px;border-radius:8px;background:var(--bg-soft);font-size:12px;font-weight:600">+ 累加</button>
+          <input class="manual-min" type="number" min="0" max="999" inputmode="numeric" placeholder="分钟" style="width:58px;padding:3px 6px;border:1px solid var(--line);border-radius:6px;font-family:var(--font-en);text-align:center;font-size:12px;background:#fff" />
+          <button type="button" class="btn-time-set" style="padding:4px 9px;border-radius:8px;background:var(--bg-soft);font-size:11.5px;font-weight:600">= 设为</button>
+          <button type="button" class="btn-time-add" style="padding:4px 9px;border-radius:8px;background:var(--bg-soft);font-size:11.5px;font-weight:600">+ 累加</button>
         </div>
       </div>
       <div class="notes">
@@ -2645,7 +2678,7 @@ function buildReportHTML(forDate) {
         <div style="font-weight:600;font-size:13px">
           <span style="color:${theme.ink3};font-family:ui-monospace,monospace;margin-right:6px">${String(t.id).padStart(2,'0')}</span>${safeText(t.title)}
         </div>
-        <span style="font-size:10px;font-family:ui-monospace,monospace;background:color-mix(in oklab, ${taskPaletteColor(t, tasks)} 18%, ${theme.card});color:${taskPaletteColor(t, tasks)};padding:1px 6px;border-radius:8px">${safeText(t.tag)}</span>
+        <span style="font-size:10px;font-family:ui-monospace,monospace;background:color-mix(in oklab, ${taskPaletteColor(t, tasks)} 12%, ${theme.card});color:${taskPaletteColor(t, tasks)};padding:1px 6px;border-radius:8px">${safeText(t.tag)}</span>
       </div>
       <div style="font-size:11px;color:${theme.ink2};font-family:ui-monospace,monospace">
         ${Math.round((data.tasks[t.id]?.elapsed || 0)/60) || 0} min
@@ -2676,7 +2709,7 @@ function buildReportHTML(forDate) {
         ${e.tags?.length ? `<div style="display:flex;gap:4px;flex-wrap:wrap">
           ${e.tags.map(t => {
             const color = colorForText(t);
-            return `<span style="font-size:10px;background:color-mix(in oklab, ${color} 18%, ${theme.card});color:${color};padding:1px 6px;border-radius:8px">${safeText(t)}</span>`;
+            return `<span style="font-size:10px;background:color-mix(in oklab, ${color} 12%, ${theme.card});color:${color};padding:1px 6px;border-radius:8px">${safeText(t)}</span>`;
           }).join('')}
         </div>` : ''}
       </div>
@@ -2799,7 +2832,7 @@ function buildReportHTML(forDate) {
           <div style="font-size:12px;font-weight:600;margin-bottom:8px">高频错因(今日)</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             ${topTags.map(([t, n]) => `
-              <span style="background:color-mix(in oklab, ${colorForText(t)} 18%, ${theme.card});color:${colorForText(t)};font-size:11.5px;padding:3px 9px;border-radius:12px">
+              <span style="background:color-mix(in oklab, ${colorForText(t)} 12%, ${theme.card});color:${colorForText(t)};font-size:11.5px;padding:3px 9px;border-radius:12px">
                 ${safeText(t)} <b style="margin-left:4px">×${n}</b>
               </span>`).join('')}
           </div>
