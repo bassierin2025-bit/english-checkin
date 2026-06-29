@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1" />
-<meta name="theme-color" content="#2F7D6B" />
+<meta name="theme-color" content="#FBF8F3" />
 <title>英语训练每日打卡</title>
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="icon" type="image/svg+xml" href="icon.svg" />
@@ -19,30 +19,35 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js" defer></script>
 <style>
   :root {
-    --bg: #EEF4F2;
-    --bg-soft: #DCE9E5;
-    --card: #FFFCF7;
-    --ink: #24312F;
-    --ink-2: #52615E;
-    --ink-3: #8B9995;
-    --line: #CAD8D4;
-    --line-2: #E3ECE9;
+    --bg: #FBF8F3;
+    --bg-soft: #F1F6F8;
+    --card: #FFFEFA;
+    --ink: #23384F;
+    --ink-2: #6F7876;
+    --ink-3: #949B95;
+    --line: #E8DDD1;
+    --line-2: #EDF3F5;
 
-    --green: #2F7D6B;   /* 夏洛克 */
-    --green-bg: #DCEEE8;
-    --blue: #3B6EA8;    /* 雅思 */
-    --blue-bg: #DDE8F4;
-    --tan: #D48A3A;     /* 输出 */
-    --tan-bg: #F4E2C8;
-    --red: #C64F5A;     /* 短视频 */
-    --red-bg: #F3D8DB;
-    --gray: #75808A;    /* 总结 */
-    --gray-bg: #E2E7E7;
+    --green: #AFCDB8;   /* soft sage */
+    --green-bg: #EFF6F1;
+    --blue: #94BCD7;    /* mist blue */
+    --blue-bg: #EEF6FA;
+    --tan: #E9CDB5;     /* warm peach */
+    --tan-bg: #FBF1EA;
+    --red: #D8B3A8;     /* clay rose */
+    --red-bg: #FAECE8;
+    --gray: #B8BDB5;    /* warm gray */
+    --gray-bg: #F0F2EF;
 
-    --shadow: 0 1px 2px rgba(15,23,42,.04), 0 4px 12px rgba(15,23,42,.04);
-    --shadow-lg: 0 8px 28px rgba(15,23,42,.10);
-    --radius: 14px;
-    --radius-sm: 10px;
+    --cal-stripe: rgba(148,188,215,.20);
+    --cal-blue: #A9CAE0;
+    --cal-peach: #EFD8C4;
+    --cal-sage: #DDEBDD;
+
+    --shadow: 0 10px 30px rgba(35,56,79,.06);
+    --shadow-lg: 0 18px 42px rgba(35,56,79,.12);
+    --radius: 22px;
+    --radius-sm: 16px;
 
     --safe-bottom: env(safe-area-inset-bottom, 0px);
     --safe-top: env(safe-area-inset-top, 0px);
@@ -50,9 +55,9 @@
     --font-cn: -apple-system, "SF Pro SC", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
     --font-en: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-    --topbar-bg: rgba(238,244,242,.88);
-    --tabbar-bg: rgba(255,252,247,.95);
-    --input-bg: #F7FBF9;
+    --topbar-bg: rgba(251,248,243,.88);
+    --tabbar-bg: rgba(255,254,250,.95);
+    --input-bg: #FFFFFF;
     /* Heatmap base color — themes can override to fit palette */
     --heat-base: var(--green);
     --task-tint: 8%;   /* % of category color mixed into task card bg */
@@ -423,11 +428,16 @@
     font-family: var(--font-en);
   }
   .task {
-    border-radius: var(--radius); box-shadow: var(--shadow);
-    margin-bottom: 8px; overflow: hidden;
-    border-left: 4px solid var(--task-color, var(--gray));
+    border-radius: 22px; box-shadow: none;
+    margin-bottom: 10px; overflow: hidden;
+    border: 1px solid color-mix(in oklab, var(--task-color, var(--gray)) 18%, var(--line-2));
     background: var(--task-bg, var(--card));
     position: relative;
+  }
+  .task::before {
+    content: ''; position: absolute; left: 0; top: 12px; bottom: 12px; width: 6px;
+    border-radius: 0 999px 999px 0;
+    background: color-mix(in oklab, var(--task-color, var(--gray)) 72%, white);
   }
   .task.done { opacity: .65; }
   .task.done::after {
@@ -435,15 +445,15 @@
   }
 
   .task-head {
-    display: flex; align-items: flex-start; gap: 8px;
-    padding: 9px 12px;
+    display: flex; align-items: flex-start; gap: 9px;
+    padding: 12px 14px 12px 18px;
   }
   .task .chk {
     flex-shrink: 0; width: 22px; height: 22px; border-radius: 7px;
     border: 1.5px solid var(--line);
     display: grid; place-items: center; margin-top: 2px;
     transition: all .15s;
-    background: var(--card);
+    background: rgba(255,255,255,.78);
   }
   .task .chk:hover { border-color: var(--ink-2); }
   .task.done .chk { background: var(--ink); border-color: var(--ink); }
@@ -453,29 +463,30 @@
   .task .title-row {
     display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
-  .task .title { font-weight: 600; font-size: 14.5px; }
+  .task .title { font-weight: 700; font-size: 14.5px; color: var(--ink); }
   .task.done .title { color: var(--ink-2); text-decoration: line-through; text-decoration-color: var(--ink-3); text-decoration-thickness: 1px; }
   .task .tag {
     font-size: 10px; padding: 1px 6px; border-radius: 9px; letter-spacing: .04em;
     font-weight: 500;
-    background: color-mix(in oklab, var(--task-color, var(--gray)) 18%, var(--card));
+    background: color-mix(in oklab, var(--task-color, var(--gray)) 16%, white);
     color: var(--task-color, var(--gray));
+    border: 1px solid color-mix(in oklab, var(--task-color, var(--gray)) 16%, transparent);
   }
   .tag.green { background: var(--green-bg); color: var(--green); }
   .tag.blue  { background: var(--blue-bg);  color: var(--blue); }
   .tag.tan   { background: var(--tan-bg);   color: var(--tan); }
   .tag.red   { background: var(--red-bg);   color: var(--red); }
   .tag.gray  { background: var(--gray-bg);  color: var(--gray); }
-  .task .desc { color: var(--ink-2); font-size: 12.5px; margin-top: 2px; line-height: 1.45; }
+  .task .desc { color: var(--ink-2); font-size: 12.5px; margin-top: 3px; line-height: 1.48; }
   .task .meta {
     display: flex; align-items: center; gap: 6px; margin-top: 5px;
     font-size: 11.5px; color: var(--ink-3); font-family: var(--font-en);
   }
   .task .meta .pill {
-    background: var(--bg-soft); padding: 1px 6px; border-radius: 6px;
+    background: rgba(255,255,255,.58); padding: 1px 6px; border-radius: 7px;
   }
   .task .action {
-    background: none; padding: 3px 7px; border-radius: 7px;
+    background: rgba(255,255,255,.52); padding: 3px 7px; border-radius: 8px;
     font-size: 11.5px; color: var(--ink-2);
     border: 1px solid var(--line);
     transition: background .15s, border-color .15s;
@@ -657,50 +668,67 @@
   .btn-outline { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
 
   /* ===== Analytics ===== */
-  .chart-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; margin-bottom: 12px; }
+  .chart-card {
+    background: color-mix(in oklab, var(--tan-bg) 38%, var(--card));
+    border: 1px solid color-mix(in oklab, var(--line) 62%, white);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 14px;
+    margin-bottom: 12px;
+  }
   .chart-card h3 { margin: 0 0 4px; font-size: 14px; }
   .chart-card .sub { color: var(--ink-3); font-size: 12px; margin-bottom: 10px; }
   .chart-card canvas { max-width: 100%; }
   .hm-cell {
-    aspect-ratio: 1 / 1; border-radius: 4px; background: var(--bg-soft);
+    aspect-ratio: 1 / 1;
+    border: 1px solid color-mix(in oklab, var(--cal-blue) 18%, var(--line-2));
+    border-radius: 7px;
+    background:
+      repeating-linear-gradient(135deg, transparent 0 6px, var(--cal-stripe) 6px 8px),
+      rgba(255,255,255,.68);
   }
-  .hm-cell[data-v="1"] { background: color-mix(in oklab, var(--heat-base) 18%, var(--bg-soft)); }
-  .hm-cell[data-v="2"] { background: color-mix(in oklab, var(--heat-base) 38%, var(--bg-soft)); }
-  .hm-cell[data-v="3"] { background: color-mix(in oklab, var(--heat-base) 58%, var(--bg-soft)); }
-  .hm-cell[data-v="4"] { background: color-mix(in oklab, var(--heat-base) 78%, var(--bg-soft)); }
-  .hm-cell[data-v="5"] { background: var(--heat-base); }
+  .hm-cell[data-v="1"] { background: color-mix(in oklab, var(--cal-peach) 28%, white); }
+  .hm-cell[data-v="2"] { background: color-mix(in oklab, var(--cal-peach) 52%, white); }
+  .hm-cell[data-v="3"] { background: color-mix(in oklab, var(--cal-blue) 46%, white); }
+  .hm-cell[data-v="4"] { background: color-mix(in oklab, var(--cal-blue) 70%, white); }
+  .hm-cell[data-v="5"] { background: var(--cal-blue); }
   .heatmap-legend { display: flex; align-items: center; gap: 6px; justify-content: flex-end; font-size: 11px; color: var(--ink-3); font-family: var(--font-en); }
   .heatmap-legend .hm-cell { width: 12px; height: 12px; aspect-ratio: auto; border-radius: 3px; }
 
   /* Calendar heatmap */
   .cal-weekdays {
-    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
-    font-size: 10.5px; color: var(--ink-3); text-align: center;
-    margin: 4px 0 6px;
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+    font-size: 11.5px; color: var(--ink-3); text-align: center;
+    margin: 8px 0 8px;
   }
   .cal-grid {
-    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
   }
   .cal-day {
-    aspect-ratio: 1 / 1; border-radius: 6px;
-    display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;
-    padding: 4px 0 0 5px; font-size: 11px; color: var(--ink-3);
-    font-family: var(--font-en); font-weight: 500;
-    background: var(--bg-soft); position: relative; border: none;
+    aspect-ratio: 1 / 1; border-radius: 14px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 0; font-size: 13px; color: #506277;
+    font-family: var(--font-en); font-weight: 700;
+    background:
+      repeating-linear-gradient(135deg, transparent 0 7px, var(--cal-stripe) 7px 9px),
+      rgba(255,255,255,.76);
+    position: relative;
+    border: 1px solid color-mix(in oklab, var(--cal-blue) 18%, var(--line-2));
+    box-shadow: 0 8px 18px rgba(35,56,79,.04), inset 0 0 0 1px rgba(255,255,255,.55);
     cursor: pointer; transition: transform .08s;
   }
   .cal-day:active { transform: scale(.95); }
   .cal-day.empty { background: transparent; pointer-events: none; }
   .cal-day.future { opacity: .35; cursor: default; }
-  .cal-day.today { box-shadow: 0 0 0 2px var(--ink) inset; }
-  .cal-day[data-v="1"] { background: color-mix(in oklab, var(--heat-base) 18%, var(--bg-soft)); color: var(--ink); }
-  .cal-day[data-v="2"] { background: color-mix(in oklab, var(--heat-base) 38%, var(--bg-soft)); color: var(--ink); }
-  .cal-day[data-v="3"] { background: color-mix(in oklab, var(--heat-base) 58%, var(--bg-soft)); color: var(--bg); }
-  .cal-day[data-v="4"] { background: color-mix(in oklab, var(--heat-base) 78%, var(--bg-soft)); color: var(--bg); }
-  .cal-day[data-v="5"] { background: var(--heat-base); color: var(--bg); }
+  .cal-day.today { box-shadow: 0 0 0 3px rgba(35,56,79,.55) inset, 0 8px 18px rgba(35,56,79,.06); }
+  .cal-day[data-v="1"] { background: color-mix(in oklab, var(--cal-peach) 30%, white); color: var(--ink); border-color: color-mix(in oklab, var(--cal-peach) 42%, var(--line-2)); }
+  .cal-day[data-v="2"] { background: color-mix(in oklab, var(--cal-peach) 58%, white); color: var(--ink); border-color: color-mix(in oklab, var(--cal-peach) 68%, var(--line-2)); }
+  .cal-day[data-v="3"] { background: color-mix(in oklab, var(--cal-blue) 54%, white); color: var(--ink); border-color: color-mix(in oklab, var(--cal-blue) 64%, var(--line-2)); }
+  .cal-day[data-v="4"] { background: color-mix(in oklab, var(--cal-blue) 78%, white); color: var(--ink); border-color: color-mix(in oklab, var(--cal-blue) 82%, var(--line-2)); }
+  .cal-day[data-v="5"] { background: var(--cal-blue); color: var(--ink); border-color: color-mix(in oklab, var(--cal-blue) 86%, var(--line-2)); }
   .cal-day .cal-dot {
-    position: absolute; bottom: 4px; right: 5px;
-    font-size: 9px; opacity: .8; font-weight: 600;
+    position: static; margin-top: 1px;
+    font-size: 9px; opacity: .72; font-weight: 600; line-height: 1;
   }
 
   /* ===== Weekly review ===== */
@@ -1458,13 +1486,13 @@ function mixHex(a, b, amount=.5) {
 
 function themeTaskPalette() {
   const t = themeVars();
-  // Muted colors derived from the active theme neutrals, not direct category red/green/blue.
+  // Soft accents derived from the active theme so task blocks follow the current palette.
   return [
-    mixHex(t.ink, t.gray, .18),
-    mixHex(t.ink2, t.gray, .24),
-    mixHex(t.gray, t.tan, .24),
-    mixHex(t.ink, t.tan, .16),
-    mixHex(t.ink2, t.tan, .18)
+    mixHex(t.ink, t.blue, .45),
+    mixHex(t.ink2, t.tan, .45),
+    mixHex(t.ink2, t.green, .40),
+    mixHex(t.gray, t.blue, .42),
+    mixHex(t.ink, t.tan, .30)
   ];
 }
 
@@ -1484,16 +1512,16 @@ function colorForText(text) {
 
 function looseTagHTML(text) {
   const color = colorForText(text);
-  return `<span class="tag" style="background:color-mix(in oklab, ${color} 14%, var(--card));color:${color}">${escapeHTML(text)}</span>`;
+  return `<span class="tag" style="background:color-mix(in oklab, ${color} 16%, var(--card));color:${color};border-color:color-mix(in oklab, ${color} 22%, var(--line-2))">${escapeHTML(text)}</span>`;
 }
 
-function taskStyle(task, tasks, strength=8) {
+function taskStyle(task, tasks, strength=16) {
   const color = taskPaletteColor(task, tasks);
   return `--task-color:${color};--task-bg:color-mix(in oklab, ${color} ${strength}%, var(--card))`;
 }
 
 function taskTagHTML(task, tasks, label=null) {
-  return `<span class="tag" style="${taskStyle(task, tasks, 7)}">${escapeHTML(label || task.tag)}</span>`;
+  return `<span class="tag" style="${taskStyle(task, tasks, 12)}">${escapeHTML(label || task.tag)}</span>`;
 }
 
 function chooseTaskScope(action) {
@@ -3403,7 +3431,7 @@ $('#btn-wk-prompt').onclick = () => {
 // ===== Color themes =====
 // Each entry: id (matches CSS body[data-theme="id"]), name, desc, 5 swatch colors (bg/green/blue/tan/red)
 const THEMES = [
-  { id: 'warm',         name: '青瓷晨雾',   desc: '清爽、柔和,适合手机长时间打卡',       colors: ['#EEF4F2','#2F7D6B','#3B6EA8','#D48A3A','#C64F5A'] },
+  { id: 'warm',         name: '奶油雾蓝',   desc: '奶油底、雾蓝和桃杏,更贴近月历面板', colors: ['#FBF8F3','#AFCDB8','#94BCD7','#E9CDB5','#D8B3A8'] },
   { id: 'terra',        name: '陶土珊瑚',   desc: '暖色但不甜腻,适合输出复盘',           colors: ['#F2E9DF','#8AA37A','#5D7E96','#C97550','#D26B5C'] },
   { id: 'olive',        name: '青橄榄',     desc: '自然、稳、带一点设计感',               colors: ['#F0EDE2','#5F7A3E','#5E7383','#C49567','#B25742'] },
   { id: 'morandi-ink',  name: '莫兰迪墨蓝', desc: '冷静、专业,减少视觉疲劳',             colors: ['#E5EAEE','#6E8A85','#3E5876','#A18570','#A0625A'] },
