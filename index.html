@@ -738,7 +738,7 @@
     cursor: pointer; transition: transform .08s;
   }
   .cal-day:active { transform: scale(.95); }
-  .cal-day.empty { background: color-mix(in oklab, var(--card) 68%, var(--task-surface)); pointer-events: none; }
+  .cal-day.empty { visibility: hidden; pointer-events: none; }
   .cal-day.future { opacity: .35; cursor: default; }
   .cal-day.today { box-shadow: 0 0 0 2px color-mix(in oklab, var(--ink) 42%, transparent) inset; }
   .cal-day[data-v="1"] { background: color-mix(in oklab, var(--cal-peach) 30%, white); color: var(--ink); border-color: color-mix(in oklab, var(--cal-peach) 42%, var(--line-2)); }
@@ -1563,12 +1563,15 @@ function mixHex(a, b, amount=.5) {
 
 function themeTaskPalette() {
   const t = themeVars();
-  // Four semantic groups; each theme provides its own accent set.
+  const themeId = localStorage.getItem('theme') || 'warm';
+  const theme = THEMES.find(x => x.id === themeId) || THEMES[0];
+  const swatches = Array.isArray(theme?.colors) ? theme.colors : [];
+  // Follow the visible theme swatches first; CSS variables are only the fallback.
   return {
-    '夏洛克': t.taskSherlock,
-    '雅思': t.taskIelts,
-    '短视频': t.taskShort,
-    '复习': t.taskReview
+    '夏洛克': swatches[1] || t.taskSherlock,
+    '雅思': swatches[2] || t.taskIelts,
+    '短视频': swatches[4] || t.taskShort,
+    '复习': swatches[3] || t.taskReview
   };
 }
 
@@ -1597,7 +1600,7 @@ function looseTagHTML(text) {
 
 function taskStyle(task, tasks, strength=0) {
   const color = taskPaletteColor(task, tasks);
-  return `--task-color:${color};--task-bg:var(--task-surface)`;
+  return `--task-color:${color};--task-bg:color-mix(in oklab, ${color} 4%, var(--task-surface))`;
 }
 
 function taskTagHTML(task, tasks, label=null) {
