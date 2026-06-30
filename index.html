@@ -1118,7 +1118,7 @@
     </div>
 
     <!-- AI summary section -->
-    <div class="week-card" style="border-left:4px solid var(--green)">
+    <div class="week-card" style="border-left:4px solid var(--blue)">
       <h3 style="margin:0 0 6px;font-size:14px">本周 AI 总结</h3>
       <p style="font-size:12px;color:var(--ink-3);margin:0 0 10px">点下面按钮把本周数据整理成提示词,粘到 Claude/ChatGPT 让它给一份总结,贴回这里。</p>
       <textarea id="wk-ai" style="width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:#FCFBF8;font-size:13.5px;min-height:120px" placeholder="把 AI 回复贴这里(可选)"></textarea>
@@ -1398,32 +1398,56 @@ $('#modal-close').onclick = () => $('#modal-bg').classList.remove('show');
 $('#modal-bg').addEventListener('click', e => { if (e.target.id === 'modal-bg') $('#modal-bg').classList.remove('show'); });
 
 /* ===== Tasks from SOP ===== */
+const TASK_GROUPS = ['夏洛克', '雅思', '短视频', '复习'];
+const LEGACY_GROUP_MAP = {
+  green: '夏洛克',
+  blue: '雅思',
+  red: '短视频',
+  tan: '复习',
+  gray: '复习',
+  '输出': '复习',
+  '总结': '复习',
+  '复盘': '复习',
+  '自定义': '复习'
+};
+
+function canonicalTaskTag(tag, cat='', fallback='复习') {
+  const raw = String(tag || '').trim();
+  if (TASK_GROUPS.includes(raw)) return raw;
+  if (LEGACY_GROUP_MAP[raw]) return LEGACY_GROUP_MAP[raw];
+  const rawCat = String(cat || '').trim();
+  if (TASK_GROUPS.includes(rawCat)) return rawCat;
+  if (LEGACY_GROUP_MAP[rawCat]) return LEGACY_GROUP_MAP[rawCat];
+  return fallback;
+}
+
 const DEFAULT_TASKS = [
-  { id: 1,  cat: 'green', tag:'夏洛克',  title: '英式声音开机',  desc: '选一段夏洛克或喜欢的英式片段,先听声音和语流,不查词不分析剧情。', timer: 5,  mode: 'down' },
-  { id: 2,  cat: 'blue',  tag:'雅思',    title: '圈逻辑词',      desc: '圈出 but / actually / after / before / until / so that / which means 等。', timer: 5, mode: 'down' },
-  { id: 3,  cat: 'green', tag:'夏洛克',  title: '英式声音校准',  desc: '第二遍开英文字幕,标出一句好听的,重点听重音、停顿、弱读。', timer: 10, mode: 'down' },
-  { id: 4,  cat: 'blue',  tag:'雅思',    title: '写答案机制',    desc: '一句话总结这题为什么选这个:问的是动作、状态还是原因。', timer: 5, mode: 'down' },
-  { id: 5,  cat: 'green', tag:'夏洛克',  title: '跟读录音',      desc: '跟读 10-20 秒一次,录音回放检查:句子有没有断、重音是否太平均、气流是否往前走。', timer: 15, mode: 'down' },
-  { id: 6,  cat: 'tan',   tag:'输出',    title: '摘句子骨架',    desc: "从 Part 1 或对话里摘 3 个能反复用的:I was wondering if / I'm just checking / Would it be possible to。", timer: 5, mode: 'down' },
-  { id: 7,  cat: 'blue',  tag:'雅思',    title: '雅思正常做题',  desc: '完成一套或一部分,按考试状态做,不暂停、不查原文。', timer: 30, mode: 'down' },
-  { id: 8,  cat: 'tan',   tag:'输出',    title: '改成自己的生活句', desc: '每个骨架至少改写 2 句和超市、工作、日常相关的句子。', timer: 10, mode: 'down' },
-  { id: 9,  cat: 'blue',  tag:'雅思',    title: '标确定度',      desc: '做完后先不看原文,题号旁标:确定 / 半确定 / 乱猜。', timer: 0, mode: 'up' },
-  { id: 10, cat: 'tan',   tag:'输出',    title: '读自己的句子',  desc: '读 3 遍,最后录 1 遍,重点是能不能连成完整句。', timer: 5, mode: 'down' },
-  { id: 11, cat: 'blue',  tag:'雅思',    title: '快速对答案',    desc: '只对正确答案,先不看解析,把错题和低确定度题圈出来。', timer: 5, mode: 'down' },
-  { id: 12, cat: 'red',   tag:'短视频',  title: '短视频补接话',  desc: '刷到英语短视频时只摘 1 句自然反应:Fair enough / That makes sense / No way。', timer: 5, mode: 'down' },
-  { id: 13, cat: 'blue',  tag:'雅思',    title: '精听错题附近',  desc: '每道重点错题只听答案前后 20-30 秒,先不看原文,写一句自己的理解。', timer: 15, mode: 'down' },
-  { id: 14, cat: 'red',   tag:'短视频',  title: '当天模拟使用',  desc: '用今天摘的接话句造一个真实场景。', timer: 5, mode: 'down' },
-  { id: 15, cat: 'blue',  tag:'雅思',    title: '标误导和确认点',desc: '格式:误导点是……  确认点是……', timer: 10, mode: 'down' },
-  { id: 16, cat: 'gray',  tag:'总结',    title: '今日总结',      desc: '写一句今天最主要的问题,例:今天容易把前置动作当最终答案。', timer: 5, mode: 'down' },
+  { id: 1,  cat: '夏洛克', tag:'夏洛克',  title: '英式声音开机',  desc: '选一段夏洛克或喜欢的英式片段,先听声音和语流,不查词不分析剧情。', timer: 5,  mode: 'down' },
+  { id: 2,  cat: '雅思',   tag:'雅思',    title: '圈逻辑词',      desc: '圈出 but / actually / after / before / until / so that / which means 等。', timer: 5, mode: 'down' },
+  { id: 3,  cat: '夏洛克', tag:'夏洛克',  title: '英式声音校准',  desc: '第二遍开英文字幕,标出一句好听的,重点听重音、停顿、弱读。', timer: 10, mode: 'down' },
+  { id: 4,  cat: '雅思',   tag:'雅思',    title: '写答案机制',    desc: '一句话总结这题为什么选这个:问的是动作、状态还是原因。', timer: 5, mode: 'down' },
+  { id: 5,  cat: '夏洛克', tag:'夏洛克',  title: '跟读录音',      desc: '跟读 10-20 秒一次,录音回放检查:句子有没有断、重音是否太平均、气流是否往前走。', timer: 15, mode: 'down' },
+  { id: 6,  cat: '复习',   tag:'复习',    title: '摘句子骨架',    desc: "从 Part 1 或对话里摘 3 个能反复用的:I was wondering if / I'm just checking / Would it be possible to。", timer: 5, mode: 'down' },
+  { id: 7,  cat: '雅思',   tag:'雅思',    title: '雅思正常做题',  desc: '完成一套或一部分,按考试状态做,不暂停、不查原文。', timer: 30, mode: 'down' },
+  { id: 8,  cat: '复习',   tag:'复习',    title: '改成自己的生活句', desc: '每个骨架至少改写 2 句和超市、工作、日常相关的句子。', timer: 10, mode: 'down' },
+  { id: 9,  cat: '雅思',   tag:'雅思',    title: '标确定度',      desc: '做完后先不看原文,题号旁标:确定 / 半确定 / 乱猜。', timer: 0, mode: 'up' },
+  { id: 10, cat: '复习',   tag:'复习',    title: '读自己的句子',  desc: '读 3 遍,最后录 1 遍,重点是能不能连成完整句。', timer: 5, mode: 'down' },
+  { id: 11, cat: '雅思',   tag:'雅思',    title: '快速对答案',    desc: '只对正确答案,先不看解析,把错题和低确定度题圈出来。', timer: 5, mode: 'down' },
+  { id: 12, cat: '短视频', tag:'短视频',  title: '短视频补接话',  desc: '刷到英语短视频时只摘 1 句自然反应:Fair enough / That makes sense / No way。', timer: 5, mode: 'down' },
+  { id: 13, cat: '雅思',   tag:'雅思',    title: '精听错题附近',  desc: '每道重点错题只听答案前后 20-30 秒,先不看原文,写一句自己的理解。', timer: 15, mode: 'down' },
+  { id: 14, cat: '短视频', tag:'短视频',  title: '当天模拟使用',  desc: '用今天摘的接话句造一个真实场景。', timer: 5, mode: 'down' },
+  { id: 15, cat: '雅思',   tag:'雅思',    title: '标误导和确认点',desc: '格式:误导点是……  确认点是……', timer: 10, mode: 'down' },
+  { id: 16, cat: '复习',   tag:'复习',    title: '今日总结',      desc: '写一句今天最主要的问题,例:今天容易把前置动作当最终答案。', timer: 5, mode: 'down' },
 ];
 
 function normalizeTask(task, fallbackId) {
   const id = Number(task.id ?? fallbackId);
   const timer = Math.max(0, Number(task.timer || 0));
+  const tag = canonicalTaskTag(task.tag, task.cat);
   return {
     id,
-    cat: task.cat || 'gray',
-    tag: String(task.tag || '自定义').trim() || '自定义',
+    cat: tag,
+    tag,
     title: String(task.title || '未命名任务').trim() || '未命名任务',
     desc: String(task.desc || '').trim(),
     timer,
@@ -1486,28 +1510,31 @@ function mixHex(a, b, amount=.5) {
 
 function themeTaskPalette() {
   const t = themeVars();
-  // Soft accents derived from the active theme so task blocks follow the current palette.
-  return [
-    mixHex(t.ink, t.blue, .45),
-    mixHex(t.ink2, t.tan, .45),
-    mixHex(t.ink2, t.green, .40),
-    mixHex(t.gray, t.blue, .42),
-    mixHex(t.ink, t.tan, .30)
-  ];
+  // Four semantic groups; every color is rebuilt from the current theme.
+  return {
+    '夏洛克': mixHex(t.ink, t.blue, .52),
+    '雅思': mixHex(t.ink2, t.tan, .48),
+    '短视频': mixHex(t.ink2, t.green, .52),
+    '复习': mixHex(t.ink, t.gray, .46)
+  };
 }
 
 function taskPaletteColor(task, tasks) {
   const palette = themeTaskPalette();
-  const tags = [...new Set(tasks.map(t => t.tag || t.cat || '自定义'))];
-  const idx = Math.max(0, tags.indexOf(task.tag || task.cat || '自定义'));
-  return palette[idx % palette.length];
+  const tag = canonicalTaskTag(task?.tag, task?.cat);
+  if (palette[tag]) return palette[tag];
+  const values = Object.values(palette);
+  return values[0] || '#888888';
 }
 
 function colorForText(text) {
   const palette = themeTaskPalette();
+  const direct = palette[canonicalTaskTag(text, '', null)];
+  if (direct) return direct;
+  const values = Object.values(palette);
   let hash = 0;
   String(text || '').split('').forEach(ch => { hash = (hash * 31 + ch.charCodeAt(0)) >>> 0; });
-  return palette[hash % palette.length];
+  return values[hash % values.length] || '#888888';
 }
 
 function looseTagHTML(text) {
@@ -1549,7 +1576,7 @@ function editTaskPlan(scope, mutator) {
 function promptTaskFields(base={}) {
   const title = prompt('任务名称', base.title || '');
   if (title == null || !title.trim()) return null;
-  const tag = prompt('标签/分类名', base.tag || '自定义');
+  const tag = prompt('分类名（夏洛克 / 雅思 / 短视频 / 复习）', canonicalTaskTag(base.tag, base.cat));
   if (tag == null) return null;
   const desc = prompt('任务说明（可留空）', base.desc || '');
   if (desc == null) return null;
@@ -1570,7 +1597,7 @@ function promptTaskFields(base={}) {
 function addTaskFlow() {
   const scope = chooseTaskScope('添加任务');
   const baseTasks = scope === 'global' ? loadGlobalTasks() : tasksForDate(TODAY);
-  const task = promptTaskFields({ id: nextTaskId(baseTasks), tag: '自定义', timer: 5, mode: 'down', custom: true });
+  const task = promptTaskFields({ id: nextTaskId(baseTasks), tag: '复习', cat: '复习', timer: 5, mode: 'down', custom: true });
   if (!task) return;
   editTaskPlan(scope, tasks => tasks.push(task));
   toast(scope === 'global' ? '已加入以后每天的循环任务' : '已加入今天');
@@ -2537,7 +2564,7 @@ function refreshSummary() {
       const notes = data.tasks[t.id]?.notes || '';
       return `
         <div style="padding:7px 0;border-bottom:1px solid var(--line-2);display:flex;gap:8px;align-items:flex-start">
-          <span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span>
+          <span style="color:var(--blue);font-weight:700;flex-shrink:0">✓</span>
           <div style="flex:1;min-width:0">
             <div><span style="color:var(--ink-3);font-family:var(--font-en);margin-right:6px">${String(t.id).padStart(2,'0')}</span>${escapeHTML(t.title)}
               <span style="margin-left:6px">${taskTagHTML(t, tasks)}</span>
@@ -2553,7 +2580,7 @@ function refreshSummary() {
   // errors list (brief)
   const errEl = $('#sum-err-list');
   if (errors.length === 0) {
-    errEl.innerHTML = `<div class="empty" style="padding:14px;text-align:left;color:var(--green)">今日 0 错题 · 状态稳。</div>`;
+    errEl.innerHTML = `<div class="empty" style="padding:14px;text-align:left;color:var(--blue)">今日 0 错题 · 状态稳。</div>`;
   } else {
     errEl.innerHTML = errors.map((e, i) => `
       <div style="padding:8px 10px;background:var(--bg-soft);border-radius:8px;margin-bottom:6px;border-left:3px solid var(--red)">
@@ -2848,8 +2875,8 @@ function buildReportHTML(forDate) {
           </div>
         </div>
         ${data.summary?.ai ? `
-          <div style="background:${theme.bgSoft};border:1px solid ${theme.line};border-left:4px solid ${theme.green};border-radius:10px;padding:12px;margin-top:10px;break-inside:avoid;page-break-inside:avoid">
-            <div style="font-size:10.5px;color:${theme.green};letter-spacing:.08em;margin-bottom:5px;font-weight:600">AI COACH</div>
+          <div style="background:${theme.bgSoft};border:1px solid ${theme.line};border-left:4px solid ${theme.blue};border-radius:10px;padding:12px;margin-top:10px;break-inside:avoid;page-break-inside:avoid">
+            <div style="font-size:10.5px;color:${theme.blue};letter-spacing:.08em;margin-bottom:5px;font-weight:600">AI COACH</div>
             <div style="font-size:12.5px;line-height:1.65;white-space:pre-wrap">${safeText(data.summary.ai)}</div>
           </div>` : ''}
       </div>
@@ -2869,7 +2896,7 @@ function buildReportHTML(forDate) {
       <!-- Completed tasks 2-column -->
       <div style="margin-bottom:18px">
         <div style="font-size:13px;font-weight:600;color:${theme.ink2};margin-bottom:8px;display:flex;align-items:center;gap:8px">
-          <span style="width:3px;height:14px;background:${theme.green};border-radius:2px"></span>今日完成的 ${done.length} 项任务
+          <span style="width:3px;height:14px;background:${theme.blue};border-radius:2px"></span>今日完成的 ${done.length} 项任务
         </div>
         ${done.length ? `
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${doneCards}</div>
@@ -2886,7 +2913,7 @@ function buildReportHTML(forDate) {
           ${errCards}
         </div>
       ` : `
-        <div style="background:${theme.greenBg};border:1px solid ${theme.green};border-radius:10px;padding:14px;text-align:center;color:${theme.green};font-size:12.5px">
+        <div style="background:${theme.blueBg};border:1px solid ${theme.blue};border-radius:10px;padding:14px;text-align:center;color:${theme.blue};font-size:12.5px">
           ✓ 今日 0 错题 · 状态稳
         </div>
       `}
