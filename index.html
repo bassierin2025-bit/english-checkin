@@ -716,17 +716,18 @@
 
   /* Calendar heatmap */
   .cal-weekdays {
-    display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
-    font-size: 11.5px; color: var(--ink-3); text-align: center;
+    display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px;
+    font-size: 11px; color: var(--ink-3); text-align: center;
     margin: 8px 0 8px;
   }
   .cal-grid {
-    display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+    display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px;
+    width: 100%; overflow: hidden;
   }
   .cal-day {
-    aspect-ratio: 1 / 1; border-radius: 14px;
+    width: 100%; min-width: 0; height: clamp(38px, 10vw, 48px); border-radius: 11px;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 0; font-size: 13px; color: #506277;
+    padding: 0; font-size: 11.5px; color: var(--ink-3);
     font-family: var(--font-en); font-weight: 700;
     background:
       repeating-linear-gradient(135deg, transparent 0 8px, color-mix(in oklab, var(--line-2) 72%, transparent) 8px 10px),
@@ -737,9 +738,9 @@
     cursor: pointer; transition: transform .08s;
   }
   .cal-day:active { transform: scale(.95); }
-  .cal-day.empty { background: transparent; pointer-events: none; }
+  .cal-day.empty { background: color-mix(in oklab, var(--card) 68%, var(--task-surface)); pointer-events: none; }
   .cal-day.future { opacity: .35; cursor: default; }
-  .cal-day.today { box-shadow: 0 0 0 3px color-mix(in oklab, var(--ink) 48%, transparent) inset; }
+  .cal-day.today { box-shadow: 0 0 0 2px color-mix(in oklab, var(--ink) 42%, transparent) inset; }
   .cal-day[data-v="1"] { background: color-mix(in oklab, var(--cal-peach) 30%, white); color: var(--ink); border-color: color-mix(in oklab, var(--cal-peach) 42%, var(--line-2)); }
   .cal-day[data-v="2"] { background: color-mix(in oklab, var(--cal-peach) 58%, white); color: var(--ink); border-color: color-mix(in oklab, var(--cal-peach) 68%, var(--line-2)); }
   .cal-day[data-v="3"] { background: color-mix(in oklab, var(--cal-blue) 54%, white); color: var(--ink); border-color: color-mix(in oklab, var(--cal-blue) 64%, var(--line-2)); }
