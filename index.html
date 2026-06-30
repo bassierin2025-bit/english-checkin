@@ -1411,6 +1411,26 @@ const LEGACY_GROUP_MAP = {
   '自定义': '复习'
 };
 
+const TASK_FLOW_TITLES = [
+  '英式声音开机',
+  '英式声音校准',
+  '跟读录音',
+  '雅思正常做题',
+  '标确定度',
+  '快速对答案',
+  '精听错题附近',
+  '标误导和确认点',
+  '圈逻辑词',
+  '写答案机制',
+  '摘句子骨架',
+  '改成自己的生活句',
+  '读自己的句子',
+  '短视频补接话',
+  '当天模拟使用',
+  '今日总结'
+];
+const TASK_FLOW_RANK = Object.fromEntries(TASK_FLOW_TITLES.map((title, i) => [title, i]));
+
 function canonicalTaskTag(tag, cat='', fallback='复习') {
   const raw = String(tag || '').trim();
   if (TASK_GROUPS.includes(raw)) return raw;
@@ -1423,20 +1443,20 @@ function canonicalTaskTag(tag, cat='', fallback='复习') {
 
 const DEFAULT_TASKS = [
   { id: 1,  cat: '夏洛克', tag:'夏洛克',  title: '英式声音开机',  desc: '选一段夏洛克或喜欢的英式片段,先听声音和语流,不查词不分析剧情。', timer: 5,  mode: 'down' },
-  { id: 2,  cat: '雅思',   tag:'雅思',    title: '圈逻辑词',      desc: '圈出 but / actually / after / before / until / so that / which means 等。', timer: 5, mode: 'down' },
   { id: 3,  cat: '夏洛克', tag:'夏洛克',  title: '英式声音校准',  desc: '第二遍开英文字幕,标出一句好听的,重点听重音、停顿、弱读。', timer: 10, mode: 'down' },
-  { id: 4,  cat: '雅思',   tag:'雅思',    title: '写答案机制',    desc: '一句话总结这题为什么选这个:问的是动作、状态还是原因。', timer: 5, mode: 'down' },
   { id: 5,  cat: '夏洛克', tag:'夏洛克',  title: '跟读录音',      desc: '跟读 10-20 秒一次,录音回放检查:句子有没有断、重音是否太平均、气流是否往前走。', timer: 15, mode: 'down' },
-  { id: 6,  cat: '复习',   tag:'复习',    title: '摘句子骨架',    desc: "从 Part 1 或对话里摘 3 个能反复用的:I was wondering if / I'm just checking / Would it be possible to。", timer: 5, mode: 'down' },
   { id: 7,  cat: '雅思',   tag:'雅思',    title: '雅思正常做题',  desc: '完成一套或一部分,按考试状态做,不暂停、不查原文。', timer: 30, mode: 'down' },
-  { id: 8,  cat: '复习',   tag:'复习',    title: '改成自己的生活句', desc: '每个骨架至少改写 2 句和超市、工作、日常相关的句子。', timer: 10, mode: 'down' },
   { id: 9,  cat: '雅思',   tag:'雅思',    title: '标确定度',      desc: '做完后先不看原文,题号旁标:确定 / 半确定 / 乱猜。', timer: 0, mode: 'up' },
-  { id: 10, cat: '复习',   tag:'复习',    title: '读自己的句子',  desc: '读 3 遍,最后录 1 遍,重点是能不能连成完整句。', timer: 5, mode: 'down' },
   { id: 11, cat: '雅思',   tag:'雅思',    title: '快速对答案',    desc: '只对正确答案,先不看解析,把错题和低确定度题圈出来。', timer: 5, mode: 'down' },
-  { id: 12, cat: '短视频', tag:'短视频',  title: '短视频补接话',  desc: '刷到英语短视频时只摘 1 句自然反应:Fair enough / That makes sense / No way。', timer: 5, mode: 'down' },
   { id: 13, cat: '雅思',   tag:'雅思',    title: '精听错题附近',  desc: '每道重点错题只听答案前后 20-30 秒,先不看原文,写一句自己的理解。', timer: 15, mode: 'down' },
-  { id: 14, cat: '短视频', tag:'短视频',  title: '当天模拟使用',  desc: '用今天摘的接话句造一个真实场景。', timer: 5, mode: 'down' },
   { id: 15, cat: '雅思',   tag:'雅思',    title: '标误导和确认点',desc: '格式:误导点是……  确认点是……', timer: 10, mode: 'down' },
+  { id: 2,  cat: '雅思',   tag:'雅思',    title: '圈逻辑词',      desc: '圈出 but / actually / after / before / until / so that / which means 等。', timer: 5, mode: 'down' },
+  { id: 4,  cat: '雅思',   tag:'雅思',    title: '写答案机制',    desc: '一句话总结这题为什么选这个:问的是动作、状态还是原因。', timer: 5, mode: 'down' },
+  { id: 6,  cat: '复习',   tag:'复习',    title: '摘句子骨架',    desc: "从 Part 1 或对话里摘 3 个能反复用的:I was wondering if / I'm just checking / Would it be possible to。", timer: 5, mode: 'down' },
+  { id: 8,  cat: '复习',   tag:'复习',    title: '改成自己的生活句', desc: '每个骨架至少改写 2 句和超市、工作、日常相关的句子。', timer: 10, mode: 'down' },
+  { id: 10, cat: '复习',   tag:'复习',    title: '读自己的句子',  desc: '读 3 遍,最后录 1 遍,重点是能不能连成完整句。', timer: 5, mode: 'down' },
+  { id: 12, cat: '短视频', tag:'短视频',  title: '短视频补接话',  desc: '刷到英语短视频时只摘 1 句自然反应:Fair enough / That makes sense / No way。', timer: 5, mode: 'down' },
+  { id: 14, cat: '短视频', tag:'短视频',  title: '当天模拟使用',  desc: '用今天摘的接话句造一个真实场景。', timer: 5, mode: 'down' },
   { id: 16, cat: '复习',   tag:'复习',    title: '今日总结',      desc: '写一句今天最主要的问题,例:今天容易把前置动作当最终答案。', timer: 5, mode: 'down' },
 ];
 
@@ -1457,7 +1477,17 @@ function normalizeTask(task, fallbackId) {
 }
 
 function normalizeTasks(tasks) {
-  return (Array.isArray(tasks) ? tasks : DEFAULT_TASKS).map((t, i) => normalizeTask(t, i + 1));
+  return (Array.isArray(tasks) ? tasks : DEFAULT_TASKS)
+    .map((t, i) => ({ task: normalizeTask(t, i + 1), index: i }))
+    .sort((a, b) => {
+      const ar = TASK_FLOW_RANK[a.task.title];
+      const br = TASK_FLOW_RANK[b.task.title];
+      if (ar != null && br != null) return ar - br;
+      if (ar != null) return -1;
+      if (br != null) return 1;
+      return a.index - b.index;
+    })
+    .map(x => x.task);
 }
 
 function loadGlobalTasks() {
@@ -1549,6 +1579,11 @@ function taskStyle(task, tasks, strength=16) {
 
 function taskTagHTML(task, tasks, label=null) {
   return `<span class="tag" style="${taskStyle(task, tasks, 12)}">${escapeHTML(label || task.tag)}</span>`;
+}
+
+function taskFlowNumber(task, tasks) {
+  const idx = tasks.findIndex(t => t.id === task.id);
+  return idx >= 0 ? idx + 1 : task.id;
 }
 
 function chooseTaskScope(action) {
@@ -1908,7 +1943,7 @@ function renderTasks() {
     note.style.display = dayState.dayTasks ? '' : 'none';
     note.textContent = dayState.dayTasks ? '今天使用单独任务表。明天会回到循环任务，除非你选择“以后每天都这样”。' : '';
   }
-  tasks.forEach(task => {
+  tasks.forEach((task, index) => {
     const state = dayState.tasks[task.id] || { done: false, elapsed: 0, notes: '' };
     ensureTimer(task.id, task);
     const t = timers.get(task.id);
@@ -1924,7 +1959,7 @@ function renderTasks() {
         </button>
         <div class="body">
           <div class="title-row">
-            <span class="title">${task.id}. ${escapeHTML(task.title)}</span>
+            <span class="title">${index + 1}. ${escapeHTML(task.title)}</span>
             ${taskTagHTML(task, tasks)}
             <span class="edit-actions">
               <button class="action btn-edit-task" type="button">编辑</button>
@@ -2566,7 +2601,7 @@ function refreshSummary() {
         <div style="padding:7px 0;border-bottom:1px solid var(--line-2);display:flex;gap:8px;align-items:flex-start">
           <span style="color:var(--blue);font-weight:700;flex-shrink:0">✓</span>
           <div style="flex:1;min-width:0">
-            <div><span style="color:var(--ink-3);font-family:var(--font-en);margin-right:6px">${String(t.id).padStart(2,'0')}</span>${escapeHTML(t.title)}
+            <div><span style="color:var(--ink-3);font-family:var(--font-en);margin-right:6px">${String(taskFlowNumber(t, tasks)).padStart(2,'0')}</span>${escapeHTML(t.title)}
               <span style="margin-left:6px">${taskTagHTML(t, tasks)}</span>
               ${mins ? `<span style="float:right;color:var(--ink-3);font-family:var(--font-en);font-size:12px">${mins}min</span>` : ''}
             </div>
@@ -2731,7 +2766,7 @@ function buildReportHTML(forDate) {
                 border-radius:8px;padding:10px 12px;break-inside:avoid;page-break-inside:avoid">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px">
         <div style="font-weight:600;font-size:13px">
-          <span style="color:${theme.ink3};font-family:ui-monospace,monospace;margin-right:6px">${String(t.id).padStart(2,'0')}</span>${safeText(t.title)}
+          <span style="color:${theme.ink3};font-family:ui-monospace,monospace;margin-right:6px">${String(taskFlowNumber(t, tasks)).padStart(2,'0')}</span>${safeText(t.title)}
         </div>
         <span style="font-size:10px;font-family:ui-monospace,monospace;background:color-mix(in oklab, ${taskPaletteColor(t, tasks)} 12%, ${theme.card});color:${taskPaletteColor(t, tasks)};padding:1px 6px;border-radius:8px">${safeText(t.tag)}</span>
       </div>
