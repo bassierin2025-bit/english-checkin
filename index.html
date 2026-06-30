@@ -19,35 +19,35 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js" defer></script>
 <style>
   :root {
-    --bg: #FBF8F3;
-    --bg-soft: #F1F6F8;
-    --card: #FFFEFA;
-    --ink: #23384F;
-    --ink-2: #6F7876;
-    --ink-3: #949B95;
-    --line: #E8DDD1;
-    --line-2: #EDF3F5;
+    --bg: #F6F2E8;
+    --bg-soft: #E8E2D4;
+    --card: #FFFDF6;
+    --ink: #263326;
+    --ink-2: #5D6257;
+    --ink-3: #928D80;
+    --line: #DCD2C0;
+    --line-2: #ECE5D8;
 
-    --green: #AFCDB8;   /* soft sage */
-    --green-bg: #EFF6F1;
-    --blue: #94BCD7;    /* mist blue */
-    --blue-bg: #EEF6FA;
-    --tan: #E9CDB5;     /* warm peach */
-    --tan-bg: #FBF1EA;
-    --red: #D8B3A8;     /* clay rose */
-    --red-bg: #FAECE8;
-    --gray: #B8BDB5;    /* warm gray */
-    --gray-bg: #F0F2EF;
+    --green: #7D916F;   /* muted olive */
+    --green-bg: #E6EADA;
+    --blue: #7F8A82;    /* neutral slate, not blue-led */
+    --blue-bg: #E5E7E1;
+    --tan: #C3A06E;     /* wheat */
+    --tan-bg: #F0E2C9;
+    --red: #B76D5C;     /* soft clay */
+    --red-bg: #F0D8D1;
+    --gray: #8A8375;    /* warm gray */
+    --gray-bg: #E7E1D6;
 
-    --cal-stripe: rgba(148,188,215,.20);
-    --cal-blue: #A9CAE0;
-    --cal-peach: #EFD8C4;
-    --cal-sage: #DDEBDD;
-    --task-sherlock: #6E9DBB;
-    --task-ielts: #A9A094;
-    --task-review: #8FA0A8;
-    --task-short: #91B3A0;
-    --task-surface: #EEF2EF;
+    --cal-stripe: rgba(125,145,111,.18);
+    --cal-blue: #B9B19E;
+    --cal-peach: #E4C8AA;
+    --cal-sage: #DDE4D2;
+    --task-sherlock: #758C67;
+    --task-ielts: #8B8374;
+    --task-review: #B89058;
+    --task-short: #A46F61;
+    --task-surface: #E7E4DC;
 
     --shadow: 0 10px 30px rgba(35,56,79,.06);
     --shadow-lg: 0 18px 42px rgba(35,56,79,.12);
@@ -60,8 +60,8 @@
     --font-cn: -apple-system, "SF Pro SC", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
     --font-en: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-    --topbar-bg: rgba(251,248,243,.88);
-    --tabbar-bg: rgba(255,254,250,.95);
+    --topbar-bg: rgba(246,242,232,.88);
+    --tabbar-bg: rgba(255,253,246,.95);
     --input-bg: #FFFFFF;
     /* Heatmap base color — themes can override to fit palette */
     --heat-base: var(--green);
@@ -3515,7 +3515,7 @@ $('#btn-wk-prompt').onclick = () => {
 // ===== Color themes =====
 // Each entry: id (matches CSS body[data-theme="id"]), name, desc, 5 swatch colors (bg/green/blue/tan/red)
 const THEMES = [
-  { id: 'warm',         name: '奶油雾蓝',   desc: '奶油底、雾蓝和桃杏,更贴近月历面板', colors: ['#FBF8F3','#AFCDB8','#94BCD7','#E9CDB5','#D8B3A8'] },
+  { id: 'warm',         name: '旧纸橄榄',   desc: '暖灰绿、麦杏和旧纸底,不走蓝色调', colors: ['#F6F2E8','#758C67','#8B8374','#B89058','#A46F61'] },
   { id: 'terra',        name: '陶土珊瑚',   desc: '暖色但不甜腻,适合输出复盘',           colors: ['#F2E9DF','#8AA37A','#5D7E96','#C97550','#D26B5C'] },
   { id: 'olive',        name: '青橄榄',     desc: '自然、稳、带一点设计感',               colors: ['#F0EDE2','#5F7A3E','#5E7383','#C49567','#B25742'] },
   { id: 'morandi-ink',  name: '莫兰迪墨蓝', desc: '冷静、专业,减少视觉疲劳',             colors: ['#E5EAEE','#6E8A85','#3E5876','#A18570','#A0625A'] },
