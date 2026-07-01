@@ -1578,17 +1578,35 @@ function mixHex(a, b, amount=.5) {
   });
 }
 
+const THEME_TASK_SWATCHES = {
+  warm: ['#D9BB94', '#A5A0B8', '#D69B8B', '#A3B08D'],
+  terra: ['#DFB89A', '#A3B5C7', '#D18E86', '#E5A599'],
+  olive: ['#D5BC93', '#A5AEB8', '#D3958A', '#99AF80'],
+  'morandi-ink': ['#C7B6A5', '#B0B8C7', '#C69B90', '#A3B4C0'],
+  mono: ['#B8AB90', '#9C9C9C', '#B08D85', '#B0B0AE'],
+  britain: ['#D3B080', '#93A9C8', '#D18C85', '#9DB29C'],
+  mist: ['#E5C6A6', '#B1B7CB', '#D9958A', '#A5C6DF'],
+  'silent-grey': ['#CFBDA6', '#A6ADB4', '#C89A8C', '#ACB59A'],
+  honey: ['#E5B25C', '#7D9AB8', '#D9906B', '#DFB86C'],
+  soda: ['#E8B78C', '#7DA8DF', '#E58F81', '#F0A87A'],
+  taro: ['#B8A8D9', '#D6C0A0', '#D19DA9', '#9C9DB8'],
+  persimmon: ['#E3A382', '#B0B0AB', '#C87873', '#C89774'],
+  'wheat-coffee': ['#C8A67A', '#A3ADB6', '#C88374', '#B79574'],
+  velvet: ['#B78681', '#939AA8', '#B87975', '#B39374'],
+  'bold-dark': ['#B7A8FF', '#7BBCFF', '#FFC078', '#70E8BC']
+};
+
 function themeTaskPalette() {
   const t = themeVars();
   const themeId = localStorage.getItem('theme') || 'warm';
   const theme = THEMES.find(x => x.id === themeId) || THEMES[0];
   const swatches = Array.isArray(theme?.colors) ? theme.colors : [];
-  // Follow the visible theme swatches first; CSS variables are only the fallback.
+  const taskSwatches = THEME_TASK_SWATCHES[themeId] || [swatches[3], swatches[2], swatches[4], swatches[1]];
   return {
-    '夏洛克': swatches[1] || t.taskSherlock,
-    '雅思': swatches[2] || t.taskIelts,
-    '短视频': swatches[4] || t.taskShort,
-    '复习': swatches[3] || t.taskReview
+    '夏洛克': taskSwatches[0] || swatches[3] || t.taskSherlock,
+    '雅思': taskSwatches[1] || swatches[2] || t.taskIelts,
+    '短视频': taskSwatches[2] || swatches[4] || t.taskShort,
+    '复习': taskSwatches[3] || swatches[1] || t.taskReview
   };
 }
 
@@ -1617,8 +1635,7 @@ function looseTagHTML(text) {
 
 function taskStyle(task, tasks, strength=0) {
   const color = taskPaletteColor(task, tasks);
-  // 35% task color mixed into a theme-specific task-surface → cards clearly follow the theme
-  return `--task-color:${color};--task-bg:color-mix(in oklab, ${color} 35%, var(--task-surface))`;
+  return `--task-color:${color};--task-bg:color-mix(in oklab, ${color} 9%, var(--card))`;
 }
 
 function taskTagHTML(task, tasks, label=null) {
@@ -3547,21 +3564,21 @@ $('#btn-wk-prompt').onclick = () => {
 // ===== Color themes =====
 // Each entry: id (matches CSS body[data-theme="id"]), name, desc, 5 swatch colors (bg/green/blue/tan/red)
 const THEMES = [
-  { id: 'warm',         name: '旧纸橄榄',   desc: '橄榄、灰紫、麦杏、陶土,默认暖底', colors: ['#F6F2E8','#7D8F62','#756C90','#B98A4D','#B26857'] },
-  { id: 'terra',        name: '陶土书桌',   desc: '灰绿、石板、陶土、珊瑚,复盘感更强', colors: ['#F2E9DF','#7E8E66','#6C7287','#B1865F','#A45F58'] },
-  { id: 'olive',        name: '橄榄笔记',   desc: '草木底、铅灰、麦穗和砖红', colors: ['#F0EDE2','#6E7F64','#656F7B','#A98F65','#A16252'] },
-  { id: 'morandi-ink',  name: '雾灰档案',   desc: '灰雾底、鼠尾草、石灰蓝、熟杏', colors: ['#E5EAEE','#77896F','#717A8A','#A0876F','#95675D'] },
-  { id: 'mono',         name: '铅笔灰',     desc: '黑白灰里加橄榄和旧皮革色', colors: ['#F4F4F1','#737B66','#676A72','#8B7B5D','#8B625B'] },
-  { id: 'britain',      name: '学院旧纸',   desc: '学院感但不铺蓝,用深灰和旧金平衡', colors: ['#ECF0F5','#65765A','#5D6476','#967449','#9D574F'] },
-  { id: 'mist',         name: '晨雾杏木',   desc: '浅底、灰绿、杏木和柔陶土', colors: ['#ECF1F5','#7E916E','#747C94','#C79A7E','#B35F55'] },
-  { id: 'silent-grey',  name: '月白橄榄',   desc: '月白底、橄榄、石灰、温木色', colors: ['#EDECE5','#7F8A68','#6A7178','#9C8F7E','#99675D'] },
-  { id: 'honey',        name: '蜂蜜麦田',   desc: '奶黄底、橄榄、深灰、蜂蜜橙', colors: ['#FAF2DC','#858F55','#4F647A','#C38A31','#B86645'] },
-  { id: 'soda',         name: '柑橘叶片',   desc: '叶绿、钢灰、橘杏和番茄红', colors: ['#EEF3F8','#5C9A78','#596F8D','#D48B55','#C45548'] },
-  { id: 'taro',         name: '芋灰麦杏',   desc: '紫灰底、橄榄、葡萄灰和麦杏', colors: ['#ECEAF2','#818B70','#756C98','#B9A178','#B05E72'] },
-  { id: 'persimmon',    name: '柿子旧报',   desc: '旧报纸底、松绿、铁灰、柿红', colors: ['#F3EEE2','#61764F','#4F5E72','#A76843','#A33F37'] },
-  { id: 'wheat-coffee', name: '麦咖手帐',   desc: '麦咖底、橄榄、灰釉和焦糖', colors: ['#F2EAD7','#6A764F','#63707A','#8D6A3E','#9B4F3C'] },
-  { id: 'velvet',       name: '丝绒木色',   desc: '云米底、深叶绿、炭灰和酒红', colors: ['#EFE8DC','#5F7458','#545C70','#7C6045','#8A403C'] },
-  { id: 'bold-dark',    name: '夜间霓光',   desc: '黑底高对比,仅夜间使用', colors: ['#0F0F12','#7BBCFF','#B7A8FF','#FFC078','#70E8BC'] },
+  { id: 'warm',         name: '旧纸橄榄',   desc: '橄榄、灰紫、麦杏、陶土,默认暖底',         colors: ['#F6F2E8','#A3B08D','#A5A0B8','#D9BB94','#D69B8B'] },
+  { id: 'terra',        name: '陶土书桌',   desc: '陶土珊瑚为主,配灰蓝和杏色',               colors: ['#F2E9DF','#E5A599','#A3B5C7','#DFB89A','#D18E86'] },
+  { id: 'olive',        name: '橄榄笔记',   desc: '草木底、浅橄榄、浅铅灰、麦穗和粉砖',       colors: ['#F0EDE2','#99AF80','#A5AEB8','#D5BC93','#D3958A'] },
+  { id: 'morandi-ink',  name: '雾灰档案',   desc: '雾灰蓝为主,配薰衣草、暖杏和柔珊瑚',       colors: ['#E5EAEE','#A3B4C0','#B0B8C7','#C7B6A5','#C69B90'] },
+  { id: 'mono',         name: '铅笔灰',     desc: '灰阶为主,配一点暖木和陶土点缀',           colors: ['#F4F4F1','#B0B0AE','#9C9C9C','#B8AB90','#B08D85'] },
+  { id: 'britain',      name: '学院旧纸',   desc: '牛津浅蓝为主,配苔藓、暖金和红衣',         colors: ['#ECF0F5','#93A9C8','#9DB29C','#D3B080','#D18C85'] },
+  { id: 'mist',         name: '晨雾杏木',   desc: '雾蓝为主,配薰衣草、暖桃和柔珊瑚',         colors: ['#ECF1F5','#A5C6DF','#B1B7CB','#E5C6A6','#D9958A'] },
+  { id: 'silent-grey',  name: '月白橄榄',   desc: '月白底,浅橄榄、灰蓝、亚麻和柔砖',         colors: ['#EDECE5','#ACB59A','#A6ADB4','#CFBDA6','#C89A8C'] },
+  { id: 'honey',        name: '蜂蜜麦田',   desc: '暖蜜金为主,配柔海军蓝和蜜橙',             colors: ['#FAF2DC','#DFB86C','#7D9AB8','#E5B25C','#D9906B'] },
+  { id: 'soda',         name: '柑橘叶片',   desc: '柑橘为主,配天空蓝、粉杏和柔番茄',         colors: ['#EEF3F8','#F0A87A','#7DA8DF','#E8B78C','#E58F81'] },
+  { id: 'taro',         name: '芋灰麦杏',   desc: '芋泥紫为主,配薰衣草、麦杏和玫粉',         colors: ['#ECEAF2','#B8A8D9','#9C9DB8','#D6C0A0','#D19DA9'] },
+  { id: 'persimmon',    name: '柿子旧报',   desc: '柿橙为主,配旧铁灰、暖驼和柔崖红',         colors: ['#F3EEE2','#E3A382','#B0B0AB','#C89774','#C87873'] },
+  { id: 'wheat-coffee', name: '麦咖手帐',   desc: '咖啡棕为主,配灰蓝、麦金和焦糖粉',         colors: ['#F2EAD7','#B79574','#A3ADB6','#C8A67A','#C88374'] },
+  { id: 'velvet',       name: '丝绒木色',   desc: '柔丝绒红为主,配钢灰、暖驼和玫木',         colors: ['#EFE8DC','#B78681','#939AA8','#B39374','#B87975'] },
+  { id: 'bold-dark',    name: '夜间霓光',   desc: '黑底高对比,仅夜间使用',                   colors: ['#0F0F12','#7BBCFF','#B7A8FF','#FFC078','#70E8BC'] },
 ];
 
 function applyTheme(id) {
