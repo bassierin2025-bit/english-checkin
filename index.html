@@ -738,7 +738,14 @@
     cursor: pointer; transition: transform .08s;
   }
   .cal-day:active { transform: scale(.95); }
-  .cal-day.empty { color: transparent; pointer-events: none; }
+  .cal-day.empty {
+    color: transparent;
+    pointer-events: none;
+    background:
+      repeating-linear-gradient(135deg, transparent 0 8px, color-mix(in oklab, var(--line-2) 72%, transparent) 8px 10px),
+      color-mix(in oklab, var(--card) 72%, var(--task-surface));
+    border-color: color-mix(in oklab, var(--line) 58%, var(--line-2));
+  }
   .cal-day.future { opacity: .35; cursor: default; }
   .cal-day.today { box-shadow: 0 0 0 2px color-mix(in oklab, var(--ink) 42%, transparent) inset; }
   .cal-day[data-v="1"] { background: color-mix(in oklab, var(--cal-peach) 30%, white); color: var(--ink); border-color: color-mix(in oklab, var(--cal-peach) 42%, var(--line-2)); }
@@ -3101,7 +3108,11 @@ function renderHeatmap() {
 
   // leading empty cells
   for (let i = 0; i < startOffset; i++) {
-    const e = document.createElement('div'); e.className = 'cal-day empty'; grid.appendChild(e);
+    const e = document.createElement('div');
+    e.className = 'cal-day empty';
+    e.dataset.v = '0';
+    e.innerHTML = '&nbsp;';
+    grid.appendChild(e);
   }
   for (let d = 1; d <= daysInMonth; d++) {
     const dt = new Date(calYear, calMonth, d);
