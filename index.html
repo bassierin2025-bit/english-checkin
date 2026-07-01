@@ -738,7 +738,7 @@
     cursor: pointer; transition: transform .08s;
   }
   .cal-day:active { transform: scale(.95); }
-  .cal-day.empty { visibility: hidden; pointer-events: none; }
+  .cal-day.empty { color: transparent; pointer-events: none; }
   .cal-day.future { opacity: .35; cursor: default; }
   .cal-day.today { box-shadow: 0 0 0 2px color-mix(in oklab, var(--ink) 42%, transparent) inset; }
   .cal-day[data-v="1"] { background: color-mix(in oklab, var(--cal-peach) 30%, white); color: var(--ink); border-color: color-mix(in oklab, var(--cal-peach) 42%, var(--line-2)); }
