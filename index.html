@@ -714,37 +714,51 @@
   .heatmap-legend { display: flex; align-items: center; gap: 6px; justify-content: flex-end; font-size: 11px; color: var(--ink-3); font-family: var(--font-en); }
   .heatmap-legend .hm-cell { width: 12px; height: 12px; aspect-ratio: auto; border-radius: 3px; }
 
-  /* Calendar heatmap */
+  /* Calendar heatmap — simplified for reliable alignment */
   .cal-weekdays {
     display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px;
     font-size: 11px; color: var(--ink-3); text-align: center;
-    margin: 8px 0 8px;
+    margin: 8px 0 6px;
+    padding: 0;
+  }
+  .cal-weekdays span {
+    padding: 4px 0;
+    display: block;
+    width: 100%;
   }
   .cal-grid {
     display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px;
-    width: 100%; overflow: hidden;
+    width: 100%;
+    padding: 0;
   }
   .cal-day {
-    width: 100%; min-width: 0; height: clamp(38px, 10vw, 48px); border-radius: 11px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    min-height: 40px;
+    border-radius: 10px;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 0; font-size: 11.5px; color: var(--ink-3);
+    gap: 1px;
+    padding: 0;
+    font-size: 12px; color: var(--ink-3);
     font-family: var(--font-en); font-weight: 700;
-    background:
-      repeating-linear-gradient(135deg, transparent 0 8px, color-mix(in oklab, var(--line-2) 72%, transparent) 8px 10px),
-      color-mix(in oklab, var(--card) 72%, var(--task-surface));
+    background: var(--bg-soft);
     position: relative;
-    border: 1px solid color-mix(in oklab, var(--line) 58%, var(--line-2));
-    box-shadow: none;
-    cursor: pointer; transition: transform .08s;
+    border: none;
+    cursor: pointer;
+    transition: transform .08s, background .15s;
+    line-height: 1;
+    box-sizing: border-box;
   }
-  .cal-day:active { transform: scale(.95); }
+  .cal-day:active { transform: scale(.94); }
   .cal-day.empty {
+    background: transparent;
     color: transparent;
     pointer-events: none;
-    background:
-      repeating-linear-gradient(135deg, transparent 0 8px, color-mix(in oklab, var(--line-2) 72%, transparent) 8px 10px),
-      color-mix(in oklab, var(--card) 72%, var(--task-surface));
-    border-color: color-mix(in oklab, var(--line) 58%, var(--line-2));
+    border: 1px dashed color-mix(in oklab, var(--line) 60%, transparent);
+  }
+  .cal-day .cal-dot {
+    font-size: 9px; opacity: .75; font-weight: 600; line-height: 1;
+    position: static; margin: 0;
   }
   .cal-day.future { opacity: .35; cursor: default; }
   .cal-day.today { box-shadow: 0 0 0 2px color-mix(in oklab, var(--ink) 42%, transparent) inset; }
@@ -753,10 +767,6 @@
   .cal-day[data-v="3"] { background: color-mix(in oklab, var(--cal-blue) 54%, white); color: var(--ink); border-color: color-mix(in oklab, var(--cal-blue) 64%, var(--line-2)); }
   .cal-day[data-v="4"] { background: color-mix(in oklab, var(--cal-blue) 78%, white); color: var(--ink); border-color: color-mix(in oklab, var(--cal-blue) 82%, var(--line-2)); }
   .cal-day[data-v="5"] { background: var(--cal-blue); color: var(--ink); border-color: color-mix(in oklab, var(--cal-blue) 86%, var(--line-2)); }
-  .cal-day .cal-dot {
-    position: static; margin-top: 1px;
-    font-size: 9px; opacity: .72; font-weight: 600; line-height: 1;
-  }
 
   /* ===== Weekly review ===== */
   .week-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; margin-bottom: 12px; }
@@ -1607,7 +1617,8 @@ function looseTagHTML(text) {
 
 function taskStyle(task, tasks, strength=0) {
   const color = taskPaletteColor(task, tasks);
-  return `--task-color:${color};--task-bg:color-mix(in oklab, ${color} 4%, var(--task-surface))`;
+  // Bump theme presence in card bg from 4% → 22% so themes look dramatically different
+  return `--task-color:${color};--task-bg:color-mix(in oklab, ${color} 22%, var(--task-surface))`;
 }
 
 function taskTagHTML(task, tasks, label=null) {
